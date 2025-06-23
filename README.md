@@ -1,6 +1,7 @@
 
 # LUMIN.AI - Neural Networks for Democratic Transparency
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/FSXowV52GpBGpAqYmKsFET/AUdamX6UCsfkvUbXDfgsq1/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/FSXowV52GpBGpAqYmKsFET/AUdamX6UCsfkvUbXDfgsq1/tree/main)
 [![TechLabs Berlin](https://img.shields.io/badge/TechLabs-Berlin-blue)](https://www.techlabs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9+-blue)](https://www.python.org/)
