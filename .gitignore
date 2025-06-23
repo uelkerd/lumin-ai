@@ -1,3 +1,12 @@
+# =============================================================================
+# UNIFIED .GITIGNORE
+# Comprehensive ignore patterns for Python, Node.js, React, and general development
+# =============================================================================
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -77,6 +86,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb_checkpoints
 
 # IPython
 profile_default/
@@ -160,31 +170,75 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the enitre vscode folder
-# .vscode/
-
 # Ruff stuff:
 .ruff_cache/
 
 # PyPI configuration file
 .pypirc
+
+# =============================================================================
+# DATA SCIENCE & MACHINE LEARNING
+# =============================================================================
+
+# Data files (keep structure, ignore content)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Models
+*.h5
+*.pkl
+*.pt
+*.pth
+models/*/checkpoints/
+
+# =============================================================================
+# NODE.JS
+# =============================================================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# =============================================================================
+# REACT / FRONTEND
+# =============================================================================
+
+# Build outputs
+web-development/frontend/build/
+build/
+dist/
+
+# Environment files
+web-development/frontend/.env.local
+web-development/frontend/.env.development.local
+web-development/frontend/.env.test.local
+web-development/frontend/.env.production.local
+.env.local
+
+# =============================================================================
+# DEVELOPMENT TOOLS & IDEs
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+.idea/
 
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
@@ -192,3 +246,36 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+.cursor/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# OPERATING SYSTEM
+# =============================================================================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# =============================================================================
+# ENVIRONMENT & CONFIGURATION
+# =============================================================================
+
+# Environment variables
+.env
+
+# =============================================================================
+# SPECIALIZED FRAMEWORKS
+# =============================================================================
+
+# Abstra
+# Abstra is an AI-powered process automation framework.
+# Ignore directories containing user credentials, local state, and settings.
+# Learn more at https://abstra.io/docs
+.abstra/
