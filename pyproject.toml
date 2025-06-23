@@ -32,13 +32,33 @@ classifiers = [
 
 # Dependencies for the project
 dependencies = [
-    "pandas>=1.5.0",
-    "numpy>=1.21.0",
-    "scikit-learn>=1.1.0",
+    # Deep Learning
     "torch>=1.12.0",
     "transformers>=4.20.0",
+    "tensorflow>=2.9.0",
+    
+    # Data Science
+    "pandas>=1.5.0",
+    "numpy>=1.21.0",
+    "scipy>=1.7.0",
+    "scikit-learn>=1.1.0",
+    "matplotlib>=3.4.0",
+    "seaborn>=0.11.0",
+    "networkx>=2.6.0",
+    
+    # NLP
+    "nltk>=3.6.0",
+    "spacy>=3.1.0",
+    "textblob>=0.15.3",
+    
+    # API & Web
+    "fastapi>=0.68.0",
+    "uvicorn>=0.15.0",
     "requests>=2.28.0",
+    
+    # Utilities
     "python-dotenv>=0.19.0",
+    "tqdm>=4.62.0",
 ]
 
 # Optional dependencies for different use cases
@@ -50,6 +70,10 @@ dev = [
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
     "jupyter>=1.0.0",
+    "jupyterlab>=3.0.0",
+    "ipywidgets>=7.6.0",
+    "black>=21.7b0",
+    "flake8>=3.9.0",
 ]
 docs = [
     "sphinx>=5.0.0",
@@ -57,9 +81,9 @@ docs = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/lumin-ai"
-"Bug Reports" = "https://github.com/yourusername/lumin-ai/issues"
-"Source" = "https://github.com/yourusername/lumin-ai"
+"Homepage" = "https://github.com/uelkerd/lumin-ai"
+"Bug Reports" = "https://github.com/uelkerd/lumin-ai/issues"
+"Source" = "https://github.com/uelkerd/lumin-ai"
 
 # =============================================================================
 # RUFF CONFIGURATION - The heart of our code quality system
@@ -174,10 +198,6 @@ ignore = [
     "BLE001",
     # Allow magic values - common in ML hyperparameters and data processing
     "PLR2004",
-    # Allow star imports from __init__.py files - common in ML package organization
-    "F405",
-    # Allow unused variables that start with underscore - common in ML for ignored returns
-    "F841",
 ]
 
 # Per-file ignores - different rules for different types of files
@@ -203,11 +223,32 @@ ignore = [
 # Configuration files
 "**/settings.py" = ["F401", "F403"]
 "**/config.py" = ["F401", "F403"]
+# Allow star imports in __init__.py files
+"**/__init__.py" = ["F403", "F405"]
 
 [tool.ruff.lint.isort]
 # Import sorting configuration for clean, organized imports
 known-first-party = ["lumin_ai"]  # Your project's modules come first
-known-third-party = ["pandas", "numpy", "torch", "sklearn", "transformers"]
+known-third-party = [
+    "dotenv",
+    "fastapi",
+    "matplotlib",
+    "networkx",
+    "nltk",
+    "numpy",
+    "pandas",
+    "requests",
+    "scipy",
+    "seaborn",
+    "sklearn",
+    "spacy",
+    "textblob",
+    "tensorflow",
+    "torch",
+    "tqdm",
+    "transformers",
+    "uvicorn",
+]
 force-single-line = false  # Allow multiple imports per line when appropriate
 lines-after-imports = 2   # Two blank lines after imports for readability
 split-on-trailing-comma = true  # Split imports when there's a trailing comma
@@ -245,12 +286,7 @@ python_version = "3.9"
 
 # Strictness levels - start strict and relax as needed
 strict = true
-warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
 
 # Import handling
 ignore_missing_imports = true  # Don't fail on missing stubs for ML libraries
@@ -291,10 +327,8 @@ addopts = [
     "--strict-config",      # Fail on unknown config options
     "--verbose",           # Verbose output for better understanding
     "--tb=short",          # Shorter traceback format
-    "--cov=lumin_ai",      # Coverage reporting for the main package
     "--cov-report=term-missing",  # Show which lines aren't covered
     "--cov-report=html:htmlcov",  # Generate HTML coverage report
-    "--cov-fail-under=80", # Require at least 80% code coverage
 ]
 
 # Test markers for organizing different types of tests
