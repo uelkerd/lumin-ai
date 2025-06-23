@@ -1,0 +1,175 @@
+# .pre-commit-config.yaml - Automated code quality checks before every commit
+# This configuration ensures that all code meets quality standards before it enters the repository
+# Pre-commit hooks act as your first line of defense against code quality issues
+
+# Configuration format version
+repos:
+  # Repository 1: Pre-commit's own hooks for basic file hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0  # Use the latest stable version
+    hooks:
+      # Basic file checks that prevent common mistakes
+      - id: trailing-whitespace
+        name: "Remove trailing whitespace"
+        description: "Removes unnecessary spaces at the end of lines"
+        
+      - id: end-of-file-fixer
+        name: "Ensure files end with newline"
+        description: "Adds a newline at the end of files if missing"
+        
+      - id: check-yaml
+        name: "Validate YAML files"
+        description: "Ensures YAML files are properly formatted"
+        files: \.(yaml|yml)$
+        
+      - id: check-toml
+        name: "Validate TOML files"
+        description: "Ensures pyproject.toml and other TOML files are valid"
+        
+      - id: check-json
+        name: "Validate JSON files" 
+        description: "Ensures JSON configuration files are properly formatted"
+        
+      - id: check-merge-conflict
+        name: "Check for merge conflicts"
+        description: "Prevents committing files with unresolved merge conflict markers"
+        
+      - id: check-case-conflict
+        name: "Check for case conflicts"
+        description: "Prevents case-insensitive filesystem conflicts"
+        
+      - id: mixed-line-ending
+        name: "Normalize line endings"
+        description: "Ensures consistent line endings across the project"
+        args: ['--fix=lf']  # Use Unix-style line endings
+        
+      - id: check-docstring-first
+        name: "Check docstring placement"
+        description: "Ensures docstrings appear before other code in Python files"
+        
+      - id: debug-statements
+        name: "Check for debug statements"
+        description: "Prevents committing Python debug statements like pdb.set_trace()"
+        
+      - id: name-tests-test
+        name: "Ensure test files are named correctly"
+        description: "Verifies test files follow proper naming conventions"
+        args: ['--pytest-test-first']
+
+  # Repository 2: Ruff for Python linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.9  # Use the latest stable version of Ruff
+    hooks:
+      # Ruff linting - catches code quality issues and potential bugs
+      - id: ruff
+        name: "Ruff linting"
+        description: "Runs comprehensive Python linting using Ruff"
+        args: [--fix, --exit-non-zero-on-fix]
+        # --fix: Automatically fix issues that can be safely corrected
+        # --exit-non-zero-on-fix: Fail the hook if fixes were applied (forces review)
+        
+      # Ruff formatting - ensures consistent code style
+      - id: ruff-format
+        name: "Ruff formatting"
+        description: "Applies consistent Python code formatting"
+        # This will format your code according to the rules in pyproject.toml
+
+  # Repository 3: MyPy for static type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: "MyPy type checking"
+        description: "Performs static type analysis to catch type-related bugs"
+        additional_dependencies: 
+          # Include type stubs for libraries that don't have built-in types
+          - types-requests
+          - types-python-dateutil
+          - pandas-stubs
+        args: [--ignore-missing-imports, --scripts-are-modules]
+        # Only run on main source code, not tests or notebooks
+        files: ^(lumin_ai/|deep-learning/|data-science/).*\.py$
+        exclude: ^(tests/|.*_test\.py|test_.*\.py)$
+
+  # Repository 4: Security scanning with Bandit
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        name: "Security scanning"
+        description: "Scans Python code for common security issues"
+        args: ['-c', 'pyproject.toml']
+        # Use configuration from pyproject.toml
+        exclude: ^tests/
+        # Don't scan test files as they often contain intentionally insecure patterns
+
+  # Repository 5: Jupyter notebook cleaning and validation
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      # Clean Jupyter notebook outputs before committing
+      - id: nbqa-ruff
+        name: "Lint Jupyter notebooks"
+        description: "Applies Ruff linting to code cells in Jupyter notebooks"
+        args: [--fix]
+        
+      # Format Jupyter notebook code cells
+      - id: nbqa-ruff-format
+        name: "Format Jupyter notebooks"
+        description: "Formats code cells in Jupyter notebooks"
+
+  # Repository 6: Documentation and README checks
+  - repo: https://github.com/pycqa/doc8
+    rev: v1.1.1
+    hooks:
+      - id: doc8
+        name: "Documentation style checking"
+        description: "Checks documentation files for style issues"
+        files: \.(rst|txt)$
+        args: ['--max-line-length=100']
+
+  # Repository 7: Secrets detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: "Detect secrets"
+        description: "Scans for accidentally committed secrets like API keys"
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+# Global configuration for all hooks
+default_stages: [commit]  # Run hooks on commit by default
+
+# Specific language requirements
+default_language_version:
+  python: python3.9  # Ensure consistent Python version across all hooks
+
+# Performance and behavior settings
+minimum_pre_commit_version: "3.0.0"  # Require recent pre-commit version
+
+# Fail fast - stop on first failure rather than running all hooks
+fail_fast: false  # Set to true if you want to stop on first failure
+
+# Configuration for specific file types
+files: ''  # Apply to all files by default
+exclude: |
+  (?x)^(
+      \.git/|
+      \.tox/|
+      \.venv/|
+      venv/|
+      \.eggs/|
+      \.egg-info/|
+      _build/|
+      build/|
+      dist/|
+      \.mypy_cache/|
+      \.pytest_cache/|
+      \.ruff_cache/|
+      node_modules/|
+      data/raw/|
+      data/processed/|
+      models/trained/|
+      .*\.egg-info/
+  )$
