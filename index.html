@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMIN.AI Roadmap Canvas</title>
+    <title>LUMIN.AI Project Hub</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React Libraries -->
@@ -15,24 +15,25 @@
         /* A little extra style for a smoother look */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* A light gray background */
         }
     </style>
      <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50">
+<body>
 
     <!-- This is where our React app will be rendered -->
     <div id="root"></div>
 
     <!-- Our React component code, wrapped in a babel script tag -->
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useMemo, Suspense } = React;
 
+        // --- Component: LuminAIRoadmap ---
         const LuminAIRoadmap = () => {
           const [activePhase, setActivePhase] = useState('mvp');
-          // Default to week 1 being selected initially
           const [selectedWeek, setSelectedWeek] = useState(1);
 
           const phases = {
@@ -64,66 +65,10 @@
           };
 
           const trackDeliverables = {
-            dl: {
-              name: "Deep Learning",
-              icon: "🧠",
-              mvp: [
-                "Basic sentiment analysis on governance texts",
-                "Simple participation prediction model",
-                "Text classification for governance themes"
-              ],
-              enhanced: [
-                "Advanced transformer models",
-                "Graph neural networks for voting patterns",
-                "Cross-protocol governance analysis"
-              ],
-              data: "Austria Democracy Radar Wave text, governance proposals, voting discussions"
-            },
-            ds: {
-              name: "Data Science", 
-              icon: "📊",
-              mvp: [
-                "Statistical analysis of survey trends",
-                "Correlation analysis (transparency vs trust)",
-                "Basic governance system comparisons"
-              ],
-              enhanced: [
-                "Network analysis of governance relationships",
-                "Predictive modeling for participation",
-                "Cross-protocol statistical comparisons"
-              ],
-              data: "Democracy Radar Wave surveys (10k+ responses), governance metrics"
-            },
-            wd: {
-              name: "Web Development",
-              icon: "💻", 
-              mvp: [
-                "Interactive dashboard for governance metrics",
-                "Data visualization interface",
-                "API integration with existing tools"
-              ],
-              enhanced: [
-                "Real-time blockchain data feeds",
-                "Advanced interactive visualizations",
-                "Policy recommendation interface"
-              ],
-              data: "Governance token analyzer APIs, Democracy Radar endpoints"
-            },
-            ux: {
-              name: "UX Design",
-              icon: "🎨",
-              mvp: [
-                "User research on governance tools",
-                "Interface wireframes and prototypes", 
-                "Usability testing of data presentations"
-              ],
-              enhanced: [
-                "Advanced interaction design",
-                "Citizen engagement tool design",
-                "Policy interface optimization"
-              ],
-              data: "Democratic participation studies, user research opportunities"
-            }
+            dl: { name: "Deep Learning", icon: "🧠", mvp: ["Basic sentiment analysis on governance texts", "Simple participation prediction model", "Text classification for governance themes"], enhanced: ["Advanced transformer models", "Graph neural networks for voting patterns", "Cross-protocol governance analysis"], data: "Austria Democracy Radar Wave text, governance proposals, voting discussions" },
+            ds: { name: "Data Science", icon: "📊", mvp: ["Statistical analysis of survey trends", "Correlation analysis (transparency vs trust)", "Basic governance system comparisons"], enhanced: ["Network analysis of governance relationships", "Predictive modeling for participation", "Cross-protocol statistical comparisons"], data: "Democracy Radar Wave surveys (10k+ responses), governance metrics" },
+            wd: { name: "Web Development", icon: "💻", mvp: ["Interactive dashboard for governance metrics", "Data visualization interface", "API integration with existing tools"], enhanced: ["Real-time blockchain data feeds", "Advanced interactive visualizations", "Policy recommendation interface"], data: "Governance token analyzer APIs, Democracy Radar endpoints" },
+            ux: { name: "UX Design", icon: "🎨", mvp: ["User research on governance tools", "Interface wireframes and prototypes", "Usability testing of data presentations"], enhanced: ["Advanced interaction design", "Citizen engagement tool design", "Policy interface optimization"], data: "Democratic participation studies, user research opportunities" }
           };
 
           const riskMitigation = [
@@ -135,79 +80,45 @@
           ];
 
           return (
-            <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 bg-gradient-to-br from-indigo-50 to-purple-50">
+            <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-b-lg">
               <div className="text-center mb-8">
                 <h1 className="text-3xl sm:text-4xl font-bold text-indigo-900 mb-2">LUMIN.AI Roadmap Canvas</h1>
                 <p className="text-lg sm:text-xl text-indigo-700">Neural Networks for Democratic Transparency</p>
                 <p className="text-sm text-gray-600 mt-2">Entry-level friendly • MVP-first approach • Real-world impact</p>
               </div>
-
-              {/* Phase Selector */}
               <div className="flex justify-center mb-8 space-x-2 sm:space-x-4">
                 {Object.entries(phases).map(([key, phase]) => (
-                  <button
-                    key={key}
-                    onClick={() => setActivePhase(key)}
-                    className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg border-2 font-semibold transition-all text-sm sm:text-base ${
-                      activePhase === key ? phase.color : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    {phase.title}
-                  </button>
+                  <button key={key} onClick={() => setActivePhase(key)} className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg border-2 font-semibold transition-all text-sm sm:text-base ${ activePhase === key ? phase.color : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200' }`}>{phase.title}</button>
                 ))}
               </div>
-
-              {/* Active Phase Description */}
               <div className={`p-4 sm:p-6 rounded-lg border-2 mb-8 ${phases[activePhase].color}`}>
                 <h2 className="text-lg sm:text-xl font-bold mb-2">{phases[activePhase].subtitle}</h2>
                 <p className="text-sm sm:text-base">{phases[activePhase].description}</p>
               </div>
-
-              {/* Track Deliverables */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 {Object.entries(trackDeliverables).map(([key, track]) => (
                   <div key={key} className="bg-white p-4 sm:p-6 rounded-lg border-2 border-gray-200 shadow-sm">
-                    <h3 className="text-lg font-bold mb-3 flex items-center">
-                      <span className="text-2xl mr-2">{track.icon}</span>
-                      {track.name}
-                    </h3>
+                    <h3 className="text-lg font-bold mb-3 flex items-center"><span className="text-2xl mr-2">{track.icon}</span>{track.name}</h3>
                     <div className="mb-4">
-                      <h4 className="font-semibold text-green-700 mb-2">
-                        {activePhase === 'mvp' ? 'MVP Deliverables' : 'Enhanced Features'}
-                      </h4>
+                      <h4 className="font-semibold text-green-700 mb-2">{activePhase === 'mvp' ? 'MVP Deliverables' : 'Enhanced Features'}</h4>
                       <ul className="space-y-1">
                         {(activePhase === 'mvp' ? track.mvp : track.enhanced).map((item, index) => (
                           <li key={index} className="flex items-start">
-                            <svg className="w-4 h-4 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
-                            </svg>
+                            <svg className="w-4 h-4 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                             <span className="text-sm">{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="border-t pt-3">
-                      <h4 className="font-semibold text-blue-700 mb-1 text-sm">Data Sources:</h4>
-                      <p className="text-xs text-gray-600">{track.data}</p>
-                    </div>
+                    <div className="border-t pt-3"><h4 className="font-semibold text-blue-700 mb-1 text-sm">Data Sources:</h4><p className="text-xs text-gray-600">{track.data}</p></div>
                   </div>
                 ))}
               </div>
-
-              {/* Timeline */}
               <div className="bg-white p-4 sm:p-6 rounded-lg border-2 border-gray-200 mb-8 shadow-sm">
                 <h2 className="text-xl font-bold mb-4 text-center">10-Week Timeline</h2>
                 <div className="grid grid-cols-5 md:grid-cols-10 gap-2 mb-4">
                   {[1,2,3,4,5,6,7,8,9,10].map(week => (
-                    <button
-                      key={week}
-                      onClick={() => setSelectedWeek(selectedWeek === week ? null : week)}
-                      className={`p-3 rounded-lg border text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${
-                        week <= 6 
-                          ? (selectedWeek === week ? 'bg-green-200 border-green-400 ring-2 ring-green-500' : 'bg-green-50 border-green-200 hover:bg-green-100')
-                          : (selectedWeek === week ? 'bg-blue-200 border-blue-400 ring-2 ring-blue-500' : 'bg-blue-50 border-blue-200 hover:bg-blue-100')
-                      }`}
-                    >
+                    <button key={week} onClick={() => setSelectedWeek(selectedWeek === week ? null : week)} className={`p-3 rounded-lg border text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${ week <= 6 ? (selectedWeek === week ? 'bg-green-200 border-green-400 ring-2 ring-green-500' : 'bg-green-50 border-green-200 hover:bg-green-100') : (selectedWeek === week ? 'bg-blue-200 border-blue-400 ring-2 ring-blue-500' : 'bg-blue-50 border-blue-200 hover:bg-blue-100') }`}>
                       W{week}
                       {week === 6 && <div className="text-xs font-bold text-green-700 mt-1">MVP</div>}
                       {week === 10 && <div className="text-xs font-bold text-blue-700 mt-1">Final</div>}
@@ -218,20 +129,12 @@
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mt-4">
                     <h3 className="font-bold mb-2">Week {selectedWeek} Milestones</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="font-semibold text-green-700">MVP Focus:</h4>
-                        <p className="text-sm">{weeklyMilestones[selectedWeek].mvp}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-blue-700">Enhanced Focus:</h4>
-                        <p className="text-sm">{weeklyMilestones[selectedWeek].enhanced}</p>
-                      </div>
+                      <div><h4 className="font-semibold text-green-700">MVP Focus:</h4><p className="text-sm">{weeklyMilestones[selectedWeek].mvp}</p></div>
+                      <div><h4 className="font-semibold text-blue-700">Enhanced Focus:</h4><p className="text-sm">{weeklyMilestones[selectedWeek].enhanced}</p></div>
                     </div>
                   </div>
                 )}
               </div>
-
-              {/* Success Metrics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
                   <h2 className="text-xl font-bold text-green-800 mb-4">MVP Success Criteria (Week 6)</h2>
@@ -243,7 +146,6 @@
                     <li className="flex items-center"><span className="text-green-600 mr-2">✅</span>Comprehensive documentation</li>
                   </ul>
                 </div>
-
                 <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
                   <h2 className="text-xl font-bold text-blue-800 mb-4">Enhanced Success (Week 10)</h2>
                   <ul className="space-y-2">
@@ -255,48 +157,119 @@
                   </ul>
                 </div>
               </div>
-
-              {/* Risk Mitigation */}
               <div className="bg-yellow-50 p-6 rounded-lg border-2 border-yellow-200 mb-8">
                 <h2 className="text-xl font-bold text-yellow-800 mb-4">Risk Mitigation Strategy</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {riskMitigation.map((item, index) => (
-                    <div key={index} className="bg-white p-3 rounded-lg border border-gray-200">
-                      <div className="font-semibold text-red-700 text-sm mb-1">Risk: {item.risk}</div>
-                      <div className="text-green-700 text-sm">Solution: {item.solution}</div>
-                    </div>
-                  ))}
+                  {riskMitigation.map((item, index) => (<div key={index} className="bg-white p-3 rounded-lg border border-gray-200"><div className="font-semibold text-red-700 text-sm mb-1">Risk: {item.risk}</div><div className="text-green-700 text-sm">Solution: {item.solution}</div></div>))}
                 </div>
               </div>
-
-              {/* Key Messages */}
               <div className="bg-indigo-100 p-6 rounded-lg border-2 border-indigo-200">
                 <h2 className="text-xl font-bold text-indigo-800 mb-4 text-center">Key Messages for Team Formation</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-4">
-                    <div className="text-4xl mb-3">🎯</div>
-                    <h3 className="font-bold text-indigo-700">Beginner-Friendly</h3>
-                    <p className="text-sm text-indigo-600 mt-1">Clear guidance, proven methods, realistic scope</p>
-                  </div>
-                  <div className="text-center p-4">
-                    <div className="text-4xl mb-3">🛡️</div>
-                    <h3 className="font-bold text-indigo-700">Guaranteed Success</h3>
-                    <p className="text-sm text-indigo-600 mt-1">MVP ensures completion, enhanced features are bonus</p>
-                  </div>
-                  <div className="text-center p-4">
-                    <div className="text-4xl mb-3">🌍</div>
-                    <h3 className="font-bold text-indigo-700">Real Impact</h3>
-                    <p className="text-sm text-indigo-600 mt-1">Democracy research that could influence actual policy</p>
-                  </div>
+                  <div className="text-center p-4"><div className="text-4xl mb-3">🎯</div><h3 className="font-bold text-indigo-700">Beginner-Friendly</h3><p className="text-sm text-indigo-600 mt-1">Clear guidance, proven methods, realistic scope</p></div>
+                  <div className="text-center p-4"><div className="text-4xl mb-3">🛡️</div><h3 className="font-bold text-indigo-700">Guaranteed Success</h3><p className="text-sm text-indigo-600 mt-1">MVP ensures completion, enhanced features are bonus</p></div>
+                  <div className="text-center p-4"><div className="text-4xl mb-3">🌍</div><h3 className="font-bold text-indigo-700">Real Impact</h3><p className="text-sm text-indigo-600 mt-1">Democracy research that could influence actual policy</p></div>
                 </div>
               </div>
             </div>
           );
         };
 
-        // Render the component to the root div
-        ReactDOM.render(<LuminAIRoadmap />, document.getElementById('root'));
+        // --- Component: LuminAIDocumentation ---
+        const LuminAIDocumentation = () => {
+          const [activeTab, setActiveTab] = useState('overview');
+          const [activeTrack, setActiveTrack] = useState('dl');
+          const documentStructure = useMemo(() => ({ overview: { title: "Project Overview", icon: "🌟" }, tracks: { title: "Track Documentation", icon: "🎯" }, project: { title: "Project Documents", icon: "📋" } }), []);
+          const trackInfo = useMemo(() => ({ dl: { name: "Deep Learning", icon: "🧠", activeClass: "bg-purple-100 border-purple-300 text-purple-800", headerClass: "bg-purple-50 border-purple-200" }, ds: { name: "Data Science", icon: "📊", activeClass: "bg-green-100 border-green-300 text-green-800", headerClass: "bg-green-50 border-green-200" }, wd: { name: "Web Development", icon: "💻", activeClass: "bg-blue-100 border-blue-300 text-blue-800", headerClass: "bg-blue-50 border-blue-200" }, ux: { name: "UX Design", icon: "🎨", activeClass: "bg-orange-100 border-orange-300 text-orange-800", headerClass: "bg-orange-50 border-orange-200" } }), []);
+          
+          const ProjectOverview = () => (<div className="space-y-6"><div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-lg"><h1 className="text-4xl font-bold mb-4">LUMIN.AI</h1><p className="text-xl mb-4">Neural Networks for Democratic Transparency</p><p className="text-lg opacity-90">Building the future of democratic governance through AI-powered analysis</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-xl font-bold text-gray-800 mb-4">🎯 Project Vision</h2><p className="text-gray-600 mb-4">Democratize access to governance analysis through neural networks that can understand and predict democratic participation patterns, transparency metrics, and citizen trust levels.</p><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Real-world impact on democracy</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Beginner-friendly implementation</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>MVP-first approach</li></ul></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-xl font-bold text-gray-800 mb-4">📊 Key Metrics</h2><div className="space-y-3"><div className="flex justify-between"><span className="text-gray-600">Timeline:</span><span className="font-semibold">10 Weeks</span></div><div className="flex justify-between"><span className="text-gray-600">Team Size:</span><span className="font-semibold">4+ Techies</span></div><div className="flex justify-between"><span className="text-gray-600">Tracks:</span><span className="font-semibold">All 4 Required</span></div><div className="flex justify-between"><span className="text-gray-600">MVP Delivery:</span><span className="font-semibold text-green-600">Week 6</span></div></div></div></div><div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200"><h2 className="text-xl font-bold text-yellow-800 mb-4">🚀 Why LUMIN.AI?</h2><div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div className="text-center"><div className="text-2xl mb-2">🛡️</div><h3 className="font-semibold">Guaranteed Success</h3><p className="text-sm text-gray-600">MVP approach ensures completion</p></div><div className="text-center"><div className="text-2xl mb-2">📚</div><h3 className="font-semibold">Research Foundation</h3><p className="text-sm text-gray-600">Built on proven Austria case study</p></div><div className="text-center"><div className="text-2xl mb-2">🌍</div><h3 className="font-semibold">Real Impact</h3><p className="text-sm text-gray-600">Democracy research that matters</p></div></div></div></div>);
+          const TrackContent = ({ track }) => {
+            const trackData = useMemo(() => ({ dl: { roadmap: { week1: "Data exploration & model research", week2: "Basic sentiment analysis implementation", week3: "Text classification development", week4: "Participation prediction model", week5: "Model optimization & testing", week6: "MVP demo preparation" }, mvp: ["Sentiment analysis on governance texts", "Basic participation prediction", "Text classification for themes", "Model performance metrics"], requirements: ["Austria Democracy Radar Wave text data", "Governance proposal corpus", "Basic NLP libraries (spacy, sklearn)", "Model evaluation framework"] }, ds: { roadmap: { week1: "Data integration & cleaning", week2: "Exploratory data analysis", week3: "Statistical correlation analysis", week4: "Governance system comparisons", week5: "Predictive modeling", week6: "Results validation & presentation" }, mvp: ["Statistical analysis of survey trends", "Transparency vs trust correlation", "Governance system comparisons", "Data visualization dashboards"], requirements: ["Democracy Radar Wave surveys (10k+ responses)", "Governance token distribution data", "Statistical analysis tools (pandas, numpy)", "Visualization libraries (matplotlib, seaborn)"] }, wd: { roadmap: { week1: "Tech stack setup & API exploration", week2: "Basic dashboard development", week3: "Data visualization components", week4: "Interactive features implementation", week5: "API integration & testing", week6: "Performance optimization & deployment" }, mvp: ["Interactive governance dashboard", "Data visualization interface", "API integration layer", "Responsive web design"], requirements: ["React.js frontend framework", "Node.js backend with Express", "Data visualization libraries (D3.js, Chart.js)", "API endpoints for governance data"] }, ux: { roadmap: { week1: "User research & persona development", week2: "Information architecture design", week3: "Wireframing & prototyping", week4: "Visual design & branding", week5: "Usability testing", week6: "Design refinement & handoff" }, mvp: ["User research findings", "Interface wireframes & prototypes", "Usability testing results", "Design system documentation"], requirements: ["User research on governance tools", "Democratic participation studies", "Design tools (Figma, Sketch)", "Usability testing framework"] } }), []);
+            const currentTrack = trackData[track]; const trackDetails = trackInfo[track];
+            return (<div className="space-y-6"><div className={`p-6 rounded-lg border-2 ${trackDetails.headerClass}`}><h2 className="text-2xl font-bold mb-4 flex items-center"><span className="text-3xl mr-3">{trackDetails.icon}</span>{trackDetails.name} Track</h2></div><div className="grid grid-cols-1 lg:grid-cols-3 gap-6"><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">📅 Roadmap</h3><div className="space-y-3">{Object.entries(currentTrack.roadmap).map(([week, task]) => (<div key={week} className="border-l-4 border-blue-200 pl-4"><div className="font-semibold text-sm text-blue-700">{week.replace('week', 'Week ')}</div><div className="text-sm text-gray-600">{task}</div></div>))}</div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">🎯 MVP Deliverables</h3><ul className="space-y-2">{currentTrack.mvp.map((item, index) => (<li key={index} className="flex items-start"><span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span className="text-sm">{item}</span></li>))}</ul></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">📋 Requirements</h3><ul className="space-y-2">{currentTrack.requirements.map((item, index) => (<li key={index} className="flex items-start"><span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span className="text-sm">{item}</span></li>))}</ul></div></div></div>);
+          };
+          const TrackDocumentation = () => (<div><div className="flex flex-wrap gap-2 mb-6">{Object.entries(trackInfo).map(([key, track]) => (<button key={key} onClick={() => setActiveTrack(key)} className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all ${ activeTrack === key ? track.activeClass : 'bg-gray-100 border-gray-300 text-gray-600' }`}>{track.icon} {track.name}</button>))}</div><TrackContent track={activeTrack} /></div>);
+          const ProjectDocuments = () => (<div className="space-y-8"><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">📋 Project Requirements Document (PRD)</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div><h3 className="text-lg font-semibold mb-3">🎯 Project Objectives</h3><ul className="space-y-2 text-sm"><li>• Develop neural networks for governance analysis</li><li>• Create interactive democracy transparency tools</li><li>• Build beginner-friendly AI implementation</li><li>• Deliver meaningful research insights</li></ul></div><div><h3 className="text-lg font-semibold mb-3">📊 Success Metrics</h3><ul className="space-y-2 text-sm"><li>• 85%+ sentiment analysis accuracy</li><li>• Interactive dashboard with less than 2s load time</li><li>• 90%+ user satisfaction in testing</li><li>• Research-grade documentation</li></ul></div></div><h3 className="text-lg font-semibold mb-3">🔄 Project Phases</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div className="bg-green-50 p-4 rounded border border-green-200"><h4 className="font-semibold text-green-800">MVP Phase (Weeks 1-6)</h4><p className="text-sm text-green-600 mt-2">Core functionality ensuring project completion</p></div><div className="bg-blue-50 p-4 rounded border border-blue-200"><h4 className="font-semibold text-blue-800">Enhanced Phase (Weeks 7-10)</h4><p className="text-sm text-blue-600 mt-2">Advanced features and research outputs</p></div></div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">🚀 Project Roadmap</h2><div className="space-y-4">{[{ week: "Weeks 1-2", title: "Foundation & Setup", desc: "Team formation, data acquisition, initial analysis" },{ week: "Weeks 3-4", title: "Core Development", desc: "MVP implementation across all tracks" },{ week: "Weeks 5-6", title: "MVP Completion", desc: "Integration, testing, and first demo" },{ week: "Weeks 7-8", title: "Enhancement Phase", desc: "Advanced features and optimizations" },{ week: "Weeks 9-10", title: "Finalization", desc: "Polish, documentation, and final presentation" }].map((phase, index) => (<div key={index} className="flex items-start border-l-4 border-indigo-200 pl-6"><div className="flex-grow"><div className="flex items-center mb-1"><span className="font-semibold text-indigo-700 mr-3">{phase.week}</span><span className="font-semibold">{phase.title}</span></div><p className="text-sm text-gray-600">{phase.desc}</p></div></div>))}</div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">🎯 Project MVP</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><h3 className="text-lg font-semibold mb-3">Core Deliverables</h3><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Working sentiment analysis model</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Statistical governance analysis</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Interactive web dashboard</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>User-tested interface</li></ul></div><div><h3 className="text-lg font-semibold mb-3">Quality Standards</h3><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Code documentation and comments</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Version control with Git</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Responsive design principles</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Error handling and testing</li></ul></div></div></div></div>);
+
+          const renderContent = () => {
+            switch (activeTab) {
+              case 'overview': return <ProjectOverview />;
+              case 'tracks': return <TrackDocumentation />;
+              case 'project': return <ProjectDocuments />;
+              default: return <ProjectOverview />;
+            }
+          };
+
+          return (
+            <div className="min-h-screen">
+              <div className="max-w-7xl mx-auto p-4 sm:p-6">
+                <div className="text-center mb-8">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">LUMIN.AI Documentation Hub</h1>
+                  <p className="text-gray-600">Comprehensive project documentation for all tracks and deliverables</p>
+                </div>
+                <div className="flex justify-center mb-6">
+                  <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
+                    {Object.entries(documentStructure).map(([key, doc]) => (
+                      <button key={key} onClick={() => setActiveTab(key)} className={`px-4 py-2 sm:px-6 sm:py-3 rounded-md font-medium transition-all text-sm sm:text-base ${ activeTab === key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }`}>
+                        <span className="mr-2">{doc.icon}</span>{doc.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>{renderContent()}</div>
+              </div>
+            </div>
+          );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            const [currentPage, setCurrentPage] = useState('roadmap'); // 'roadmap' or 'docs'
+
+            const NavButton = ({ page, currentPage, setCurrentPage, children }) => {
+                const isActive = currentPage === page;
+                return (
+                    <button
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-bold transition-all rounded-t-lg border-b-4 ${
+                            isActive 
+                                ? 'text-indigo-600 border-indigo-500' 
+                                : 'text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-100'
+                        }`}
+                    >
+                        {children}
+                    </button>
+                )
+            };
+
+            return (
+                <div className="max-w-7xl mx-auto">
+                    <header className="bg-white shadow-sm sticky top-0 z-10">
+                        <nav className="flex items-center justify-between p-4 border-b">
+                           <div className="flex items-center space-x-2">
+                                <span className="text-2xl">💡</span>
+                                <span className="text-xl font-bold text-gray-800">LUMIN.AI Hub</span>
+                           </div>
+                           <div className="flex space-x-2 bg-gray-50 p-1 rounded-lg">
+                               <NavButton page="roadmap" currentPage={currentPage} setCurrentPage={setCurrentPage}>
+                                   🚀 Roadmap
+                               </NavButton>
+                               <NavButton page="docs" currentPage={currentPage} setCurrentPage={setCurrentPage}>
+                                   📚 Docs
+                               </NavButton>
+                           </div>
+                        </nav>
+                    </header>
+                    <main>
+                        {currentPage === 'roadmap' && <LuminAIRoadmap />}
+                        {currentPage === 'docs' && <LuminAIDocumentation />}
+                    </main>
+                </div>
+            )
+        }
+
+        // Render the main App component to the root div
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
-
