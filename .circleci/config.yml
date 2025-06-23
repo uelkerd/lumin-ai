@@ -25,8 +25,8 @@ jobs:
           name: "Install Ruff linter"
           command: |
             echo "Installing Ruff - the lightning-fast Python linter..."
-            pip install ruff
-            
+            pip install ruff==0.4.4
+
             # Show which version we installed for debugging purposes
             echo "Ruff version installed:"
             ruff --version
