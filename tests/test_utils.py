@@ -1,7 +1,8 @@
 """Tests for the utils module."""
 
 import pytest
-from lumin_ai.utils import add, subtract, multiply, divide
+
+from lumin_ai.utils import add, divide, multiply, subtract
 
 
 def test_add():
