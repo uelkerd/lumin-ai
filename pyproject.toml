@@ -203,6 +203,9 @@ ignore = [
     "S101",   # Allow assert statements in tests
     "ANN",    # Don't require type annotations in tests
 ]
+
+# Source directory layout
+"src/**/__init__.py" = ["F401", "F403"]
 # Jupyter notebooks have different conventions
 "*.ipynb" = [
     "D",      # Don't require docstrings in notebooks  
