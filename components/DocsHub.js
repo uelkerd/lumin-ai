@@ -41,20 +41,26 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
                 const fileName = docFileMapping[activeDoc.trackId]?.files[activeDoc.docType];
 
                 if (!fileName) {
-                    throw new Error(`File mapping not found for ${activeDoc.trackId}/${activeDoc.docType}`);
+                    throw new Error("Cannot find filename for selected document");
                 }
 
                 const url = `${GITHUB_REPO_URL_BASE}${fileName}`;
 
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - Could not fetch ${url}`);
+                    throw new Error(`HTTP error! status: ${response.status} - Could not fetch ${fileName}`);
+                }
+
+                // Validate content type
+                const contentType = response.headers.get('content-type');
+                if (contentType && !contentType.includes('text/plain') && !contentType.includes('text/markdown')) {
+                    throw new Error(`Unexpected content type: ${contentType}`);
                 }
 
                 const text = await response.text();
 
                 if (!text || text.trim() === '') {
-                    throw new Error("Empty document content");
+                    throw new Error("Document is empty");
                 }
 
                 setDocContent(text);
@@ -65,8 +71,8 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
                     [cacheKey]: text
                 }));
             } catch (e) {
-                console.error("Error fetching document:", e);
-                setError(e.message);
+                console.error(`Error fetching document: ${e.message}`);
+                setError(`Error fetching document: ${e.message}`);
                 setDocContent(''); // Clear content on error
             } finally {
                 setIsLoading(false);
@@ -81,31 +87,28 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
             setActiveDoc({ trackId, docType });
             if (window.innerWidth < 768) setIsSidebarOpen(false);
         } else {
-            console.error("Invalid selection:", trackId, docType);
+            console.error("Invalid trackId or docType in handleSelect");
         }
     };
 
     const parsedHtml = useMemo(() => {
-        // Ensure both marked and DOMPurify are available
-        if (window.marked && window.DOMPurify && docContent) {
+        if (typeof window.marked !== 'undefined' && typeof window.DOMPurify !== 'undefined' && docContent) {
             try {
-                // Generate HTML from markdown
+                // Use DOMPurify to sanitize the HTML before rendering
                 const rawHtml = window.marked.parse(docContent);
-
-                // Sanitize HTML to prevent XSS attacks
                 const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
                     USE_PROFILES: { html: true },
-                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                                  'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-                                  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
-                    ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
+                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li',
+                                'code', 'pre', 'strong', 'em', 'blockquote', 'table', 'thead',
+                                'tbody', 'tr', 'th', 'td', 'hr', 'br', 'img'],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id']
                 });
-
                 return { __html: sanitizedHtml };
             } catch (e) {
                 console.error("Error parsing markdown:", e);
-                setError(`Error parsing markdown content: ${e.message}`); // Provide specific error to user
-                return { __html: '<p>Error parsing markdown content.</p>' };
+                // Use generic error message instead of exposing specific error details
+                setError(`Error rendering content. Please try again later.`);
+                return { __html: '<p>Error rendering markdown content</p>' };
             }
         }
         return { __html: '' };
