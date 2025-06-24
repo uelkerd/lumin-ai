@@ -163,7 +163,7 @@ jobs:
           command: |
             curl -s https://codecov.io/bash > codecov
             chmod +x codecov
-            ./codecov -f coverage.xml -F python-tests
+            ./codecov -f coverage.xml -F python-tests -R uelkerd/lumin-ai
 
 # Define the workflows that determine when jobs run
 workflows:
