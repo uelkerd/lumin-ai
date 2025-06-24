@@ -135,9 +135,10 @@ output-format = "grouped"
 show-fixes = true
 
 # Show the source code for each violation to aid in understanding
-show-source = true
+# show-source is now handled in the lint section
 
 [tool.ruff.lint]
+
 # Select rules to enforce - this is a comprehensive set for high-quality code
 select = [
     # Pyflakes - catches basic Python errors like undefined variables
