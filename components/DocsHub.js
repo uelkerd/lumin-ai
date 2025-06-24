@@ -8,7 +8,7 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Cache for storing fetched documents to avoid redundant network requests (from HEAD)
+    // Cache for storing fetched documents to avoid redundant network requests
     const [docCache, setDocCache] = useState({});
 
     // GitHub repo URL for fetching docs
@@ -24,17 +24,16 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
                     throw new Error("Invalid document selection");
                 }
 
-                // Generate cache key (from HEAD)
+                // Generate cache key
                 const cacheKey = `${activeDoc.trackId}-${activeDoc.docType}`;
 
-                // Check if document is in cache (from HEAD)
+                // Check if document is in cache
                 if (docCache[cacheKey]) {
                     setDocContent(docCache[cacheKey]);
                     setIsLoading(false);
                     return;
                 }
 
-                // Combined error checks from both branches for robustness
                 if (!docFileMapping || !docFileMapping[activeDoc.trackId]) {
                     throw new Error("Cannot find document mapping for selected track");
                 }
@@ -60,7 +59,7 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
 
                 setDocContent(text);
 
-                // Add to cache (from HEAD)
+                // Add to cache
                 setDocCache(prevCache => ({
                     ...prevCache,
                     [cacheKey]: text
@@ -75,10 +74,9 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
         };
 
         fetchDoc();
-    }, [activeDoc, docFileMapping, docCache]); // Added docCache to dependencies for caching logic
+    }, [activeDoc, docFileMapping, docCache]);
 
     const handleSelect = (trackId, docType) => {
-        // Combined logic from both branches for robust selection handling
         if (trackId && docType) {
             setActiveDoc({ trackId, docType });
             if (window.innerWidth < 768) setIsSidebarOpen(false);
@@ -89,29 +87,28 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
 
     const parsedHtml = useMemo(() => {
         // Ensure both marked and DOMPurify are available
-        if (!window.marked || !window.DOMPurify || !docContent) {
-            return { __html: '' };
+        if (window.marked && window.DOMPurify && docContent) {
+            try {
+                // Generate HTML from markdown
+                const rawHtml = window.marked.parse(docContent);
+
+                // Sanitize HTML to prevent XSS attacks
+                const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
+                    USE_PROFILES: { html: true },
+                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+                                  'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+                                  'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
+                    ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
+                });
+
+                return { __html: sanitizedHtml };
+            } catch (e) {
+                console.error("Error parsing markdown:", e);
+                setError(`Error parsing markdown content: ${e.message}`); // Provide specific error to user
+                return { __html: '<p>Error parsing markdown content.</p>' };
+            }
         }
-
-        try {
-            // Generate HTML from markdown
-            const rawHtml = window.marked.parse(docContent);
-
-            // Sanitize HTML to prevent XSS attacks (using HEAD's more comprehensive ALLOWED_TAGS)
-            const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
-                USE_PROFILES: { html: true },
-                ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                              'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-                              'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
-                ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
-            });
-
-            return { __html: sanitizedHtml };
-        } catch (e) {
-            console.error("Error parsing markdown:", e);
-            setError(`Error parsing markdown content: ${e.message}`); // Provide specific error to user
-            return { __html: '<p>Error parsing markdown content.</p>' };
-        }
+        return { __html: '' };
     }, [docContent]);
 
     return (
@@ -119,7 +116,7 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
             <Sidebar
                 onSelect={handleSelect}
                 activeDoc={activeDoc}
-                isSidebarOpen={isSidebarOpen} // Prop from incoming branch
+                isSidebarOpen={isSidebarOpen}
                 docFileMapping={docFileMapping}
             />
             <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar">
