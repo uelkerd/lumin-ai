@@ -1,16 +1,17 @@
 """Setup file for the LUMIN.AI project."""
 
-import re
 import os
-from setuptools import setup, find_packages
+import re
+
+from setuptools import find_packages, setup
+
 
 # Read version from __init__.py
-with open(os.path.join('src', 'lumin_ai', '__init__.py'), encoding="utf-8") as f:
+with open(os.path.join("src", "lumin_ai", "__init__.py"), encoding="utf-8") as f:
     content = f.read()
     version_match = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", content)
     if version_match is None:
-        raise RuntimeError(
-            "Unable to find version string in src/lumin_ai/__init__.py")
+        raise RuntimeError("Unable to find version string in src/lumin_ai/__init__.py")
     version = version_match.group(1)
 
 setup(
@@ -39,7 +40,7 @@ setup(
         "all": [
             "torch>=1.12.0",
             "tensorflow>=2.9.0",
-        ]
+        ],
     },
     python_requires=">=3.8",
 )
