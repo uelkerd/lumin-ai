@@ -28,4 +28,4 @@ ignore:
   - "tests/"
   - "data/"
   - "docs/"
-  - "assets/" 
+  - "assets/"
