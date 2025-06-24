@@ -6,19 +6,19 @@ version: 2.1
 # Using the latest version of the Python and Codecov orbs
 orbs:
   python: circleci/python@2.0.1
-  codecov: codecov/codecov@5
+  codecov: codecov/codecov@4.0.1
 
 # Define jobs for linting, testing, and coverage reporting
 jobs:
   lint-python-code:
     # Use the default Python executor - this gives us a clean Linux environment with Python pre-installed
     executor: python/default
-    
+
     steps:
       # Step 1: Get your code from the repository
       # This downloads all your project files so CircleCI can examine them
       - checkout
-      
+
       # Step 2: Install Ruff
       # We install Ruff directly rather than from requirements.txt to keep things simple and fast
       # This ensures we always get the latest version and don't depend on your project dependencies
@@ -31,7 +31,7 @@ jobs:
             # Show which version we installed for debugging purposes
             echo "Ruff version installed:"
             ruff --version
-      
+
       # Step 3: Run Ruff across your entire Python codebase
       # This will check all Python files in your project for style and quality issues
       - run:
@@ -39,14 +39,14 @@ jobs:
           command: |
             echo "Running Ruff linter across the entire LUMIN.AI codebase..."
             echo "This will check for style issues, unused imports, and potential bugs..."
-            
+
             # Run Ruff on the entire project
             # The '.' means "check everything in the current directory and subdirectories"
             # --output-format=github makes the output more readable in CircleCI
             ruff check . --output-format=github
-            
+
             echo "Ruff linting completed successfully!"
-      
+
       # Step 4: Check code formatting with Ruff
       # This verifies that your code follows consistent formatting standards
       # Running this separately makes it clear what type of issue needs fixing
@@ -54,14 +54,14 @@ jobs:
           name: "Check Python code formatting"
           command: |
             echo "Checking if Python code follows consistent formatting..."
-            
+
             # Use Ruff's formatter to check if code is properly formatted
             # --check means "don't fix anything, just tell me if there are issues"
             # --diff shows exactly what would change if we ran the formatter
             ruff format --check --diff .
-            
+
             echo "Code formatting check completed!"
-      
+
       # Step 5: Generate a summary report
       # This gives you a nice overview of what was checked and any issues found
       - run:
@@ -73,7 +73,7 @@ jobs:
             if [ $(find . -name "*.py" -type f | wc -l) -gt 10 ]; then
               echo "... and $(expr $(find . -name "*.py" -type f | wc -l) - 10) more Python files"
             fi
-            
+
             echo ""
             echo "Total Python files scanned: $(find . -name "*.py" -type f | wc -l)"
             echo ""
@@ -82,32 +82,26 @@ jobs:
 
   run-python-tests:
     executor: python/default
-    
+
     steps:
       - checkout
-      
-      - python/install-packages:
-          pkg-manager: pip
-          packages:
-            - pytest
-            - pytest-cov
-      
+
       - run:
-          name: "Install project in development mode"
+          name: "Install project with test dependencies"
           command: |
-            pip install -e .
-      
+            pip install -e .[test]
+
       - run:
           name: "Run tests with coverage"
           command: |
             echo "Running tests with coverage analysis..."
             python -m pytest --cov=lumin_ai --cov-report=xml tests/
             echo "Tests completed!"
-      
+
       - store_artifacts:
           path: coverage.xml
           destination: coverage-report
-      
+
       - persist_to_workspace:
           root: .
           paths:
@@ -116,12 +110,12 @@ jobs:
 # Define the workflows that determine when jobs run
 workflows:
   version: 2
-  
+
   # Linting workflow
   lint:
     jobs:
       - lint-python-code
-  
+
   # Testing and coverage workflow
   test-and-coverage:
     jobs:

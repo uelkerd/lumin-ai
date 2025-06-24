@@ -3,7 +3,7 @@
 
 def test_truth():
     """Test that True is indeed True."""
-    assert True
+    pass
 
 
 def test_math():
@@ -18,9 +18,9 @@ def test_string_operations():
     """Test that string operations work correctly."""
     # String concatenation
     assert "Hello, " + "World!" == "Hello, World!"
-    
+
     # String methods
     assert "hello".upper() == "HELLO"
     assert "WORLD".lower() == "world"
     assert "   strip me   ".strip() == "strip me"
-    assert "count letters".count("t") == 3 
+    assert "count letters".count("t") == 3
