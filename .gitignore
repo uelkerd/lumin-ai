@@ -247,6 +247,7 @@ web-development/frontend/.env.production.local
 .cursorignore
 .cursorindexingignore
 .cursor/
+.REVIEW/
 
 # Vim
 *.swp
