@@ -1,0 +1,383 @@
+# pyproject.toml - Comprehensive configuration for LUMIN.AI
+# This file centralizes all code quality tool settings for the project
+# Strict settings ensure high code quality across all tracks (ML, Data Science, Web Dev)
+
+[build-system]
+# Defines how the project should be built if distributed as a package
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# Project metadata - important for professional projects
+name = "lumin-ai"
+version = "0.1.0"
+description = "Neural Networks for Democratic Transparency - AI-powered governance analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [
+    {name = "LUMIN.AI Team", email = "team@lumin-ai.org"},
+]
+keywords = ["ai", "democracy", "governance", "neural-networks", "transparency"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Researchers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Dependencies for the project
+dependencies = [
+    # Deep Learning
+    "torch~=1.12.0",
+    "transformers~=4.20.0",
+    "tensorflow~=2.9.0",
+    
+    # Data Science
+    "pandas~=1.5.0",
+    "numpy~=1.21.0",
+    "scipy~=1.7.0",
+    "scikit-learn~=1.1.0",
+    "matplotlib~=3.4.0",
+    "seaborn~=0.11.0",
+    "networkx~=2.6.0",
+    
+    # NLP
+    "nltk~=3.6.0",
+    "spacy~=3.1.0",
+    "textblob~=0.15.3",
+    
+    # API & Web
+    "fastapi~=0.68.0",
+    "uvicorn~=0.15.0",
+    "requests~=2.28.0",
+    
+    # Utilities
+    "python-dotenv~=0.19.0",
+    "tqdm~=4.62.0",
+]
+
+# Optional dependencies for different use cases
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "jupyter>=1.0.0",
+    "jupyterlab>=3.0.0",
+    "ipywidgets>=7.6.0",
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/uelkerd/lumin-ai"
+"Bug Reports" = "https://github.com/uelkerd/lumin-ai/issues"
+"Source" = "https://github.com/uelkerd/lumin-ai"
+
+# =============================================================================
+# RUFF CONFIGURATION - The heart of our code quality system
+# =============================================================================
+
+[tool.ruff]
+# Files to examine - we want to check everything Python-related
+include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
+
+# Files and directories to ignore - these are typically auto-generated or external
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*.egg-info",
+    ".jupyter",
+    "data/raw",          # Raw data files don't need linting
+    "data/processed",    # Processed data files don't need linting
+    "models/trained",    # Trained model files don't need linting
+]
+
+# Line length - slightly longer than default to accommodate complex ML expressions
+# 100 characters allows for readable code while preventing overly long lines
+line-length = 100
+
+# Target Python version - ensures compatibility across the team
+target-version = "py39"
+
+# Output format for better readability in terminals and CI systems
+output-format = "grouped"
+
+# Show fixes that Ruff can automatically apply
+show-fixes = true
+
+# Show the source code for each violation to aid in understanding
+show-source = true
+
+[tool.ruff.lint]
+# Select rules to enforce - this is a comprehensive set for high-quality code
+select = [
+    # Pyflakes - catches basic Python errors like undefined variables
+    "F",
+    # pycodestyle errors and warnings - enforces PEP 8 style guide  
+    "E", "W",
+    # isort - ensures consistent import ordering
+    "I",
+    # pydocstyle - enforces docstring conventions for better documentation
+    "D",
+    # pyupgrade - suggests modern Python syntax improvements
+    "UP",
+    # flake8-bugbear - catches likely bugs and design problems
+    "B",
+    # flake8-simplify - suggests code simplifications
+    "SIM", 
+    # flake8-comprehensions - improves list/dict/set comprehensions
+    "C4",
+    # flake8-pie - catches unnecessary code patterns
+    "PIE",
+    # flake8-return - improves return statement patterns
+    "RET",
+    # flake8-implicit-str-concat - catches accidental string concatenation
+    "ISC",
+    # flake8-quotes - enforces consistent quote usage
+    "Q",
+    # flake8-annotations - encourages type annotations for better code clarity
+    "ANN",
+    # flake8-async - catches async/await issues
+    "ASYNC",
+    # flake8-bandit - basic security issue detection
+    "S",
+    # flake8-boolean-trap - prevents confusing boolean function arguments
+    "FBT",
+    # flake8-unused-arguments - catches unused function arguments
+    "ARG",
+    # flake8-print - discourages print statements in production code
+    "T20",
+    # Ruff-specific rules for additional quality checks
+    "RUF",
+]
+
+# Rules to ignore - these are either too strict for ML/research code or conflict with our needs
+ignore = [
+    # Allow print statements - useful for debugging ML models and data exploration
+    "T201",
+    # Don't require docstrings for every function - can be overwhelming for research code
+    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
+    # Allow boolean positional arguments - common in ML libraries
+    "FBT001", "FBT002", "FBT003",
+    # Allow broad exception catching - sometimes necessary in data processing
+    "B001",
+    # Allow magic values - common in ML hyperparameters and data processing
+    "PLR2004",
+]
+
+# Per-file ignores - different rules for different types of files
+[tool.ruff.lint.per-file-ignores]
+# Test files can have additional flexibility
+"tests/**/*.py" = [
+    "D",      # Don't require docstrings in tests
+    "S101",   # Allow assert statements in tests
+    "ANN",    # Don't require type annotations in tests
+]
+# Jupyter notebooks have different conventions
+"*.ipynb" = [
+    "D",      # Don't require docstrings in notebooks  
+    "T201",   # Allow print statements in notebooks
+    "F401",   # Allow unused imports in notebooks (for exploration)
+    "E402",   # Allow imports not at top of file in notebooks
+]
+# Data exploration scripts can be more flexible
+"data-science/exploratory/**/*.py" = [
+    "T201",   # Allow print statements for data exploration
+    "F401",   # Allow unused imports when exploring
+]
+# Configuration files
+"**/settings.py" = ["F401", "F403"]
+"**/config.py" = ["F401", "F403"]
+# Allow star imports in __init__.py files
+"**/__init__.py" = ["F401", "F403", "F405"]
+
+[tool.ruff.lint.isort]
+# Import sorting configuration for clean, organized imports
+known-first-party = ["lumin_ai"]  # Your project's modules come first
+known-third-party = [
+    "dotenv",
+    "fastapi",
+    "matplotlib",
+    "networkx",
+    "nltk",
+    "numpy",
+    "pandas",
+    "requests",
+    "scipy",
+    "seaborn",
+    "sklearn",
+    "spacy",
+    "textblob",
+    "tensorflow",
+    "torch",
+    "tqdm",
+    "transformers",
+    "uvicorn",
+]
+force-single-line = false  # Allow multiple imports per line when appropriate
+lines-after-imports = 2   # Two blank lines after imports for readability
+split-on-trailing-comma = true  # Split imports when there's a trailing comma
+
+[tool.ruff.lint.pydocstyle]
+# Docstring style - Google style is clean and widely used in ML projects
+convention = "google"
+
+[tool.ruff.lint.flake8-quotes]
+# Use double quotes consistently - matches Python community standards
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"
+
+[tool.ruff.lint.flake8-annotations]
+# Type annotation settings - encouraging but not overwhelming
+mypy-init-return = true
+suppress-dummy-args = true
+suppress-none-returning = true
+
+[tool.ruff.format]
+# Code formatting rules that work well with the linting rules above
+quote-style = "double"           # Consistent with flake8-quotes setting
+indent-style = "space"           # Use spaces, not tabs
+skip-source-first-line = false   # Format shebang lines
+line-ending = "lf"               # Use Unix-style line endings for consistency
+
+# =============================================================================
+# MYPY CONFIGURATION - Static type checking for better code reliability
+# =============================================================================
+
+[tool.mypy]
+# Python version compatibility
+python_version = "3.9"
+
+# Strictness levels - start strict and relax as needed
+strict = true
+warn_unused_configs = true
+
+# Import handling
+ignore_missing_imports = true  # Don't fail on missing stubs for ML libraries
+follow_imports = "normal"
+
+# Output formatting
+show_error_codes = true
+show_column_numbers = true
+show_error_context = true
+
+# Specific directory configurations
+[[tool.mypy.overrides]]
+module = "tests.*"
+# Tests can be less strict with typing
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+[[tool.mypy.overrides]]
+module = "data_science.exploratory.*"
+# Exploratory scripts can be less strict
+disallow_untyped_defs = false
+ignore_errors = true
+
+# =============================================================================
+# PYTEST CONFIGURATION - Testing framework settings
+# =============================================================================
+
+[tool.pytest.ini_options]
+# Test discovery patterns
+testpaths = ["tests", "deep-learning", "data-science"]
+python_files = ["test_*.py", "*_test.py", "tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Output configuration for better debugging
+addopts = [
+    "--strict-markers",     # Fail on unknown markers
+    "--strict-config",      # Fail on unknown config options
+    "--verbose",           # Verbose output for better understanding
+    "--tb=short",          # Shorter traceback format
+    "--cov-report=term-missing",  # Show which lines aren't covered
+    "--cov-report=html:htmlcov",  # Generate HTML coverage report
+]
+
+# Test markers for organizing different types of tests
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "ml: marks tests as machine learning model tests",
+    "api: marks tests as API endpoint tests",
+]
+
+# Minimum version requirements
+minversion = "7.0"
+
+# =============================================================================
+# COVERAGE CONFIGURATION - Code coverage measurement
+# =============================================================================
+
+[tool.coverage.run]
+# What to include in coverage measurement
+source = ["lumin_ai", "deep-learning", "data-science"]
+branch = true  # Measure branch coverage, not just line coverage
+
+# What to exclude from coverage
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "setup.py",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/node_modules/*",
+    "*/data/*",
+    "*/models/trained/*",
+]
+
+[tool.coverage.report]
+# Coverage reporting options
+precision = 2
+show_missing = true
+skip_covered = false
+
+# Fail if coverage drops below threshold
+fail_under = 80
+
+# Exclude certain patterns from coverage requirements
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == '__main__':",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
