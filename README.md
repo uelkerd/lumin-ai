@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/logos/LuminLogo-main.svg" alt="LUMIN.AI Logo" width="400">
+</p>
 
 # LUMIN.AI - Neural Networks for Democratic Transparency
 
