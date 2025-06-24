@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 # Git LFS setup script for LUMIN.AI project
 # This script helps developers set up Git LFS for the project
 
