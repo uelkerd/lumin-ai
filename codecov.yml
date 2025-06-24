@@ -1,5 +1,7 @@
 codecov:
   require_ci_to_pass: true
+  url: "https://codecov.io"
+  slug: "uelkerd/lumin-ai"
 
 coverage:
   precision: 2
