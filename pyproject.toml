@@ -135,9 +135,10 @@ output-format = "grouped"
 show-fixes = true
 
 # Show the source code for each violation to aid in understanding
-show-source = true
+# show-source is now handled in the lint section
 
 [tool.ruff.lint]
+
 # Select rules to enforce - this is a comprehensive set for high-quality code
 select = [
     # Pyflakes - catches basic Python errors like undefined variables
@@ -189,7 +190,7 @@ ignore = [
     # Allow boolean positional arguments - common in ML libraries
     "FBT001", "FBT002", "FBT003",
     # Allow broad exception catching - sometimes necessary in data processing
-    "B001",
+    "BLE001",
     # Allow magic values - common in ML hyperparameters and data processing
     "PLR2004",
 ]
@@ -202,6 +203,9 @@ ignore = [
     "S101",   # Allow assert statements in tests
     "ANN",    # Don't require type annotations in tests
 ]
+
+# Source directory layout
+"src/**/__init__.py" = ["F401", "F403"]
 # Jupyter notebooks have different conventions
 "*.ipynb" = [
     "D",      # Don't require docstrings in notebooks  
@@ -267,7 +271,6 @@ suppress-none-returning = true
 # Code formatting rules that work well with the linting rules above
 quote-style = "double"           # Consistent with flake8-quotes setting
 indent-style = "space"           # Use spaces, not tabs
-skip-source-first-line = false   # Format shebang lines
 line-ending = "lf"               # Use Unix-style line endings for consistency
 
 # =============================================================================
