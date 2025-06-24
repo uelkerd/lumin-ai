@@ -1,28 +1,25 @@
 {
   "name": "lumin-ai",
   "version": "1.0.0",
-  "description": "Neural Networks for Democratic Transparency",
+  "description": "LUMIN.AI Project Hub",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx http-server -o"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uelkerd/lumin-ai.git"
   },
-  "keywords": [
-    "ai",
-    "democracy",
-    "transparency",
-    "neural-networks"
-  ],
+  "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/uelkerd/lumin-ai/issues"
   },
   "homepage": "https://github.com/uelkerd/lumin-ai#readme",
   "dependencies": {
-    "dompurify": "^3.2.6"
+    "dompurify": "^3.2.6",
+    "http-server": "^14.1.1"
   }
 }
