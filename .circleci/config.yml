@@ -95,12 +95,16 @@ jobs:
           name: "Run tests with coverage"
           command: |
             echo "Running tests with coverage analysis..."
-            python -m pytest --cov=lumin_ai --cov-report=xml tests/
+            python -m pytest --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/
             echo "Tests completed!"
 
       - store_artifacts:
           path: coverage.xml
           destination: coverage-report
+          
+      - store_artifacts:
+          path: .htmlcov
+          destination: html-coverage-report
 
       - persist_to_workspace:
           root: .
