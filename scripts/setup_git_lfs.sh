@@ -35,7 +35,7 @@ git lfs track
 echo ""
 echo "Git LFS setup complete!"
 echo "Large files with the following extensions are now tracked by Git LFS:"
-grep -E "filter=lfs" .gitattributes | sed 's/filter=lfs diff=lfs merge=lfs -text//' | sort
+awk '/filter=lfs/ {print $1}' .gitattributes | sort
 
 echo ""
 echo "To add a new file type to track with LFS, run:"
