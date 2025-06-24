@@ -1,23 +1,24 @@
-# Simple CircleCI configuration for LUMIN.AI - Ruff linting only
-# This configuration focuses on code quality by running Ruff across the entire Python codebase
+# CircleCI configuration for LUMIN.AI with linting, testing, and coverage reporting
+# This configuration focuses on code quality and test coverage reporting to Codecov
 
 version: 2.1
 
-# We only need the Python orb since we're just linting Python code
+# Using the latest version of the Python and Codecov orbs
 orbs:
   python: circleci/python@2.0.1
+  codecov: codecov/codecov@4.0.1
 
-# Define a single job that handles all our linting needs
+# Define jobs for linting, testing, and coverage reporting
 jobs:
   lint-python-code:
     # Use the default Python executor - this gives us a clean Linux environment with Python pre-installed
     executor: python/default
-    
+
     steps:
       # Step 1: Get your code from the repository
       # This downloads all your project files so CircleCI can examine them
       - checkout
-      
+
       # Step 2: Install Ruff
       # We install Ruff directly rather than from requirements.txt to keep things simple and fast
       # This ensures we always get the latest version and don't depend on your project dependencies
@@ -30,7 +31,7 @@ jobs:
             # Show which version we installed for debugging purposes
             echo "Ruff version installed:"
             ruff --version
-      
+
       # Step 3: Run Ruff across your entire Python codebase
       # This will check all Python files in your project for style and quality issues
       - run:
@@ -38,14 +39,14 @@ jobs:
           command: |
             echo "Running Ruff linter across the entire LUMIN.AI codebase..."
             echo "This will check for style issues, unused imports, and potential bugs..."
-            
+
             # Run Ruff on the entire project
             # The '.' means "check everything in the current directory and subdirectories"
             # --output-format=github makes the output more readable in CircleCI
             ruff check . --output-format=github
-            
+
             echo "Ruff linting completed successfully!"
-      
+
       # Step 4: Check code formatting with Ruff
       # This verifies that your code follows consistent formatting standards
       # Running this separately makes it clear what type of issue needs fixing
@@ -53,14 +54,14 @@ jobs:
           name: "Check Python code formatting"
           command: |
             echo "Checking if Python code follows consistent formatting..."
-            
+
             # Use Ruff's formatter to check if code is properly formatted
             # --check means "don't fix anything, just tell me if there are issues"
             # --diff shows exactly what would change if we ran the formatter
             ruff format --check --diff .
-            
+
             echo "Code formatting check completed!"
-      
+
       # Step 5: Generate a summary report
       # This gives you a nice overview of what was checked and any issues found
       - run:
@@ -72,21 +73,62 @@ jobs:
             if [ $(find . -name "*.py" -type f | wc -l) -gt 10 ]; then
               echo "... and $(expr $(find . -name "*.py" -type f | wc -l) - 10) more Python files"
             fi
-            
+
             echo ""
             echo "Total Python files scanned: $(find . -name "*.py" -type f | wc -l)"
             echo ""
             echo "If you see this message, all linting checks passed! 🎉"
             echo "Your code follows good Python style and quality standards."
 
-# Define the workflow that determines when this job runs
+  run-python-tests:
+    executor: python/default
+
+    steps:
+      - checkout
+
+      - run:
+          name: "Install project with test dependencies"
+          command: |
+            pip install -e .[test]
+
+      - run:
+          name: "Run tests with coverage"
+          command: |
+            echo "Running tests with coverage analysis..."
+            python -m pytest --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/
+            echo "Tests completed!"
+
+      - store_artifacts:
+          path: coverage.xml
+          destination: coverage-report
+          
+      - store_artifacts:
+          path: .htmlcov
+          destination: html-coverage-report
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - coverage.xml
+
+# Define the workflows that determine when jobs run
 workflows:
   version: 2
-  
-  # This workflow runs every time someone pushes code to any branch
-  lint-on-push:
+
+  # Linting workflow
+  lint:
     jobs:
       - lint-python-code
+
+  # Testing and coverage workflow
+  test-and-coverage:
+    jobs:
+      - run-python-tests
+      - codecov/upload:
+          requires:
+            - run-python-tests
+          file: coverage.xml
+          flags: python-tests
 
 # Optional: You can also set up the workflow to run on pull requests only
 # This is useful if you want to save CircleCI credits by not running on every small commit
