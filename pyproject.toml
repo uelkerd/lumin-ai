@@ -33,32 +33,32 @@ classifiers = [
 # Dependencies for the project
 dependencies = [
     # Deep Learning
-    "torch>=1.12.0",
-    "transformers>=4.20.0",
-    "tensorflow>=2.9.0",
+    "torch~=1.12.0",
+    "transformers~=4.20.0",
+    "tensorflow~=2.9.0",
     
     # Data Science
-    "pandas>=1.5.0",
-    "numpy>=1.21.0",
-    "scipy>=1.7.0",
-    "scikit-learn>=1.1.0",
-    "matplotlib>=3.4.0",
-    "seaborn>=0.11.0",
-    "networkx>=2.6.0",
+    "pandas~=1.5.0",
+    "numpy~=1.21.0",
+    "scipy~=1.7.0",
+    "scikit-learn~=1.1.0",
+    "matplotlib~=3.4.0",
+    "seaborn~=0.11.0",
+    "networkx~=2.6.0",
     
     # NLP
-    "nltk>=3.6.0",
-    "spacy>=3.1.0",
-    "textblob>=0.15.3",
+    "nltk~=3.6.0",
+    "spacy~=3.1.0",
+    "textblob~=0.15.3",
     
     # API & Web
-    "fastapi>=0.68.0",
-    "uvicorn>=0.15.0",
-    "requests>=2.28.0",
+    "fastapi~=0.68.0",
+    "uvicorn~=0.15.0",
+    "requests~=2.28.0",
     
     # Utilities
-    "python-dotenv>=0.19.0",
-    "tqdm>=4.62.0",
+    "python-dotenv~=0.19.0",
+    "tqdm~=4.62.0",
 ]
 
 # Optional dependencies for different use cases
@@ -72,8 +72,6 @@ dev = [
     "jupyter>=1.0.0",
     "jupyterlab>=3.0.0",
     "ipywidgets>=7.6.0",
-    "black>=21.7b0",
-    "flake8>=3.9.0",
 ]
 docs = [
     "sphinx>=5.0.0",
@@ -186,16 +184,12 @@ select = [
 ignore = [
     # Allow print statements - useful for debugging ML models and data exploration
     "T201",
-    # Allow TODO comments - common in research and development phases
-    "FIX002",
-    # Allow relative imports within packages - common in ML project structures
-    "TID252",
     # Don't require docstrings for every function - can be overwhelming for research code
     "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
     # Allow boolean positional arguments - common in ML libraries
     "FBT001", "FBT002", "FBT003",
     # Allow broad exception catching - sometimes necessary in data processing
-    "BLE001",
+    "B001",
     # Allow magic values - common in ML hyperparameters and data processing
     "PLR2004",
 ]
@@ -224,7 +218,7 @@ ignore = [
 "**/settings.py" = ["F401", "F403"]
 "**/config.py" = ["F401", "F403"]
 # Allow star imports in __init__.py files
-"**/__init__.py" = ["F403", "F405"]
+"**/__init__.py" = ["F401", "F403", "F405"]
 
 [tool.ruff.lint.isort]
 # Import sorting configuration for clean, organized imports
@@ -274,7 +268,7 @@ suppress-none-returning = true
 quote-style = "double"           # Consistent with flake8-quotes setting
 indent-style = "space"           # Use spaces, not tabs
 skip-source-first-line = false   # Format shebang lines
-line-ending = "auto"             # Adapt to the system's line endings
+line-ending = "lf"               # Use Unix-style line endings for consistency
 
 # =============================================================================
 # MYPY CONFIGURATION - Static type checking for better code reliability

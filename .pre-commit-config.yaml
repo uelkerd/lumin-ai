@@ -87,9 +87,7 @@ repos:
           - types-python-dateutil
           - pandas-stubs
         args: [--ignore-missing-imports, --scripts-are-modules]
-        # Only run on main source code, not tests or notebooks
-        files: ^(lumin_ai/|deep-learning/|data-science/).*\.py$
-        exclude: ^(tests/|.*_test\.py|test_.*\.py)$
+        # Configuration managed in pyproject.toml
 
   # Repository 4: Security scanning with Bandit
   - repo: https://github.com/PyCQA/bandit
