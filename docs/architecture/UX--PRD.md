@@ -215,7 +215,7 @@ This document outlines the functional and non-functional requirements for the UX
   - Accessibility annotation documenting keyboard navigation patterns, screen reader requirements, and ARIA attribute specifications
   - Color contrast specifications and alternative visual indicator requirements for governance data visualization
   - Interactive element accessibility requirements including focus management and alternative interaction methods
-  - Testing protocol documentation enabling ongoing accessibility validation throughout development process
+  - Testing protocol documentation enabling ongoing accessibility validation throughout the development process
 - **Dependencies**: Web Development track accessibility implementation capabilities and testing framework
 - **Testing**: Accessibility implementation guidance validation through compliance testing and assistive technology user evaluation
 
