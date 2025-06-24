@@ -1,0 +1,44 @@
+        <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Gradient Definition -->
+            <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#2D1B69;" />
+                    <stop offset="50%" style="stop-color:#1A365D;" />
+                    <stop offset="100%" style="stop-color:#000000;" />
+                </linearGradient>
+            </defs>
+        
+            <!-- Icon: Geometric Neural Network / Democratic Transparency Symbol -->
+            <g id="icon" fill="url(#logoGradient)">
+                <!-- The structure suggests an open, interconnected network, evoking transparency. -->
+                <!-- The overlapping elements with opacity create a sense of depth and translucency. -->
+        
+                <!-- Connecting Lines -->
+                <path d="M 25,50 Q 50,20 75,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.8" />
+                <path d="M 25,50 Q 50,80 75,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.8" />
+                <path d="M 75,50 Q 95,50 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.6" />
+                <path d="M 25,50 C 45,5 105,5 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.4" />
+                <path d="M 25,50 C 45,95 105,95 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.4" />
+        
+                <!-- Nodes (Circles) -->
+                <circle cx="25" cy="50" r="7" opacity="0.7"/>
+                <circle cx="75" cy="50" r="9" /> 
+                <circle cx="115" cy="50" r="7" opacity="0.7"/>
+
+                <!-- Inner nodes representing data points or members -->
+                <circle cx="50" cy="32" r="3.5" opacity="0.9"/>
+                <circle cx="50" cy="68" r="3.5" opacity="0.9"/>
+            </g>
+        
+            <!-- Text: LUMIN.AI -->
+            <!-- Typography: Modern, refined, bold letterforms using 'Exo 2' font. -->
+            <text 
+                x="150" 
+                y="62" 
+                font-family="'Exo 2', sans-serif" 
+                font-size="40" 
+                font-weight="600" 
+                fill="url(#logoGradient)">
+                LUMIN.AI
+            </text>
+        </svg>
