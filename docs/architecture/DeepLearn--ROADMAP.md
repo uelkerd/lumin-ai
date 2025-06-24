@@ -190,7 +190,8 @@ The Deep Learning track focuses on developing neural networks for governance ana
 ## Key Performance Indicators (KPIs)
 
 ### Technical KPIs
-- **Model Accuracy**: 85%+ accuracy on governance sentiment classification by Week 6
+-   **Model Accuracy**: 85%+ accuracy on governance sentiment classification by Week 6
++   **Model Accuracy**: 80%+ accuracy on governance sentiment classification by Week 6
 - **API Response Time**: < 500ms response time for sentiment analysis requests
 - **Model Robustness**: Consistent performance across different governance domains
 - **Integration Success**: 100% uptime during cross-track integration testing
