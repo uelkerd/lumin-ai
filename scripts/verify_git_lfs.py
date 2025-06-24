@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Verify Git LFS setup for LUMIN.AI project.
+"""Verify Git LFS setup for LUMIN.AI project.
 
 This script checks if Git LFS is properly configured and working by:
 1. Checking if .gitattributes exists and contains LFS tracking patterns
@@ -8,22 +7,33 @@ This script checks if Git LFS is properly configured and working by:
 3. Verifying that these files are properly tracked by Git LFS
 """
 
-import os
 import subprocess
 import sys
+import shlex
 from pathlib import Path
+from typing import Optional, List, Union
 
 
-def run_command(cmd):
-    """Run a shell command and return its output."""
+def run_command(cmd: Union[str, List[str]]) -> Optional[str]:
+    """Run a command and return its output.
+    
+    Args:
+        cmd: Command to run as a string or list of arguments
+        
+    Returns:
+        Command output as string or None if error
+    """
     try:
+        # Convert string command to list of arguments if needed
+        cmd_args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        
         result = subprocess.run(
-            cmd,
+            cmd_args,
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            shell=True
+            shell=False  # Avoid shell=True for security
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
@@ -32,51 +42,50 @@ def run_command(cmd):
         return None
 
 
-def check_gitattributes():
+def check_gitattributes() -> bool:
     """Check if .gitattributes exists and contains LFS patterns."""
-    gitattributes_path = Path('.gitattributes')
-
+    gitattributes_path = Path(".gitattributes")
+    
     if not gitattributes_path.exists():
         print("❌ .gitattributes file not found!")
         return False
-
-    with open(gitattributes_path, 'r') as f:
+    
+    with open(gitattributes_path) as f:
         content = f.read()
-
-    if 'filter=lfs' not in content:
+    
+    if "filter=lfs" not in content:
         print("❌ No LFS tracking patterns found in .gitattributes!")
         return False
-
+    
     print("✅ .gitattributes file exists and contains LFS tracking patterns")
-
+    
     # Count tracked extensions
-    tracked_extensions = [line.split()[0] for line in content.splitlines()
-                          if 'filter=lfs' in line]
+    tracked_extensions = [line.split()[0] for line in content.splitlines() if "filter=lfs" in line]
     print(f"   Found {len(tracked_extensions)} tracked file patterns")
     return True
 
 
-def check_git_lfs_installed():
+def check_git_lfs_installed() -> bool:
     """Check if Git LFS is installed."""
-    result = run_command("git lfs version")
+    result = run_command(["git", "lfs", "version"])
     if result is None:
         print("❌ Git LFS is not installed!")
         return False
-
+    
     print(f"✅ Git LFS is installed: {result}")
     return True
 
 
-def check_lfs_files():
+def check_lfs_files() -> bool:
     """Check if any LFS-tracked files exist in the repository."""
-    result = run_command("git lfs ls-files")
+    result = run_command(["git", "lfs", "ls-files"])
     if result is None or result == "":
         print("ℹ️ No LFS-tracked files found in the repository yet")
         return True
-
+    
     file_count = len(result.splitlines())
     print(f"✅ Found {file_count} files tracked by Git LFS")
-
+    
     # Print a sample of tracked files
     if file_count > 0:
         print("\nSample of LFS-tracked files:")
@@ -84,54 +93,49 @@ def check_lfs_files():
             print(f"   {line}")
         if file_count > 5:
             print(f"   ... and {file_count - 5} more")
-
+    
     return True
 
 
-def check_sample_file():
+def check_sample_file() -> bool:
     """Check if our sample CSV file is properly tracked by Git LFS."""
-    sample_file = Path('data/examples/sample_data.csv')
+    sample_file = Path("data/examples/sample_data.csv")
     if not sample_file.exists():
         print("ℹ️ Sample CSV file not found, skipping check")
         return True
-
+    
     # Check if the file is tracked by Git
-    result = run_command(f"git ls-files {sample_file}")
+    result = run_command(["git", "ls-files", str(sample_file)])
     if result is None or result == "":
         print("ℹ️ Sample CSV file is not yet tracked by Git, skipping check")
         return True
-
-    # Check if the file is tracked by Git LFS
-    result = run_command(f"git lfs ls-files | grep {sample_file}")
-    if result is None or result == "":
+    
+    # Check if the file is tracked by Git LFS - safer approach without grep
+    lfs_files_output = run_command(["git", "lfs", "ls-files"])
+    if not lfs_files_output or str(sample_file) not in lfs_files_output:
         print(f"❌ Sample file {sample_file} is not tracked by Git LFS!")
-        print("   Run 'git lfs track \"*.csv\"' and re-add the file")
+        print('   Run \'git lfs track "*.csv"\' and re-add the file')
         return False
-
+    
     print(f"✅ Sample file {sample_file} is properly tracked by Git LFS")
     return True
 
 
-def main():
+def main() -> int:
     """Run all checks and report status."""
     print("🔍 Verifying Git LFS setup for LUMIN.AI project...\n")
-
-    checks = [
-        check_git_lfs_installed,
-        check_gitattributes,
-        check_lfs_files,
-        check_sample_file
-    ]
-
+    
+    checks = [check_git_lfs_installed, check_gitattributes, check_lfs_files, check_sample_file]
+    
     all_passed = all(check() for check in checks)
-
-    print("\n" + "="*50)
+    
+    print("\n" + "=" * 50)
     if all_passed:
         print("✅ Git LFS is properly set up and working!")
     else:
         print("❌ Some Git LFS checks failed. Please fix the issues above.")
-    print("="*50)
-
+    print("=" * 50)
+    
     return 0 if all_passed else 1
 
 
