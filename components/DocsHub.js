@@ -2,9 +2,8 @@
 // Main documentation hub component for the LUMIN.AI Project Hub
 const { useState, useEffect, useMemo } = React;
 
-const DocsHub = ({ docFileMapping }) => {
+const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
     const [activeDoc, setActiveDoc] = useState({ trackId: 'project', docType: 'roadmap' });
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [docContent, setDocContent] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -35,23 +34,33 @@ const DocsHub = ({ docFileMapping }) => {
                     return;
                 }
 
+                if (!docFileMapping || !docFileMapping[activeDoc.trackId]) {
+                    throw new Error("Cannot find document mapping for selected track");
+                }
+
                 const fileName = docFileMapping[activeDoc.trackId]?.files[activeDoc.docType];
 
                 if (!fileName) {
-                    throw new Error(`File mapping not found for ${activeDoc.trackId}/${activeDoc.docType}`);
+                    throw new Error("Cannot find filename for selected document");
                 }
 
                 const url = `${GITHUB_REPO_URL_BASE}${fileName}`;
 
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - Could not fetch ${url}`);
+                    throw new Error(`HTTP error! status: ${response.status} - Could not fetch ${fileName}`);
+                }
+
+                // Validate content type
+                const contentType = response.headers.get('content-type');
+                if (contentType && !contentType.includes('text/plain') && !contentType.includes('text/markdown')) {
+                    throw new Error(`Unexpected content type: ${contentType}`);
                 }
 
                 const text = await response.text();
 
                 if (!text || text.trim() === '') {
-                    throw new Error("Empty document content");
+                    throw new Error("Document is empty");
                 }
 
                 setDocContent(text);
@@ -62,8 +71,8 @@ const DocsHub = ({ docFileMapping }) => {
                     [cacheKey]: text
                 }));
             } catch (e) {
-                console.error("Error fetching document:", e);
-                setError(e.message);
+                console.error(`Error fetching document: ${e.message}`);
+                setError(`Error fetching document: ${e.message}`);
                 setDocContent(''); // Clear content on error
             } finally {
                 setIsLoading(false);
@@ -71,41 +80,38 @@ const DocsHub = ({ docFileMapping }) => {
         };
 
         fetchDoc();
-    }, [activeDoc, docFileMapping]);
+    }, [activeDoc, docFileMapping, docCache]);
 
     const handleSelect = (trackId, docType) => {
-        if (!trackId || !docType) {
-            console.error("Invalid selection:", trackId, docType);
-            return;
+        if (trackId && docType) {
+            setActiveDoc({ trackId, docType });
+            if (window.innerWidth < 768) setIsSidebarOpen(false);
+        } else {
+            console.error("Invalid trackId or docType in handleSelect");
         }
-
-        setActiveDoc({ trackId, docType });
-        if (window.innerWidth < 768) setIsSidebarOpen(false);
     };
 
     const parsedHtml = useMemo(() => {
-        if (!window.marked || !docContent) {
-            return { __html: '' };
+        if (typeof window.marked !== 'undefined' && typeof window.DOMPurify !== 'undefined' && docContent) {
+            try {
+                // Use DOMPurify to sanitize the HTML before rendering
+                const rawHtml = window.marked.parse(docContent);
+                const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
+                    USE_PROFILES: { html: true },
+                    ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'ul', 'ol', 'li',
+                                'code', 'pre', 'strong', 'em', 'blockquote', 'table', 'thead',
+                                'tbody', 'tr', 'th', 'td', 'hr', 'br', 'img'],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id']
+                });
+                return { __html: sanitizedHtml };
+            } catch (e) {
+                console.error("Error parsing markdown:", e);
+                // Use generic error message instead of exposing specific error details
+                setError(`Error rendering content. Please try again later.`);
+                return { __html: '<p>Error rendering markdown content</p>' };
+            }
         }
-
-        try {
-            // Generate HTML from markdown
-            const rawHtml = window.marked.parse(docContent);
-
-            // Sanitize HTML to prevent XSS attacks
-            const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
-                USE_PROFILES: { html: true },
-                ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                              'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-                              'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
-                ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
-            });
-
-            return { __html: sanitizedHtml };
-        } catch (e) {
-            console.error("Error parsing markdown:", e);
-            return { __html: '<p>Error parsing markdown content.</p>' };
-        }
+        return { __html: '' };
     }, [docContent]);
 
     return (
