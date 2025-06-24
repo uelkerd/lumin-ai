@@ -1,0 +1,14 @@
+{
+  "name": "lumin-ai",
+  "version": "1.0.0",
+  "description": "LUMIN.AI Project Hub",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dompurify": "^3.2.6"
+  },
+  "author": "",
+  "license": "ISC"
+}
