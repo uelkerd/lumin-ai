@@ -102,8 +102,8 @@ def check_sample_file():
         return True
 
     # Check if the file is tracked by Git LFS
-    result = run_command(f"git lfs ls-files | grep {sample_file}")
-    if result is None or result == "":
+    lfs_files_output = run_command("git lfs ls-files")
+    if not lfs_files_output or str(sample_file) not in lfs_files_output:
         print(f"❌ Sample file {sample_file} is not tracked by Git LFS!")
         print("   Run 'git lfs track \"*.csv\"' and re-add the file")
         return False
