@@ -163,8 +163,6 @@ jobs:
       - codecov/upload:
           file: coverage.xml
           flags: python-tests
-          slug: uelkerd/lumin-ai
-          github_api_url: https://api.github.com
 
 # Define the workflows that determine when jobs run
 workflows:
