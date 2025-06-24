@@ -245,6 +245,11 @@ function testDOMPurifySanitization() {
   console.log(`Test ${sanitizeOptions && sanitizeOptions.ALLOWED_TAGS ? 'PASSED' : 'FAILED'}: Sanitization should specify allowed tags`);
 }
 
+// Setup mock environment
+globalThis.document = mockDocument;
+globalThis.window = mockWindow;
+globalThis.React = mockReact;
+
 // Run tests
 console.log('=== COMPONENT TESTS ===');
 testAppStateManagement();

@@ -55,11 +55,13 @@ body {
 .markdown-content p {
     margin-bottom: 1rem;
     line-height: 1.7;
+    color: #374151;
 }
 
 .markdown-content ul, .markdown-content ol {
     margin-bottom: 1rem;
     padding-left: 1.5rem;
+    list-style-type: disc;
 }
 
 .markdown-content li {
@@ -71,17 +73,22 @@ body {
     text-decoration: underline;
 }
 
+.markdown-content strong {
+    font-weight: 700;
+}
+
 .markdown-content blockquote {
-    border-left: 4px solid #e5e7eb;
+    border-left: 4px solid #d1d5db;
     padding-left: 1rem;
     margin-left: 0;
     margin-right: 0;
     font-style: italic;
-    color: #6b7280;
+    color: #4b5563;
 }
 
 .markdown-content pre {
-    background-color: #f3f4f6;
+    background-color: #1f2937;
+    color: #f9fafb;
     padding: 1rem;
     border-radius: 0.5rem;
     overflow-x: auto;
@@ -101,6 +108,11 @@ body {
     padding: 0;
 }
 
+.markdown-content hr {
+    border-top: 1px solid #d1d5db;
+    margin: 2rem 0;
+}
+
 .markdown-content table {
     width: 100%;
     border-collapse: collapse;
@@ -108,12 +120,13 @@ body {
 }
 
 .markdown-content th, .markdown-content td {
-    border: 1px solid #e5e7eb;
+    border: 1px solid #d1d5db;
     padding: 0.75rem;
+    text-align: left;
 }
 
 .markdown-content th {
-    background-color: #f3f4f6;
+    background-color: #f9fafb;
     font-weight: bold;
 }
 

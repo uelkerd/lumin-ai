@@ -15,36 +15,23 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- DOMPurify for sanitizing HTML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.6/purify.min.js"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
-        .markdown-content h1 { font-size: 2.25rem; font-weight: bold; margin-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
-        .markdown-content h2 { font-size: 1.875rem; font-weight: bold; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; }
-        .markdown-content h3 { font-size: 1.5rem; font-weight: bold; margin-top: 2rem; margin-bottom: 0.75rem; }
-        .markdown-content h4 { font-size: 1.25rem; font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.5rem; }
-        .markdown-content p { margin-bottom: 1rem; line-height: 1.6; color: #374151; }
-        .markdown-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .markdown-content li { margin-bottom: 0.5rem; }
-        .markdown-content strong { font-weight: 700; }
-        .markdown-content code { background-color: #e5e7eb; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
-        .markdown-content pre { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; overflow-x: auto;}
-        .markdown-content hr { border-top: 1px solid #d1d5db; margin: 2rem 0; }
-        .markdown-content blockquote { border-left: 4px solid #d1d5db; padding-left: 1rem; margin-left: 0; font-style: italic; color: #4b5563; }
-        .markdown-content table { border-collapse: collapse; width: 100%; margin-bottom: 1rem; }
-        .markdown-content th, .markdown-content td { border: 1px solid #d1d5db; padding: 0.75rem; text-align: left; }
-        .markdown-content th { background-color: #f9fafb; font-weight: bold; }
-        .loading-spinner { border-top-color: #4f46e5; }
-    </style>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- External CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="root"></div>
 
+    <!-- Import modular components -->
+    <script type="text/babel" src="components/UtilComponents.js"></script>
+    <script type="text/babel" src="components/Sidebar.js"></script>
+    <script type="text/babel" src="components/DocsHub.js"></script>
+    <script type="text/babel" src="components/App.js"></script>
+    
+    <!-- Entry point script -->
     <script type="text/babel">
         const { useState, useEffect, useMemo, Suspense } = React;
 
@@ -247,55 +234,8 @@
             const [activePage, setActivePage] = useState('docsHub'); // docsHub, roadmapCanvas, overview
             const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-            const handleMenuToggle = () => setIsSidebarOpen(!isSidebarOpen);
-
-            const Header = () => {
-                const Logo = () => ( <svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" className="h-10 w-auto"><defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style={{stopColor: '#4f46e5'}} /><stop offset="50%" style={{stopColor: '#3b82f6'}} /><stop offset="100%" style={{stopColor: '#1e3a8a'}} /></linearGradient></defs><g id="icon" fill="url(#logoGradient)"><path d="M 25,50 Q 50,20 75,50" stroke="url(#logoGradient)" strokeWidth="1.5" fill="none" opacity="0.8" /><path d="M 25,50 Q 50,80 75,50" stroke="url(#logoGradient)" strokeWidth="1.5" fill="none" opacity="0.8" /><path d="M 75,50 Q 95,50 115,50" stroke="url(#logoGradient)" strokeWidth="1.5" fill="none" opacity="0.6" /><path d="M 25,50 C 45,5 105,5 115,50" stroke="url(#logoGradient)" strokeWidth="1.5" fill="none" opacity="0.4" /><path d="M 25,50 C 45,95 105,95 115,50" stroke="url(#logoGradient)" strokeWidth="1.5" fill="none" opacity="0.4" /><circle cx="25" cy="50" r="7" opacity="0.7"/><circle cx="75" cy="50" r="9" /> <circle cx="115" cy="50" r="7" opacity="0.7"/><circle cx="50" cy="32" r="3.5" opacity="0.9"/><circle cx="50" cy="68" r="3.5" opacity="0.9"/></g><text x="150" y="62" fontFamily="'Exo 2', sans-serif" fontSize="40" fontWeight="600" fill="url(#logoGradient)">LUMIN.AI</text></svg> );
-                const NavButton = ({ pageId, children }) => (
-                     <button onClick={() => setActivePage(pageId)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${activePage === pageId ? 'bg-indigo-600 text-white shadow' : 'text-gray-600 hover:bg-gray-200'}`}>
-                        {children}
-                    </button>
-                );
-                return (
-                    <header className="bg-white shadow-sm sticky top-0 z-20 flex items-center justify-between p-4 border-b border-gray-200">
-                         <div className="flex items-center">
-                             <button onClick={handleMenuToggle} className="p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-4 md:hidden">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                            </button>
-                            <Logo />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                             <NavButton pageId="docsHub">📄 Docs Hub</NavButton>
-                             <NavButton pageId="roadmapCanvas">🗺️ Roadmap Canvas</NavButton>
-                             <NavButton pageId="overview">✨ Overview</NavButton>
-                        </div>
-                    </header>
-                )
-            };
-
-            const renderPage = () => {
-                switch(activePage) {
-                    case 'docsHub':
-                        return <DocsHub />;
-                    case 'roadmapCanvas':
-                        return <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar"><LuminAIRoadmapCanvas /></main>;
-                    case 'overview':
-                         return <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar"><OverviewPage /></main>;
-                    default:
-                        return <DocsHub />;
-                }
-            }
-
-            return (
-                <div className="h-screen flex flex-col">
-                    <Header />
-                    <div className="flex-1 flex overflow-hidden">
-                        {renderPage()}
-                    </div>
-                </div>
-            );
-        }
-
+        // Render the root component
+        const { useState, useEffect, useMemo, Suspense } = React;
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
