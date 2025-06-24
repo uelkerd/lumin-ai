@@ -101,7 +101,7 @@ jobs:
       - store_artifacts:
           path: coverage.xml
           destination: coverage-report
-          
+
       - store_artifacts:
           path: .htmlcov
           destination: html-coverage-report
@@ -110,6 +110,12 @@ jobs:
           root: .
           paths:
             - coverage.xml
+
+      # Upload coverage report to Codecov directly from this job
+      # This replaces the separate codecov/upload job
+      - codecov/upload:
+          file: coverage.xml
+          flags: python-tests
 
 # Define the workflows that determine when jobs run
 workflows:
@@ -124,11 +130,7 @@ workflows:
   test-and-coverage:
     jobs:
       - run-python-tests
-      - codecov/upload:
-          requires:
-            - run-python-tests
-          file: coverage.xml
-          flags: python-tests
+      # Removed the separate codecov/upload job since we're now uploading directly from the run-python-tests job
 
 # Optional: You can also set up the workflow to run on pull requests only
 # This is useful if you want to save CircleCI credits by not running on every small commit
