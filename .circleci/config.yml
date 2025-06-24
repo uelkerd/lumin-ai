@@ -85,18 +85,25 @@ jobs:
 
     steps:
       - checkout
-
-      - run:
-          name: "Install pytest and coverage tools"
-          command: |
-            echo "Installing pytest and coverage tools..."
-            pip install pytest pytest-cov
-            echo "Testing tools installed successfully!"
+      
+      # Setup Python dependency caching
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "setup.py" }}
+            # Fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run:
           name: "Install project with test dependencies"
           command: |
-            pip install -e .[test]
+            python -m pip install --upgrade pip
+            pip install -e ".[test]"
+
+      # Save the dependency cache for future runs
+      - save_cache:
+          key: v1-dependencies-{{ checksum "pyproject.toml" }}-{{ checksum "setup.py" }}
+          paths:
+            - ~/.cache/pip
 
       - run:
           name: "Run tests with coverage"
