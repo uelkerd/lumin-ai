@@ -189,7 +189,7 @@ ignore = [
     # Allow boolean positional arguments - common in ML libraries
     "FBT001", "FBT002", "FBT003",
     # Allow broad exception catching - sometimes necessary in data processing
-    "B001",
+    "BLE001",
     # Allow magic values - common in ML hyperparameters and data processing
     "PLR2004",
 ]
@@ -267,7 +267,6 @@ suppress-none-returning = true
 # Code formatting rules that work well with the linting rules above
 quote-style = "double"           # Consistent with flake8-quotes setting
 indent-style = "space"           # Use spaces, not tabs
-skip-source-first-line = false   # Format shebang lines
 line-ending = "lf"               # Use Unix-style line endings for consistency
 
 # =============================================================================
