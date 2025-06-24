@@ -3,7 +3,7 @@
 
 def test_truth():
     """Test that True is indeed True."""
-    pass
+    assert True
 
 
 def test_math():

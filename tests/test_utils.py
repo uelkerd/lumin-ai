@@ -6,10 +6,10 @@ from lumin_ai.utils import add, subtract, multiply, divide
 
 def test_add():
     """Test the add function."""
-    assert add(1, 2) == 3
-    assert add(-1, 1) == 0
+    assert add(2, 2) == 4
     assert add(0, 0) == 0
-    assert add(1.5, 2.5) == 4.0
+    assert add(-1, 1) == 0
+    assert add(0.1, 0.2) == pytest.approx(0.3)
 
 
 def test_subtract():

@@ -1,7 +1,8 @@
 """Utility functions for the LUMIN.AI project."""
+from typing import Union
 
 
-def add(a, b):
+def add(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
     """Add two numbers together.
 
     Args:
@@ -14,7 +15,7 @@ def add(a, b):
     return a + b
 
 
-def subtract(a, b):
+def subtract(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
     """Subtract b from a.
 
     Args:
@@ -27,7 +28,7 @@ def subtract(a, b):
     return a - b
 
 
-def multiply(a, b):
+def multiply(a: Union[int, float], b: Union[int, float]) -> Union[int, float]:
     """Multiply two numbers.
 
     Args:
@@ -40,7 +41,7 @@ def multiply(a, b):
     return a * b
 
 
-def divide(a, b):
+def divide(a: Union[int, float], b: Union[int, float]) -> float:
     """Divide a by b.
 
     Args:
