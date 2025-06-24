@@ -184,7 +184,8 @@ This document outlines the functional and non-functional requirements for the De
 - **Description**: The sentiment analysis service must maintain high availability during operational periods
 - **Priority**: High
 - **Acceptance Criteria**:
-  - 99% uptime during project demonstration periods
+-   99% uptime during project demonstration periods
++   High availability (e.g., 99% uptime) during project demonstration periods
   - Graceful handling of system failures with meaningful error messages
   - Automatic recovery from transient failures where possible
 - **Testing**: Reliability testing with fault injection and recovery scenarios
