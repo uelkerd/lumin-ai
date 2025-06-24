@@ -30,7 +30,7 @@
     <script type="text/babel" src="components/Sidebar.js"></script>
     <script type="text/babel" src="components/DocsHub.js"></script>
     <script type="text/babel" src="components/App.js"></script>
-    
+
     <!-- Entry point script -->
     <script type="text/babel">
         const { useState, useEffect, useMemo, Suspense } = React;
@@ -192,7 +192,7 @@
             )
         }
 
-        const LuminAIRoadmapCanvas = () => { /* ... content from lumin_ai_roadmap (1).tsx ... */
+        const LuminAIRoadmapCanvas = () => {
           const [activePhase, setActivePhase] = useState('mvp');
           const [selectedWeek, setSelectedWeek] = useState(1);
           const phases = { mvp: { title: "MVP Phase (Weeks 1-6)", subtitle: "Guaranteed Success Foundation", color: "bg-green-50 border-green-300 text-green-800", description: "Core functionality that ensures project completion regardless of advanced features" }, enhanced: { title: "Enhanced Phase (Weeks 7-10)", subtitle: "Nice-to-Have Features", color: "bg-blue-50 border-blue-300 text-blue-800", description: "Advanced features built on solid MVP foundation" }};
@@ -214,7 +214,7 @@
           );
         };
 
-        const OverviewPage = () => { /* ... content from lumin-ai-docs.tsx ... */
+        const OverviewPage = () => {
             const [activeTab, setActiveTab] = useState('overview'); const [activeTrack, setActiveTrack] = useState('dl');
             const documentStructure = useMemo(() => ({ overview: { title: "Project Overview", icon: "🌟" }, tracks: { title: "Track Documentation", icon: "🎯" }, project: { title: "Project Documents", icon: "📋" } }), []);
             const trackInfo = useMemo(() => ({ dl: { name: "Deep Learning", icon: "🧠", activeClass: "bg-purple-100 border-purple-300 text-purple-800", headerClass: "bg-purple-50 border-purple-200" }, ds: { name: "Data Science", icon: "📊", activeClass: "bg-green-100 border-green-300 text-green-800", headerClass: "bg-green-50 border-green-200" }, wd: { name: "Web Development", icon: "💻", activeClass: "bg-blue-100 border-blue-300 text-blue-800", headerClass: "bg-blue-50 border-blue-200" }, ux: { name: "UX Design", icon: "🎨", activeClass: "bg-orange-100 border-orange-300 text-orange-800", headerClass: "bg-orange-50 border-orange-200" } }), []);
@@ -234,8 +234,19 @@
             const [activePage, setActivePage] = useState('docsHub'); // docsHub, roadmapCanvas, overview
             const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+            return (
+                <div className="flex-1 flex overflow-hidden">
+                    <Sidebar onSelect={handleSelect} activeDoc={activeDoc} isSidebarOpen={isSidebarOpen} />
+                    <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar">
+                        <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200 min-h-full">
+                            {activePage === 'docsHub' ? <DocsHub /> : activePage === 'roadmapCanvas' ? <LuminAIRoadmapCanvas /> : <OverviewPage />}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
         // Render the root component
-        const { useState, useEffect, useMemo, Suspense } = React;
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>

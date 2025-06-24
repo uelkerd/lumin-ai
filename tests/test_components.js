@@ -29,12 +29,18 @@ const mockFetch = async (url) => {
     return {
       ok: false,
       status: 404,
-      text: async () => ''
+      text: async () => '',
+      headers: {
+        get: (name) => name === 'content-type' ? 'text/plain' : null
+      }
     };
   }
   return {
     ok: true,
-    text: async () => '# Test Markdown'
+    text: async () => '# Test Markdown',
+    headers: {
+      get: (name) => name === 'content-type' ? 'text/markdown' : null
+    }
   };
 };
 
@@ -42,207 +48,146 @@ const mockFetch = async (url) => {
 function testAppStateManagement() {
   console.log('Testing App component state management...');
 
-  // Mock the useState hook to track state changes
-  let activePageState = 'docsHub';
-  let isSidebarOpenState = true;
+  // Test initial state
+  const appProps = {};
+  const app = new App(appProps);
 
-  const setActivePage = (newValue) => {
-    activePageState = newValue;
-    console.log(`Active page changed to: ${newValue}`);
-  };
+  if (app.state.activePage !== 'docsHub') {
+    console.error('❌ Initial activePage state should be docsHub');
+  } else {
+    console.log('✅ Initial activePage state is correct');
+  }
 
-  const setIsSidebarOpen = (newValue) => {
-    isSidebarOpenState = newValue;
-    console.log(`Sidebar open state changed to: ${newValue}`);
-  };
+  if (!app.state.isSidebarOpen) {
+    console.error('❌ Initial sidebar state should be open');
+  } else {
+    console.log('✅ Initial sidebar state is correct');
+  }
 
-  mockReact.useState = (initialValue) => {
-    if (initialValue === 'docsHub') {
-      return [activePageState, setActivePage];
-    }
-    if (initialValue === true) {
-      return [isSidebarOpenState, setIsSidebarOpen];
-    }
-    return [initialValue, () => {}];
-  };
-
-  // Simulate menu toggle
-  const handleMenuToggle = () => setIsSidebarOpen(!isSidebarOpenState);
-  handleMenuToggle();
-
-  // Test result
-  console.log(`Test ${isSidebarOpenState === false ? 'PASSED' : 'FAILED'}: handleMenuToggle should toggle sidebar state`);
-
-  // Reset state for next test
-  isSidebarOpenState = true;
+  console.log('App component state management tests completed');
 }
 
-// Test DocsHub component caching and error handling
+// Test DocsHub component
 async function testDocsHubComponent() {
-  console.log('\nTesting DocsHub component caching and error handling...');
+  console.log('\nTesting DocsHub component...');
 
-  // Mock states
-  let docContent = '';
-  let isLoading = true;
-  let error = null;
-  let docCache = {};
+  // Mock successful fetch
+  window.fetch = (url) => mockFetch(url);
 
-  const setDocContent = (value) => { docContent = value; };
-  const setIsLoading = (value) => { isLoading = value; };
-  const setError = (value) => { error = value; };
-  const setDocCache = (callback) => { docCache = callback(docCache); };
-
-  mockReact.useState = (initialValue) => {
-    if (initialValue === '') return [docContent, setDocContent];
-    if (initialValue === true) return [isLoading, setIsLoading];
-    if (initialValue === null) return [error, setError];
-    if (typeof initialValue === 'object' && initialValue !== null) return [docCache, setDocCache];
-    return [initialValue, () => {}];
-  };
-
-  // Test successful fetch and caching
-  global.fetch = (url) => mockFetch(url);
-
-  const activeDoc = { trackId: 'project', docType: 'roadmap' };
-  const docFileMapping = {
-    "project": {
-      files: {
-        roadmap: "PROJECT--ROADMAP.md"
+  // Test successful document fetch
+  const docsHubProps = {
+    isSidebarOpen: true,
+    setIsSidebarOpen: () => {},
+    docFileMapping: {
+      "project": {
+        name: "Project Overview",
+        icon: "🌟",
+        files: { prd: "PROJECT--PRD.md" }
       }
     }
   };
 
-  // Simulate fetchDoc function
-  const fetchDoc = async () => {
-    setIsLoading(true);
-    setError(null);
+  const docsHub = new DocsHub(docsHubProps);
+  await docsHub.fetchDoc();
 
-    try {
-      // Generate cache key
-      const cacheKey = `${activeDoc.trackId}-${activeDoc.docType}`;
+  if (docsHub.state.error) {
+    console.error('❌ DocsHub should not have error when fetch is successful');
+  } else {
+    console.log('✅ DocsHub handles successful fetch correctly');
+  }
 
-      // Check if document is in cache
-      if (docCache[cacheKey]) {
-        setDocContent(docCache[cacheKey]);
-        setIsLoading(false);
-        return;
-      }
+  // Test failed fetch
+  window.fetch = (url) => mockFetch('NOT_EXIST');
+  await docsHub.fetchDoc();
 
-      const fileName = docFileMapping[activeDoc.trackId]?.files[activeDoc.docType];
+  if (!docsHub.state.error) {
+    console.error('❌ DocsHub should have error when fetch fails');
+  } else {
+    console.log('✅ DocsHub handles failed fetch correctly');
+  }
 
-      if (!fileName) {
-        throw new Error(`File mapping not found`);
-      }
-
-      const url = `https://example.com/${fileName}`;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const text = await response.text();
-
-      if (!text || text.trim() === '') {
-        throw new Error("Empty document content");
-      }
-
-      setDocContent(text);
-
-      // Add to cache
-      setDocCache(prevCache => ({
-        ...prevCache,
-        [cacheKey]: text
-      }));
-    } catch (e) {
-      console.error("Error fetching document:", e);
-      setError(e.message);
-      setDocContent('');
-    } finally {
-      setIsLoading(false);
+  // Test invalid content type
+  window.fetch = async () => ({
+    ok: true,
+    text: async () => 'Not markdown content',
+    headers: {
+      get: (name) => name === 'content-type' ? 'application/json' : null
     }
-  };
+  });
 
-  // Test successful fetch
-  await fetchDoc();
-  console.log(`Test ${docContent === '# Test Markdown' ? 'PASSED' : 'FAILED'}: Document content should be set after successful fetch`);
-  console.log(`Test ${isLoading === false ? 'PASSED' : 'FAILED'}: Loading state should be false after fetch`);
-  console.log(`Test ${error === null ? 'PASSED' : 'FAILED'}: Error should be null after successful fetch`);
+  await docsHub.fetchDoc();
 
-  // Test cache usage
-  const cachedContent = docCache['project-roadmap'];
-  console.log(`Test ${cachedContent === '# Test Markdown' ? 'PASSED' : 'FAILED'}: Document should be stored in cache`);
+  if (!docsHub.state.error || !docsHub.state.error.includes('content type')) {
+    console.error('❌ DocsHub should validate content type');
+  } else {
+    console.log('✅ DocsHub validates content type correctly');
+  }
 
-  // Reset states
-  docContent = '';
-  isLoading = true;
-
-  // Fetch again (should use cache)
-  await fetchDoc();
-  console.log(`Test ${docContent === '# Test Markdown' ? 'PASSED' : 'FAILED'}: Document content should be retrieved from cache`);
-
-  // Test error handling
-  activeDoc.docType = 'nonexistent';
-  await fetchDoc();
-  console.log(`Test ${error !== null ? 'PASSED' : 'FAILED'}: Error should be set when file mapping not found`);
+  console.log('DocsHub component tests completed');
 }
 
-// Test DOMPurify sanitization
+// Test sanitization with DOMPurify
 function testDOMPurifySanitization() {
   console.log('\nTesting DOMPurify sanitization...');
 
-  // Mock window.DOMPurify with tracking
-  let sanitizeCalled = false;
-  let sanitizeOptions = null;
-
-  window = {
-    ...mockWindow,
-    DOMPurify: {
-      sanitize: (html, options) => {
-        sanitizeCalled = true;
-        sanitizeOptions = options;
-        return html;
-      }
-    },
-    marked: {
-      parse: (content) => '<div>Parsed markdown</div>'
-    }
-  };
-
-  // Mock useMemo to execute callback
-  mockReact.useMemo = (callback) => callback();
-
-  // Test function similar to parsedHtml in DocsHub
-  const getParsedHtml = (content) => {
-    if (!window.marked || !content) {
-      return { __html: '' };
-    }
-
-    try {
-      // Generate HTML from markdown
-      const rawHtml = window.marked.parse(content);
-
-      // Sanitize HTML to prevent XSS attacks
-      const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
-        USE_PROFILES: { html: true },
-        ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                      'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-                      'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
-        ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
-      });
-
-      return { __html: sanitizedHtml };
-    } catch (e) {
-      console.error("Error parsing markdown:", e);
-      return { __html: '<p>Error parsing markdown content.</p>' };
-    }
-  };
+  // Malicious script input
+  const maliciousContent = '# Heading\n\n<script>alert("XSS")</script>';
+  const parsedHtml = window.marked.parse(maliciousContent);
 
   // Test sanitization
-  const result = getParsedHtml('# Test content with <script>alert("XSS")</script>');
+  const sanitizedHtml = window.DOMPurify.sanitize(parsedHtml, {
+    USE_PROFILES: { html: true },
+    ALLOWED_TAGS: ['h1', 'p', 'a'],
+    ALLOWED_ATTR: ['href']
+  });
 
-  console.log(`Test ${sanitizeCalled ? 'PASSED' : 'FAILED'}: DOMPurify.sanitize should be called`);
-  console.log(`Test ${sanitizeOptions && sanitizeOptions.ALLOWED_TAGS ? 'PASSED' : 'FAILED'}: Sanitization should specify allowed tags`);
+  if (sanitizedHtml.includes('<script>')) {
+    console.error('❌ DOMPurify sanitization failed to remove script tag');
+  } else {
+    console.log('✅ DOMPurify sanitization successfully removes script tags');
+  }
+
+  console.log('DOMPurify sanitization tests completed');
+}
+
+// Test sidebar state management
+function testSidebarStateManagement() {
+  console.log('\nTesting Sidebar state management...');
+
+  const sidebar = new Sidebar({
+    onSelect: () => {},
+    activeDoc: { trackId: 'project', docType: 'roadmap' },
+    isSidebarOpen: true,
+    docFileMapping: {
+      "project": { name: "Project Overview", icon: "🌟" }
+    }
+  });
+
+  if (!sidebar.state.openTracks.project) {
+    console.error('❌ Initial project track state should be open');
+  } else {
+    console.log('✅ Initial track state is correct');
+  }
+
+  sidebar.toggleTrack('project');
+
+  if (sidebar.state.openTracks.project) {
+    console.error('❌ Track state should toggle to closed');
+  } else {
+    console.log('✅ Track state toggle works correctly');
+  }
+
+  console.log('Sidebar state management tests completed');
+}
+
+// Run all tests
+function runTests() {
+  console.log('Running component tests...');
+  testAppStateManagement();
+  testDocsHubComponent();
+  testDOMPurifySanitization();
+  testSidebarStateManagement();
+  console.log('\nAll tests completed');
 }
 
 // Setup mock environment
@@ -251,9 +196,4 @@ globalThis.window = mockWindow;
 globalThis.React = mockReact;
 
 // Run tests
-console.log('=== COMPONENT TESTS ===');
-testAppStateManagement();
-testDocsHubComponent().then(() => {
-  testDOMPurifySanitization();
-  console.log('\nTests completed.');
-});
+runTests();
