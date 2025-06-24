@@ -3,10 +3,9 @@
 
 version: 2.1
 
-# Using the latest version of the Python and Codecov orbs
+# Using the latest version of the Python orb
 orbs:
   python: circleci/python@2.0.1
-  codecov: codecov/codecov@4.0.1
 
 # Define jobs for linting, testing, and coverage reporting
 jobs:
@@ -158,11 +157,13 @@ jobs:
           paths:
             - coverage.xml
 
-      # Upload coverage report to Codecov directly from this job
-      # This replaces the separate codecov/upload job
-      - codecov/upload:
-          file: coverage.xml
-          flags: python-tests
+      # Use the bash uploader instead of the codecov orb
+      - run:
+          name: "Upload coverage to Codecov"
+          command: |
+            curl -s https://codecov.io/bash > codecov
+            chmod +x codecov
+            ./codecov -f coverage.xml -F python-tests
 
 # Define the workflows that determine when jobs run
 workflows:
