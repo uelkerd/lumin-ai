@@ -154,7 +154,8 @@ This document outlines the functional and non-functional requirements for the Da
 - **Description**: All statistical calculations must maintain appropriate accuracy and precision for research-grade analysis
 - **Priority**: High
 - **Acceptance Criteria**:
-  - All statistical test results accurate to 4 decimal places with appropriate rounding
+-   All statistical test results accurate to 4 decimal places with appropriate rounding
++   All statistical test results maintain appropriate precision with proper rounding
   - Confidence interval calculations maintain appropriate coverage probabilities (95% intervals cover true values 95% of time)
   - Numerical stability maintained across different data distributions and sample sizes
   - Results reproducible across different computing environments and software versions
