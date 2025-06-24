@@ -33,165 +33,10 @@
 
     <!-- Entry point script -->
     <script type="text/babel">
+        // Make React hooks available globally for the imported components
         const { useState, useEffect, useMemo, Suspense } = React;
 
-        // --- Configuration for fetching docs from GitHub ---
-        const GITHUB_REPO_URL_BASE = "https://raw.githubusercontent.com/uelkerd/lumin-ai/main/docs/architecture/";
-
-        const docFileMapping = {
-            "project": { name: "Project Overview", icon: "🌟", files: { prd: "PROJECT--PRD.md", mvp: "PROJECT--MVP.md", roadmap: "PROJECT--ROADMAP.md" }},
-            "web-dev": { name: "Web Development", icon: "💻", files: { prd: "WebDev--PRD.md", mvp: "WebDev--MVP.md", roadmap: "WebDev--ROADMAP.md" }},
-            "ux-design": { name: "UX Design", icon: "🎨", files: { prd: "UX--PRD.md", mvp: "UX--MVP.md", roadmap: "UX--ROADMAP.md" }},
-            "data-science": { name: "Data Science", icon: "📊", files: { prd: "DataSci--PRD.md", mvp: "DataSci--MVP.md", roadmap: "DataSci--ROADMAP.md" }},
-            "deep-learning": { name: "Deep Learning", icon: "🧠", files: { prd: "DeepLearn--PRD.md", mvp: "DeepLearn--MVP.md", roadmap: "DeepLearn--ROADMAP.md" }}
-        };
-
-        // --- Reusable Components ---
-        const LoadingSpinner = () => (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 loading-spinner"></div>
-          </div>
-        );
-
-        const ErrorMessage = ({ error }) => (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
-                <p className="font-bold">Error loading document</p>
-                <p>{error}</p>
-                <p className="mt-2 text-sm">Please check the file name and path in your GitHub repository.</p>
-            </div>
-        );
-
-        const Sidebar = ({ onSelect, activeDoc, isSidebarOpen }) => {
-            const [openTracks, setOpenTracks] = useState({ "project": true, "web-dev": true, "ux-design": true, "data-science": true, "deep-learning": true });
-
-            const toggleTrack = (trackId) => setOpenTracks(prev => ({ ...prev, [trackId]: !prev[trackId] }));
-
-            const NavItem = ({ trackId, docType, children }) => (
-                <li onClick={() => onSelect(trackId, docType)} className={`pl-10 pr-3 py-2 text-sm rounded-md cursor-pointer transition-colors ${activeDoc.trackId === trackId && activeDoc.docType === docType ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'}`}>
-                    {children}
-                </li>
-            );
-
-            return (
-                <aside className={`bg-gray-100 border-r border-gray-200 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? 'w-64' : 'w-0'} overflow-hidden`}>
-                    <div className="p-4 h-full overflow-y-auto custom-scrollbar">
-                        <nav>
-                            <ul>
-                                {Object.entries(docFileMapping).map(([trackId, track]) => (
-                                    <li key={trackId} className="mb-2">
-                                        <div onClick={() => toggleTrack(trackId)} className="flex items-center justify-between px-3 py-2 text-md font-semibold text-gray-800 rounded-md cursor-pointer hover:bg-gray-200">
-                                            <div className="flex items-center"><span className="mr-2 text-xl">{track.icon}</span><span>{track.name}</span></div>
-                                            <svg className={`w-5 h-5 transition-transform ${openTracks[trackId] ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                                        </div>
-                                        {openTracks[trackId] && (
-                                            <ul className="mt-1 space-y-1">
-                                                <NavItem trackId={trackId} docType="prd">PRD</NavItem>
-                                                <NavItem trackId={trackId} docType="mvp">MVP</NavItem>
-                                                <NavItem trackId={trackId} docType="roadmap">Roadmap</NavItem>
-                                            </ul>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
-                    </div>
-                </aside>
-            );
-        };
-
-        // --- Page Components ---
-
-        const DocsHub = () => {
-             const [activeDoc, setActiveDoc] = useState({ trackId: 'project', docType: 'roadmap' });
-             const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-             const [docContent, setDocContent] = useState('');
-             const [isLoading, setIsLoading] = useState(true);
-             const [error, setError] = useState(null);
-             // Cache for storing fetched documents to avoid redundant network requests
-             const [docCache, setDocCache] = useState({});
-
-             useEffect(() => {
-                const fetchDoc = async () => {
-                    setIsLoading(true);
-                    setError(null);
-
-                    // Generate cache key
-                    const cacheKey = `${activeDoc.trackId}-${activeDoc.docType}`;
-
-                    // Check if document is in cache
-                    if (docCache[cacheKey]) {
-                        setDocContent(docCache[cacheKey]);
-                        setIsLoading(false);
-                        return;
-                    }
-
-                    const fileName = docFileMapping[activeDoc.trackId].files[activeDoc.docType];
-                    const url = `${GITHUB_REPO_URL_BASE}${fileName}`;
-                    try {
-                        const response = await fetch(url);
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status} - Could not fetch ${url}`);
-                        }
-                        const text = await response.text();
-                        setDocContent(text);
-
-                        // Add to cache
-                        setDocCache(prevCache => ({
-                            ...prevCache,
-                            [cacheKey]: text
-                        }));
-                    } catch (e) {
-                        setError(e.message);
-                        setDocContent(''); // Clear content on error
-                    } finally {
-                        setIsLoading(false);
-                    }
-                };
-
-                fetchDoc();
-            }, [activeDoc, docCache]);
-
-            const handleSelect = (trackId, docType) => {
-                setActiveDoc({ trackId, docType });
-                if (window.innerWidth < 768) setIsSidebarOpen(false);
-            };
-
-            const parsedHtml = useMemo(() => {
-                if(window.marked && docContent) {
-                    try {
-                        // Generate HTML from markdown
-                        const rawHtml = window.marked.parse(docContent);
-
-                        // Sanitize HTML to prevent XSS attacks
-                        const sanitizedHtml = window.DOMPurify.sanitize(rawHtml, {
-                            USE_PROFILES: { html: true },
-                            ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-                                          'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-                                          'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'img', 'span'],
-                            ALLOWED_ATTR: ['href', 'name', 'target', 'src', 'alt', 'class', 'id']
-                        });
-
-                        return { __html: sanitizedHtml };
-                    } catch (e) {
-                        console.error("Error parsing markdown:", e);
-                        return { __html: '<p>Error parsing markdown content.</p>' };
-                    }
-                }
-                return { __html: ''};
-            }, [docContent]);
-
-            return (
-                 <div className="flex-1 flex overflow-hidden">
-                    <Sidebar onSelect={handleSelect} activeDoc={activeDoc} isSidebarOpen={isSidebarOpen} />
-                    <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar">
-                         <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200 min-h-full">
-                             {isLoading ? <LoadingSpinner/> : error ? <ErrorMessage error={error}/> : <div className="markdown-content" dangerouslySetInnerHTML={parsedHtml}/>}
-                        </div>
-                    </main>
-                </div>
-            )
-        }
-
+        // LuminAIRoadmapCanvas component definition (not yet extracted to separate file)
         const LuminAIRoadmapCanvas = () => {
           const [activePhase, setActivePhase] = useState('mvp');
           const [selectedWeek, setSelectedWeek] = useState(1);
@@ -214,34 +59,162 @@
           );
         };
 
+        // OverviewPage component definition
         const OverviewPage = () => {
-            const [activeTab, setActiveTab] = useState('overview'); const [activeTrack, setActiveTrack] = useState('dl');
-            const documentStructure = useMemo(() => ({ overview: { title: "Project Overview", icon: "🌟" }, tracks: { title: "Track Documentation", icon: "🎯" }, project: { title: "Project Documents", icon: "📋" } }), []);
-            const trackInfo = useMemo(() => ({ dl: { name: "Deep Learning", icon: "🧠", activeClass: "bg-purple-100 border-purple-300 text-purple-800", headerClass: "bg-purple-50 border-purple-200" }, ds: { name: "Data Science", icon: "📊", activeClass: "bg-green-100 border-green-300 text-green-800", headerClass: "bg-green-50 border-green-200" }, wd: { name: "Web Development", icon: "💻", activeClass: "bg-blue-100 border-blue-300 text-blue-800", headerClass: "bg-blue-50 border-blue-200" }, ux: { name: "UX Design", icon: "🎨", activeClass: "bg-orange-100 border-orange-300 text-orange-800", headerClass: "bg-orange-50 border-orange-200" } }), []);
+            const [activeTab, setActiveTab] = useState('overview');
+            const [activeTrack, setActiveTrack] = useState('dl');
+            const documentStructure = useMemo(() => ({
+                overview: { title: "Project Overview", icon: "🌟" },
+                tracks: { title: "Track Documentation", icon: "🎯" },
+                project: { title: "Project Documents", icon: "📋" }
+            }), []);
+
+            const trackInfo = useMemo(() => ({
+                dl: { name: "Deep Learning", icon: "🧠", activeClass: "bg-purple-100 border-purple-300 text-purple-800", headerClass: "bg-purple-50 border-purple-200" },
+                ds: { name: "Data Science", icon: "📊", activeClass: "bg-green-100 border-green-300 text-green-800", headerClass: "bg-green-50 border-green-200" },
+                wd: { name: "Web Development", icon: "💻", activeClass: "bg-blue-100 border-blue-300 text-blue-800", headerClass: "bg-blue-50 border-blue-200" },
+                ux: { name: "UX Design", icon: "🎨", activeClass: "bg-orange-100 border-orange-300 text-orange-800", headerClass: "bg-orange-50 border-orange-200" }
+            }), []);
+
             const ContentWrapper = ({ children }) => <div className="space-y-6">{children}</div>;
+
             const ProjectOverview = () => <ContentWrapper><div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8 rounded-lg"><h1 className="text-4xl font-bold mb-4">LUMIN.AI</h1><p className="text-xl mb-4">Neural Networks for Democratic Transparency</p><p className="text-lg opacity-90">Building the future of democratic governance through AI-powered analysis</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-xl font-bold text-gray-800 mb-4">🎯 Project Vision</h2><p className="text-gray-600 mb-4">Democratize access to governance analysis through neural networks that can understand and predict democratic participation patterns, transparency metrics, and citizen trust levels.</p><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Real-world impact on democracy</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Beginner-friendly implementation</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>MVP-first approach</li></ul></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-xl font-bold text-gray-800 mb-4">📊 Key Metrics</h2><div className="space-y-3"><div className="flex justify-between"><span className="text-gray-600">Timeline:</span><span className="font-semibold">10 Weeks</span></div><div className="flex justify-between"><span className="text-gray-600">Team Size:</span><span className="font-semibold">4+ Techies</span></div><div className="flex justify-between"><span className="text-gray-600">Tracks:</span><span className="font-semibold">All 4 Required</span></div><div className="flex justify-between"><span className="text-gray-600">MVP Delivery:</span><span className="font-semibold text-green-600">Week 6</span></div></div></div></div><div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200"><h2 className="text-xl font-bold text-yellow-800 mb-4">🚀 Why LUMIN.AI?</h2><div className="grid grid-cols-1 md:grid-cols-3 gap-4"><div className="text-center"><div className="text-2xl mb-2">🛡️</div><h3 className="font-semibold">Guaranteed Success</h3><p className="text-sm text-gray-600">MVP approach ensures completion</p></div><div className="text-center"><div className="text-2xl mb-2">📚</div><h3 className="font-semibold">Research Foundation</h3><p className="text-sm text-gray-600">Built on proven Austria case study</p></div><div className="text-center"><div className="text-2xl mb-2">🌍</div><h3 className="font-semibold">Real Impact</h3><p className="text-sm text-gray-600">Democracy research that matters</p></div></div></div></ContentWrapper>;
-            const TrackContent = ({ track }) => {const trackData = useMemo(() => ({ dl: { roadmap: { week1: "Data exploration & model research", week2: "Basic sentiment analysis implementation", week3: "Text classification development", week4: "Participation prediction model", week5: "Model optimization & testing", week6: "MVP demo preparation" }, mvp: ["Sentiment analysis on governance texts","Basic participation prediction","Text classification for themes","Model performance metrics"], requirements: ["Austria Democracy Radar Wave text data","Governance proposal corpus","Basic NLP libraries (spacy, sklearn)","Model evaluation framework"] }, ds: { roadmap: { week1: "Data integration & cleaning", week2: "Exploratory data analysis", week3: "Statistical correlation analysis", week4: "Governance system comparisons", week5: "Predictive modeling", week6: "Results validation & presentation" }, mvp: ["Statistical analysis of survey trends","Transparency vs trust correlation","Governance system comparisons","Data visualization dashboards"], requirements: ["Democracy Radar Wave surveys (10k+ responses)","Governance token distribution data","Statistical analysis tools (pandas, numpy)","Visualization libraries (matplotlib, seaborn)"] }, wd: { roadmap: { week1: "Tech stack setup & API exploration", week2: "Basic dashboard development", week3: "Data visualization components", week4: "Interactive features implementation", week5: "API integration & testing", week6: "Performance optimization & deployment" }, mvp: ["Interactive governance dashboard","Data visualization interface","API integration layer","Responsive web design"], requirements: ["React.js frontend framework","Node.js backend with Express","Data visualization libraries (D3.js, Chart.js)","API endpoints for governance data"] }, ux: { roadmap: { week1: "User research & persona development", week2: "Information architecture design", week3: "Wireframing & prototyping", week4: "Visual design & branding", week5: "Usability testing", week6: "Design refinement & handoff" }, mvp: ["User research findings","Interface wireframes & prototypes","Usability testing results","Design system documentation"], requirements: ["User research on governance tools","Democratic participation studies","Design tools (Figma, Sketch)","Usability testing framework"] } }), []); const currentTrack = trackData[track]; const trackDetails = trackInfo[track]; return (<div className="space-y-6"><div className={`p-6 rounded-lg border-2 ${trackDetails.headerClass}`}><h2 className="text-2xl font-bold mb-4 flex items-center"><span className="text-3xl mr-3">{trackDetails.icon}</span>{trackDetails.name} Track</h2></div><div className="grid grid-cols-1 lg:grid-cols-3 gap-6"><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">📅 Roadmap</h3><div className="space-y-3">{Object.entries(currentTrack.roadmap).map(([week, task]) => (<div key={week} className="border-l-4 border-blue-200 pl-4"><div className="font-semibold text-sm text-blue-700">{week.replace('week', 'Week ')}</div><div className="text-sm text-gray-600">{task}</div></div>))}</div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">🎯 MVP Deliverables</h3><ul className="space-y-2">{currentTrack.mvp.map((item, index) => (<li key={index} className="flex items-start"><span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span className="text-sm">{item}</span></li>))}</ul></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h3 className="text-lg font-bold text-gray-800 mb-4">📋 Requirements</h3><ul className="space-y-2">{currentTrack.requirements.map((item, index) => (<li key={index} className="flex items-start"><span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span className="text-sm">{item}</span></li>))}</ul></div></div></div>);};
-            const TrackDocumentation = () => (<div><div className="flex flex-wrap gap-2 mb-6">{Object.entries(trackInfo).map(([key, track]) => (<button key={key} onClick={() => setActiveTrack(key)} className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all ${ activeTrack === key ? track.activeClass : 'bg-gray-100 border-gray-300 text-gray-600' }`}>{track.icon} {track.name}</button>))}</div><TrackContent track={activeTrack} /></div>);
-            const ProjectDocuments = () => (<ContentWrapper><div className="space-y-8"><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">📋 Project Requirements Document (PRD)</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"><div><h3 className="text-lg font-semibold mb-3">🎯 Project Objectives</h3><ul className="space-y-2 text-sm"><li>• Develop neural networks for governance analysis</li><li>• Create interactive democracy transparency tools</li><li>• Build beginner-friendly AI implementation</li><li>• Deliver meaningful research insights</li></ul></div><div><h3 className="text-lg font-semibold mb-3">📊 Success Metrics</h3><ul className="space-y-2 text-sm"><li>• 85%+ sentiment analysis accuracy</li><li>• Interactive dashboard with less than 2s load time</li><li>• 90%+ user satisfaction in testing</li><li>• Research-grade documentation</li></ul></div></div><h3 className="text-lg font-semibold mb-3">🔄 Project Phases</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div className="bg-green-50 p-4 rounded border border-green-200"><h4 className="font-semibold text-green-800">MVP Phase (Weeks 1-6)</h4><p className="text-sm text-green-600 mt-2">Core functionality ensuring project completion</p></div><div className="bg-blue-50 p-4 rounded border border-blue-200"><h4 className="font-semibold text-blue-800">Enhanced Phase (Weeks 7-10)</h4><p className="text-sm text-blue-600 mt-2">Advanced features and research outputs</p></div></div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">🚀 Project Roadmap</h2><div className="space-y-4">{[{ week: "Weeks 1-2", title: "Foundation & Setup", desc: "Team formation, data acquisition, initial analysis" },{ week: "Weeks 3-4", title: "Core Development", desc: "MVP implementation across all tracks" },{ week: "Weeks 5-6", title: "MVP Completion", desc: "Integration, testing, and first demo" },{ week: "Weeks 7-8", title: "Enhancement Phase", desc: "Advanced features and optimizations" },{ week: "Weeks 9-10", title: "Finalization", desc: "Polish, documentation, and final presentation" }].map((phase, index) => (<div key={index} className="flex items-start border-l-4 border-indigo-200 pl-6"><div className="flex-grow"><div className="flex items-center mb-1"><span className="font-semibold text-indigo-700 mr-3">{phase.week}</span><span className="font-semibold">{phase.title}</span></div><p className="text-sm text-gray-600">{phase.desc}</p></div></div>))}</div></div><div className="bg-white p-6 rounded-lg border border-gray-200"><h2 className="text-2xl font-bold text-gray-800 mb-6">🎯 Project MVP</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><h3 className="text-lg font-semibold mb-3">Core Deliverables</h3><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Working sentiment analysis model</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Statistical governance analysis</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>Interactive web dashboard</li><li className="flex items-center"><span className="text-green-500 mr-2">✓</span>User-tested interface</li></ul></div><div><h3 className="text-lg font-semibold mb-3">Quality Standards</h3><ul className="space-y-2 text-sm"><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Code documentation and comments</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Version control with Git</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Responsive design principles</li><li className="flex items-center"><span className="text-blue-500 mr-2">•</span>Error handling and testing</li></ul></div></div></div></div></ContentWrapper>);
-            const renderContent = () => { switch (activeTab) { case 'overview': return <ProjectOverview />; case 'tracks': return <TrackDocumentation />; case 'project': return <ProjectDocuments />; default: return <ProjectOverview />; }};
-            return (
-                <div className="min-h-screen bg-gray-50 p-6"><div className="text-center mb-8"><h1 className="text-3xl font-bold text-gray-900 mb-2">LUMIN.AI Documentation Hub</h1><p className="text-gray-600">Comprehensive project documentation for all tracks and deliverables</p></div><div className="flex justify-center mb-8"><div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">{Object.entries(documentStructure).map(([key, doc]) => (<button key={key} onClick={() => setActiveTab(key)} className={`px-6 py-3 rounded-md font-medium transition-all ${ activeTab === key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900' }`}><span className="mr-2">{doc.icon}</span>{doc.title}</button>))}</div></div><div>{renderContent()}</div></div>
-            );
-        };
 
-        // --- Main App Component ---
-        const App = () => {
-            const [activePage, setActivePage] = useState('docsHub'); // docsHub, roadmapCanvas, overview
-            const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+            const TrackContent = ({ track }) => {
+                const trackData = useMemo(() => ({
+                    dl: { roadmap: { week1: "Data exploration & model research", week2: "Basic sentiment analysis implementation", week3: "Text classification development", week4: "Participation prediction model", week5: "Model optimization & testing", week6: "MVP demo preparation" }, mvp: ["Sentiment analysis on governance texts","Basic participation prediction","Text classification for themes","Model performance metrics"], requirements: ["Austria Democracy Radar Wave text data","Governance proposal corpus","Basic NLP libraries (spacy, sklearn)","Model evaluation framework"] },
+                    ds: { roadmap: { week1: "Data integration & cleaning", week2: "Exploratory data analysis", week3: "Statistical correlation analysis", week4: "Governance system comparisons", week5: "Predictive modeling", week6: "Results validation & presentation" }, mvp: ["Statistical analysis of survey trends","Transparency vs trust correlation","Governance system comparisons","Data visualization dashboards"], requirements: ["Democracy Radar Wave surveys (10k+ responses)","Governance token distribution data","Statistical analysis tools (pandas, numpy)","Visualization libraries (matplotlib, seaborn)"] },
+                    wd: { roadmap: { week1: "Tech stack setup & API exploration", week2: "Basic dashboard development", week3: "Data visualization components", week4: "Interactive features implementation", week5: "API integration & testing", week6: "Performance optimization & deployment" }, mvp: ["Interactive governance dashboard","Data visualization interface","API integration layer","Responsive web design"], requirements: ["React.js frontend framework","Node.js backend with Express","Data visualization libraries (D3.js, Chart.js)","API endpoints for governance data"] },
+                    ux: { roadmap: { week1: "User research & persona development", week2: "Information architecture design", week3: "Wireframing & prototyping", week4: "Visual design & branding", week5: "Usability testing", week6: "Design refinement & handoff" }, mvp: ["User research findings","Interface wireframes & prototypes","Usability testing results","Design system documentation"], requirements: ["User research on governance tools","Democratic participation studies","Design tools (Figma, Sketch)","Usability testing framework"] }
+                }), []);
 
-            return (
-                <div className="flex-1 flex overflow-hidden">
-                    <Sidebar onSelect={handleSelect} activeDoc={activeDoc} isSidebarOpen={isSidebarOpen} />
-                    <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto custom-scrollbar">
-                        <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200 min-h-full">
-                            {activePage === 'docsHub' ? <DocsHub /> : activePage === 'roadmapCanvas' ? <LuminAIRoadmapCanvas /> : <OverviewPage />}
+                const currentTrack = trackData[track];
+                const trackDetails = trackInfo[track];
+
+                return (
+                    <div className="space-y-6">
+                        <div className={`p-6 rounded-lg border-2 ${trackDetails.headerClass}`}>
+                            <h2 className="text-2xl font-bold mb-4 flex items-center"><span className="text-3xl mr-3">{trackDetails.icon}</span>{trackDetails.name} Track</h2>
                         </div>
-                    </main>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="bg-white p-6 rounded-lg border border-gray-200">
+                                <h3 className="text-lg font-bold text-gray-800 mb-4">📅 Roadmap</h3>
+                                <div className="space-y-3">
+                                    {Object.entries(currentTrack.roadmap).map(([week, task]) => (
+                                        <div key={week} className="border-l-4 border-blue-200 pl-4">
+                                            <div className="font-semibold text-sm text-blue-700">{week.replace('week', 'Week ')}</div>
+                                            <div className="text-sm text-gray-600">{task}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="bg-white p-6 rounded-lg border border-gray-200">
+                                <h3 className="text-lg font-bold text-gray-800 mb-4">🎯 MVP Deliverables</h3>
+                                <ul className="space-y-2">
+                                    {currentTrack.mvp.map((item, index) => (
+                                        <li key={index} className="flex items-start">
+                                            <span className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                            <span className="text-sm">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-white p-6 rounded-lg border border-gray-200">
+                                <h3 className="text-lg font-bold text-gray-800 mb-4">📋 Requirements</h3>
+                                <ul className="space-y-2">
+                                    {currentTrack.requirements.map((item, index) => (
+                                        <li key={index} className="flex items-start">
+                                            <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                            <span className="text-sm">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const TrackDocumentation = () => (
+                <div>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        {Object.entries(trackInfo).map(([key, track]) => (
+                            <button
+                                key={key}
+                                onClick={() => setActiveTrack(key)}
+                                className={`px-4 py-2 rounded-lg border-2 font-semibold transition-all ${
+                                    activeTrack === key ? track.activeClass : 'bg-gray-100 border-gray-300 text-gray-600'
+                                }`}
+                            >
+                                {track.icon} {track.name}
+                            </button>
+                        ))}
+                    </div>
+                    <TrackContent track={activeTrack} />
+                </div>
+            );
+
+            const ProjectDocuments = () => (
+                <ContentWrapper>
+                    <div className="space-y-8">
+                        <div className="bg-white p-6 rounded-lg border border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6">📋 Project Requirements Document (PRD)</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3">🎯 Project Objectives</h3>
+                                    <ul className="space-y-2 text-sm">
+                                        <li>• Develop neural networks for governance analysis</li>
+                                        <li>• Create interactive democracy transparency tools</li>
+                                        <li>• Build beginner-friendly AI implementation</li>
+                                        <li>• Deliver meaningful research insights</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3">📊 Success Metrics</h3>
+                                    <ul className="space-y-2 text-sm">
+                                        <li>• 85%+ sentiment analysis accuracy</li>
+                                        <li>• Interactive dashboard with less than 2s load time</li>
+                                        <li>• 90%+ user satisfaction in testing</li>
+                                        <li>• Research-grade documentation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ContentWrapper>
+            );
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'overview': return <ProjectOverview />;
+                    case 'tracks': return <TrackDocumentation />;
+                    case 'project': return <ProjectDocuments />;
+                    default: return <ProjectOverview />;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gray-50 p-6">
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">LUMIN.AI Documentation Hub</h1>
+                        <p className="text-gray-600">Comprehensive project documentation for all tracks and deliverables</p>
+                    </div>
+                    <div className="flex justify-center mb-8">
+                        <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
+                            {Object.entries(documentStructure).map(([key, doc]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => setActiveTab(key)}
+                                    className={`px-6 py-3 rounded-md font-medium transition-all ${
+                                        activeTab === key ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                                >
+                                    <span className="mr-2">{doc.icon}</span>{doc.title}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div>{renderContent()}</div>
                 </div>
             );
         };
