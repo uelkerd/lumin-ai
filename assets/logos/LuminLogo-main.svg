@@ -13,12 +13,14 @@
                 <!-- The structure suggests an open, interconnected network, evoking transparency. -->
                 <!-- The overlapping elements with opacity create a sense of depth and translucency. -->
         
-                <!-- Connecting Lines -->
-                <path d="M 25,50 Q 50,20 75,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.8" />
-                <path d="M 25,50 Q 50,80 75,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.8" />
-                <path d="M 75,50 Q 95,50 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.6" />
-                <path d="M 25,50 C 45,5 105,5 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.4" />
-                <path d="M 25,50 C 45,95 105,95 115,50" stroke="url(#logoGradient)" stroke-width="1.5" fill="none" opacity="0.4" />
+                <!-- Connecting Lines - Grouped for better maintainability -->
+                <g stroke="url(#logoGradient)" stroke-width="1.5" fill="none">
+                    <path d="M 25,50 Q 50,20 75,50" opacity="0.8" />
+                    <path d="M 25,50 Q 50,80 75,50" opacity="0.8" />
+                    <path d="M 75,50 Q 95,50 115,50" opacity="0.6" />
+                    <path d="M 25,50 C 45,5 105,5 115,50" opacity="0.4" />
+                    <path d="M 25,50 C 45,95 105,95 115,50" opacity="0.4" />
+                </g>
         
                 <!-- Nodes (Circles) -->
                 <circle cx="25" cy="50" r="7" opacity="0.7"/>
@@ -31,14 +33,24 @@
             </g>
         
             <!-- Text: LUMIN.AI -->
-            <!-- Typography: Modern, refined, bold letterforms using 'Exo 2' font. -->
-            <text 
-                x="150" 
-                y="62" 
-                font-family="'Exo 2', sans-serif" 
-                font-size="40" 
-                font-weight="600" 
-                fill="url(#logoGradient)">
-                LUMIN.AI
-            </text>
+            <!-- Typography: Modern, refined, bold letterforms converted to paths for consistent rendering -->
+            <!-- Original font: 'Exo 2', sans-serif, font-size="40", font-weight="600" -->
+            <g id="text" fill="url(#logoGradient)">
+                <!-- L -->
+                <path d="M163.56 62h-11.04V34.6h3.24v24.56h7.8V62z"/>
+                <!-- U -->
+                <path d="M171.519 62V43.4h3.12v18.08c0 2.24 1.12 3.36 3.36 3.36s3.36-1.12 3.36-3.36V43.4h3.12V62c0 3.84-2.16 5.76-6.48 5.76s-6.48-1.92-6.48-5.76z"/>
+                <!-- M -->
+                <path d="M190.839 62V43.4h2.88l6.2 13.16 6.2-13.16h2.88V62h-3.12V48.84L200.119 62h-2.4l-4.76-13.16V62h-3.12z"/>
+                <!-- I -->
+                <path d="M214.998 62V43.4h3.24V62h-3.24z"/>
+                <!-- N -->
+                <path d="M224.838 62V43.4h3.12l8.96 14.24V43.4h3.12V62h-3.12l-8.96-14.24V62h-3.12z"/>
+                <!-- . -->
+                <path d="M244.917 62v-3.52h3.52V62h-3.52z"/>
+                <!-- A -->
+                <path d="M254.157 62l7.32-18.6h3.12L271.917 62h-3.44l-1.68-4.28h-7.52L257.597 62h-3.44zm6.36-7.12h5.52l-2.76-7.04-2.76 7.04z"/>
+                <!-- I -->
+                <path d="M276.836 62V43.4h3.24V62h-3.24z"/>
+            </g>
         </svg>
