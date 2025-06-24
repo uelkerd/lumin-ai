@@ -142,18 +142,7 @@ jobs:
           command: |
             echo "Running tests with coverage analysis..."
             # Use python -m to ensure we use the correct environment
-            python -m pytest --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/ || {
-              echo "Failed to run pytest using python -m, trying alternate method..."
-              # Alternative approach - find the pytest executable and run it directly
-              PYTEST_PATH=$(which pytest || echo "")
-              if [ -n "$PYTEST_PATH" ]; then
-                echo "Using pytest at: $PYTEST_PATH"
-                $PYTEST_PATH --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/
-              else
-                echo "ERROR: Could not find pytest executable!"
-                exit 1
-              fi
-            }
+            python -m pytest --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/
             echo "Tests completed!"
 
       - store_artifacts:
