@@ -31,8 +31,8 @@ setup(
         "torch": ["torch>=1.12.0"],
         "tensorflow": ["tensorflow>=2.9.0"],
         "test": [
-            "pytest",
-            "pytest-cov",
+            "pytest==7.4.0",
+            "pytest-cov==4.1.0",
         ],
         "dev": [
             "ruff==0.4.4",
