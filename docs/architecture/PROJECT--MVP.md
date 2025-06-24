@@ -30,7 +30,8 @@ The LUMIN.AI Project MVP represents a comprehensive, working governance transpar
 - **UX-Validated Presentation**: Sentiment results displayed according to user research findings ensuring accessibility across stakeholder technical backgrounds
 
 **MVP Success Criteria**:
-- Sentiment analysis API operational with 99%+ uptime during demonstration periods
+-   - Sentiment analysis API operational with 99%+ uptime during demonstration periods
++   - Sentiment analysis API operational with high availability (e.g., 99% uptime) during demonstration periods
 - Model accuracy validated through cross-comparison with Data Science statistical analysis
 - User interface successfully enables non-technical stakeholders to understand and apply sentiment analysis insights
 
