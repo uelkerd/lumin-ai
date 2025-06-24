@@ -87,6 +87,13 @@ jobs:
       - checkout
 
       - run:
+          name: "Install pytest and coverage tools"
+          command: |
+            echo "Installing pytest and coverage tools..."
+            pip install pytest pytest-cov
+            echo "Testing tools installed successfully!"
+
+      - run:
           name: "Install project with test dependencies"
           command: |
             pip install -e .[test]
