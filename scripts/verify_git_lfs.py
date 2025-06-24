@@ -23,7 +23,7 @@ def run_command(cmd):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            shell=True
+            shell=False
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
