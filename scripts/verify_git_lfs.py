@@ -9,35 +9,39 @@ This script checks if Git LFS is properly configured and working by:
 
 import subprocess
 import sys
-import shlex
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional, List, Union
+from typing import Optional
 
 
-def run_command(cmd: Union[str, List[str]]) -> Optional[str]:
-    """Run a command and return its output.
+def run_git_command(args: Sequence[str]) -> Optional[str]:
+    """Run a git command and return its output.
 
     Args:
-        cmd: Command to run as a string or list of arguments
+        args: Git command arguments (without 'git' prefix)
 
     Returns:
         Command output as string or None if error
     """
     try:
-        # Convert string command to list of arguments if needed
-        cmd_args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        # We only allow git commands with specific arguments for security
+        cmd = ["git", *args]
+
+        # Extra validation to prevent command injection
+        for arg in args:
+            if ";" in arg or "&" in arg or "|" in arg:
+                raise ValueError(f"Invalid character in command argument: {arg}")
 
         result = subprocess.run(
-            cmd_args,
+            cmd,
             check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             shell=False  # Avoid shell=True for security
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        print(f"Error running command '{cmd}': {e}")
+        print(f"Error running git command: {e}")
         print(f"stderr: {e.stderr}")
         return None
 
@@ -68,7 +72,7 @@ def check_gitattributes() -> bool:
 
 def check_git_lfs_installed() -> bool:
     """Check if Git LFS is installed."""
-    result = run_command(["git", "lfs", "version"])
+    result = run_git_command(["lfs", "version"])
     if result is None:
         print("❌ Git LFS is not installed!")
         return False
@@ -79,9 +83,9 @@ def check_git_lfs_installed() -> bool:
 
 def check_lfs_files() -> bool:
     """Check if any LFS-tracked files exist in the repository."""
-    result = run_command(["git", "lfs", "ls-files"])
+    result = run_git_command(["lfs", "ls-files"])
     if result is None or result == "":
-        print("ℹ️ No LFS-tracked files found in the repository yet")
+        print("i No LFS-tracked files found in the repository yet")
         return True
 
     file_count = len(result.splitlines())
@@ -102,17 +106,17 @@ def check_sample_file() -> bool:
     """Check if our sample CSV file is properly tracked by Git LFS."""
     sample_file = Path("data/examples/sample_data.csv")
     if not sample_file.exists():
-        print("ℹ️ Sample CSV file not found, skipping check")
+        print("i Sample CSV file not found, skipping check")
         return True
 
     # Check if the file is tracked by Git
-    result = run_command(["git", "ls-files", str(sample_file)])
+    result = run_git_command(["ls-files", str(sample_file)])
     if result is None or result == "":
-        print("ℹ️ Sample CSV file is not yet tracked by Git, skipping check")
+        print("i Sample CSV file is not yet tracked by Git, skipping check")
         return True
 
     # Check if the file is tracked by Git LFS - safer approach without grep
-    lfs_files_output = run_command(["git", "lfs", "ls-files"])
+    lfs_files_output = run_git_command(["lfs", "ls-files"])
     if not lfs_files_output or str(sample_file) not in lfs_files_output:
         print(f"❌ Sample file {sample_file} is not tracked by Git LFS!")
         print('   Run \'git lfs track "*.csv"\' and re-add the file')
