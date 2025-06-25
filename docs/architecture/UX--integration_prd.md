@@ -71,7 +71,7 @@ This document outlines the integration requirements for connecting frontend dash
       confidence: number,
       explanation: {
         key_phrases: string[],
-        feature_importance: object
+        feature_importance: object // TODO: Define the specific structure, e.g., { "positive": { "word": 0.8, ... } }
       }
     }],
     processing_time: number,
