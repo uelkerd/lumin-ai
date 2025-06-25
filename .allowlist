@@ -9,4 +9,4 @@ MONGODB_USERNAME=dev
 MONGODB_PASSWORD=devpassword
 MONGODB_DATABASE=luminai
 
-# Add application-specific secrets below as needed 
+# Add application-specific secrets below as needed
