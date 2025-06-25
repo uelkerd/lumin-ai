@@ -9,6 +9,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9+-blue)](https://www.python.org/)
 [![React](https://img.shields.io/badge/react-18.0+-61DAFB)](https://reactjs.org/)
+[![codecov](https://codecov.io/gh/uelkerd/lumin-ai/graph/badge.svg?token=8Qth2KEXra)](https://codecov.io/gh/uelkerd/lumin-ai)
 
 > Entry-level friendly AI project analyzing democratic governance through neural networks, combining cutting-edge technology with real-world social impact.
 
