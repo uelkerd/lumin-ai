@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 # prevent_nested_venv.sh - Script to prevent nested virtual environment activation
 # Source this in your .zshrc to prevent nested virtualenv activations
