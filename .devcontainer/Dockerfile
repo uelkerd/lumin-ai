@@ -6,7 +6,7 @@ ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION}-slim-bullseye
 
 # Build arguments for customization
-ARG NODE_VERSION=18
+ARG NODE_VERSION=20
 ARG USERNAME=lumin-dev
 ARG USER_UID=1000
 ARG USER_GID=1000
