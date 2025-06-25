@@ -909,8 +909,16 @@ print_success "Development templates created for rapid cross-track development"
 
 # Set proper permissions for development workflow
 print_status "Setting proper file permissions for collaborative development..."
-sudo chown -R lumin-dev:lumin-dev /workspace
-chmod -R 755 /workspace
+
+# WARNING: Avoid recursive chown/chmod on /workspace to prevent unintended side effects,
+# especially with host-mounted files. Adjust the following as needed for your environment.
+
+# sudo chown -R lumin-dev:lumin-dev /workspace
+# chmod -R 755 /workspace
+
+# Set permissions only on necessary files and directories
+sudo chown -R lumin-dev:lumin-dev /workspace/src/api /workspace/scripts
+chmod 755 /workspace/scripts
 chmod +x /workspace/src/api/*.py
 
 print_success "File permissions configured for team collaboration"
