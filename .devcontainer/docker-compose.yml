@@ -1,26 +1,50 @@
-# LUMIN.AI Development Environment - Minimal Version
-# Simplified Docker Compose configuration for stable development setup
+# LUMIN.AI Development Environment - Optimized Build
+# Using Compose spec
 
 services:
   # Main development environment container
   lumin-dev-environment:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
       args:
         PYTHON_VERSION: "3.11"
-        NODE_VERSION: "18"
+        NODE_VERSION: "20"
         USERNAME: "lumin-dev"
+      # BuildKit optimizations
+      cache_from:
+        - type=registry,ref=python:3.11-slim-bullseye
+      # Use Compose BuildKit integration
+      x-bake:
+        platforms:
+          - linux/amd64
+        cache-to:
+          - type=inline
+        output:
+          - type=docker
 
     container_name: lumin-ai-dev
     command: sleep infinity
 
-    # Volume mounts for persistent development
+    # Use with host.docker.internal to access host services
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Improved volume mounts with selective bind mounts
     volumes:
-      # Project source code
-      - ../:/workspace:cached
+      # Project source code (cached mode for better performance)
+      - type: bind
+        source: ..
+        target: /workspace
+        consistency: cached
       # Persistent Python package cache
-      - lumin-python-packages:/home/lumin-dev/.cache/pip
+      - type: volume
+        source: lumin-python-packages
+        target: /home/lumin-dev/.cache/pip
+      # Docker socket for Docker-in-Docker capabilities if needed
+      #- type: bind
+      #  source: /var/run/docker.sock
+      #  target: /var/run/docker.sock
 
     # Port mapping (must match devcontainer.json forward ports)
     ports:
@@ -32,10 +56,38 @@ services:
     # Environment variables
     env_file:
       - .env
+    # BuildKit and optimization variables
+    environment:
+      BUILDKIT_PROGRESS: plain
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      DOCKER_BUILDKIT: 1
+      COMPOSE_BAKE: "true"
+
+    # Enable all capabilities required for development
+    # including running Docker in Docker if socket is mounted
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
 
     # Configure network for service communication
     networks:
       - lumin-network
+
+    # Health check to ensure container is running properly
+    healthcheck:
+      test: ["CMD", "ps", "aux"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Specify resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
 
   # MongoDB service for data storage
   governance-db:
@@ -45,12 +97,25 @@ services:
 
     # Store data outside container for persistence
     volumes:
-      - governance-data:/data/db
-      - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
+      - type: volume
+        source: governance-data
+        target: /data/db
+      - type: bind
+        source: ./init-mongodb.js
+        target: /docker-entrypoint-initdb.d/init-mongodb.js
+        read_only: true
 
     # Environment variables for DB setup
     env_file:
       - .env
+
+    # Health check for MongoDB
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
     # Internal port only - not exposed to host by default for security
     # Access MongoDB through the lumin-dev-environment container for better security
@@ -62,14 +127,26 @@ services:
     networks:
       - lumin-network
 
-# Persistent volumes
+    # Specify resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+# Persistent volumes with labels for better identification
 volumes:
   governance-data:
-    # Data persists even when containers are removed
+    name: lumin-ai-governance-data
+    labels:
+      com.luminai.description: "MongoDB data storage for LUMIN.AI governance analysis"
   lumin-python-packages:
-    # Package cache for faster builds
+    name: lumin-ai-python-packages
+    labels:
+      com.luminai.description: "Python package cache for faster builds"
 
 # Network for container communication
 networks:
   lumin-network:
     driver: bridge
+    name: lumin-ai-network

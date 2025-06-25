@@ -18,27 +18,48 @@
                 "ms-vscode.vscode-json",
                 "redhat.vscode-yaml",
                 "ms-vscode.hexeditor",
-                "eamodio.gitlens",
-                "github.vscode-pull-request-github",
+                "github.vscode-github-actions",
                 "ms-azuretools.vscode-docker",
-                "ms-python.flake8"
+                "dbaeumer.vscode-eslint"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
-                "python.terminal.activateEnvironment": true,
-                "python.formatting.provider": "black",
-                "python.linting.enabled": true,
-                "python.linting.pylintEnabled": true,
-                "python.linting.flake8Enabled": true,
-                "jupyter.askForKernelRestart": false,
-                "jupyter.alwaysTrustNotebooks": true,
                 "editor.formatOnSave": true,
-                "editor.codeActionsOnSave": {
-                    "source.organizeImports": true
+                "python.linting.enabled": true,
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.formatting.provider": "black",
+                "python.formatting.blackArgs": [
+                    "--line-length",
+                    "88"
+                ],
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": true
+                    }
                 },
-                "files.associations": {
-                    "*.gov": "json",
-                    "*.democracy": "csv"
+                "[javascript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[typescript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml",
+                    "editor.formatOnSave": true
+                },
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "/bin/zsh"
+                    }
                 }
             }
         }
@@ -62,7 +83,7 @@
             "onAutoForward": "notify"
         }
     },
-    "postCreateCommand": "bash -c 'if [ -f \".pre-commit-config.yaml\" ]; then pip install pre-commit && pre-commit install; fi'",
+    "postCreateCommand": "bash -c 'if [ -f \"/tmp/setup.sh\" ]; then chmod +x /tmp/setup.sh && /tmp/setup.sh; fi && if [ -f \"requirements-dev.txt\" ]; then pip install -r requirements-dev.txt; fi && if [ -f \"requirements-ds.txt\" ]; then pip install -r requirements-ds.txt; fi && if [ -f \"package.json\" ]; then npm install; fi && if [ -f \".pre-commit-config.yaml\" ]; then pre-commit install; fi'",
     "mounts": [
         "source=${localWorkspaceFolder}/data,target=/workspace/data,type=bind,consistency=cached",
         "source=${localWorkspaceFolder}/models,target=/workspace/models,type=bind,consistency=cached",
@@ -70,14 +91,27 @@
     ],
     "remoteUser": "lumin-dev",
     "features": {
-        "ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {},
-        "ghcr.io/devcontainers/features/common-utils:2": {
-            "installZsh": true,
-            "configureZshAsDefaultShell": true,
-            "username": "lumin-dev",
-            "userUid": "1000",
-            "userGid": "1000"
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "enableNonRootDocker": "true",
+            "moby": "true"
+        },
+        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {
+            "version": "latest"
         }
-    }
+    },
+    "initializeCommand": "echo 'Preparing build context for devcontainer...'",
+    "onCreateCommand": "echo 'Container created, running initial setup...'",
+    "updateContentCommand": "echo 'Content updated, synchronizing dependencies...'",
+    "postStartCommand": "echo 'Container started successfully!'",
+    "postAttachCommand": {
+        "notify-attached": "echo 'VS Code attached to container!'"
+    },
+    "runArgs": [
+        "--shm-size=2gb",
+        "--cpus=2",
+        "--memory=4g"
+    ],
+    "shutdownAction": "stopContainer",
+    "waitFor": "onCreateCommand"
 }
