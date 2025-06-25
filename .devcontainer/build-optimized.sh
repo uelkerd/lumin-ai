@@ -104,7 +104,7 @@ run_build() {
     else
         # Regular docker compose build
         docker compose build \
-            --no-cache \
+        docker compose build \
             --progress=plain
     fi
 
