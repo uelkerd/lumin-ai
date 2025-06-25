@@ -1,46 +1,11 @@
-# Development Tools Requirements for LUMIN.AI - Minimal Version
-# Core development tools only - for a more stable container build
-
-# Code Quality and Formatting
-black==23.11.0                # Consistent code formatting across team
-isort==5.12.0                 # Import statement organization
-flake8==6.1.0                 # Code style and error checking
-mypy==1.7.1                   # Static type checking for better code quality
-bandit[toml]==1.7.5           # Security vulnerability scanning
-
-# Testing Framework for Reliable Development
-pytest==7.4.3                # Comprehensive testing framework
-pytest-cov==4.1.0            # Test coverage reporting
-pytest-mock==3.12.0          # Mocking utilities for isolated testing
-
-# Jupyter Enhancement for Data Science Workflow
-jupyterlab==4.0.8            # Modern notebook interface for analysis
-ipywidgets==8.1.1            # Interactive widgets for governance data exploration
-
-# API Development for Cross-Track Integration
-fastapi==0.104.1             # Modern API framework for ML service endpoints
-uvicorn==0.24.0              # ASGI server for serving ML APIs
-requests==2.31.0             # HTTP client for API testing and integration
-
-# Development Utilities for Productive Workflow
-ipython==8.17.2              # Enhanced interactive Python shell
-rich==13.7.0                 # Beautiful terminal output and progress bars
-tqdm==4.66.1                 # Progress bars for long-running processes
-
-# Environment and Configuration Management
-python-dotenv==1.0.0         # Environment variable management
-pyyaml==6.0.1                # YAML configuration file support
-
-# Version Control and Collaboration Tools
-pre-commit==3.5.0            # Git hooks for code quality enforcement
-nbqa==1.7.1                  # Run code quality tools on notebooks
-
-# Logging and Monitoring for Production Readiness
-loguru==0.7.2                # Enhanced logging with better formatting
-
-# File Format Support for Governance Data
-openpyxl==3.1.2              # Excel file reading and writing
-
-# Development Server and Hot Reload
-watchdog==3.0.0              # File system monitoring for auto-reload
-python-multipart==0.0.6      # Multipart form data parsing for file uploads
+# Development Dependencies for LUMIN.AI
+pytest==7.4.0
+pytest-cov==4.1.0
+flake8==6.1.0
+black==23.7.0
+isort==5.12.0
+mypy==1.5.1
+pre-commit==3.3.3
+python-dotenv==1.0.0
+httpx==0.24.1
+pytest-asyncio==0.21.1
