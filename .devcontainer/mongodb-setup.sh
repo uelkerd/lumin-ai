@@ -254,8 +254,12 @@ print('🔄 Change streams configured for real-time governance analysis');
 
 # Create database statistics collection for monitoring
 mongosh governance_analysis --eval "
-// Create monitoring collection for database health
+ // Create monitoring collection for database health
 db.createCollection('system_monitoring');
+
+// Create indexes for efficient queries as the collection grows
+db.system_monitoring.createIndex({ setup_date: 1 });
+db.system_monitoring.createIndex({ version: 1 });
 
 // Insert initial monitoring document
 db.system_monitoring.insertOne({
