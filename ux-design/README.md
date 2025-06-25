@@ -310,6 +310,6 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 - [ ] Design documentation
 
 ---
-**Track Lead**: [Name]  
-**Last Updated**: [Date]  
+**Track Lead**: [Name]
+**Last Updated**: [Date]
 **Status**: 🟢 Active Development

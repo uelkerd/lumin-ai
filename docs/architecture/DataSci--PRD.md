@@ -23,7 +23,7 @@ This document outlines the functional and non-functional requirements for the Da
 **DS-F-001: Austria Democracy Radar Dataset Integration**
 - **Description**: The system must successfully load, validate, and process all available Austria Democracy Radar Wave datasets for comprehensive governance analysis
 - **Priority**: High
-- **Acceptance Criteria**: 
+- **Acceptance Criteria**:
   - Successfully loads all Democracy Radar Waves (1-10) with complete data integrity validation
   - Handles missing values and data inconsistencies across different survey waves
   - Maintains temporal alignment and enables longitudinal analysis across survey periods

@@ -15,7 +15,7 @@
 
 ## 🌱 Project Overview
 
-LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems. 
+LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems.
 
 Our MVP-first approach ensures meaningful deliverables while building towards advanced AI-powered policy insights.
 

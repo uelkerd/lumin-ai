@@ -7,12 +7,12 @@
                     <stop offset="100%" style="stop-color:#000000;" />
                 </linearGradient>
             </defs>
-        
+
             <!-- Icon: Geometric Neural Network / Democratic Transparency Symbol -->
             <g id="icon" fill="url(#logoGradient)">
                 <!-- The structure suggests an open, interconnected network, evoking transparency. -->
                 <!-- The overlapping elements with opacity create a sense of depth and translucency. -->
-        
+
                 <!-- Connecting Lines - Grouped for better maintainability -->
                 <g stroke="url(#logoGradient)" stroke-width="1.5" fill="none">
                     <path d="M 25,50 Q 50,20 75,50" opacity="0.8" />
@@ -21,17 +21,17 @@
                     <path d="M 25,50 C 45,5 105,5 115,50" opacity="0.4" />
                     <path d="M 25,50 C 45,95 105,95 115,50" opacity="0.4" />
                 </g>
-        
+
                 <!-- Nodes (Circles) -->
                 <circle cx="25" cy="50" r="7" opacity="0.7"/>
-                <circle cx="75" cy="50" r="9" /> 
+                <circle cx="75" cy="50" r="9" />
                 <circle cx="115" cy="50" r="7" opacity="0.7"/>
 
                 <!-- Inner nodes representing data points or members -->
                 <circle cx="50" cy="32" r="3.5" opacity="0.9"/>
                 <circle cx="50" cy="68" r="3.5" opacity="0.9"/>
             </g>
-        
+
             <!-- Text: LUMIN.AI -->
             <!-- Typography: Modern, refined, bold letterforms converted to paths for consistent rendering -->
             <!-- Original font: 'Exo 2', sans-serif, font-size="40", font-weight="600" -->
