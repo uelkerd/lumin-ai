@@ -1,0 +1,45 @@
+# Deep Learning Track Requirements for LUMIN.AI
+# These packages support neural network development for governance sentiment analysis
+# and voting pattern recognition using transformer models and graph neural networks
+
+# Core Deep Learning Framework
+torch==2.1.0                    # PyTorch for neural network development
+torchvision==0.16.0            # Computer vision utilities (useful for visualization)
+torchaudio==2.1.0              # Audio processing (if governance data includes speeches)
+
+# Transformer Models for Governance Text Analysis
+transformers==4.35.0           # Hugging Face transformers for sentiment analysis
+tokenizers==0.14.1            # Fast tokenization for governance text processing
+datasets==2.14.6              # Dataset loading and preprocessing utilities
+accelerate==0.24.1             # Distributed training and optimization
+
+# Specialized NLP Libraries for Political Science
+spacy==3.7.2                   # Advanced natural language processing
+spacy-transformers==1.3.4     # SpaCy integration with transformer models
+
+# Graph Neural Networks for Voting Pattern Analysis
+torch-geometric==2.4.0        # Graph neural network framework
+networkx==3.2.1               # Graph creation and analysis for voting patterns
+
+# Model Training and Evaluation
+pytorch-lightning==2.1.0      # Structured training framework
+torchmetrics==1.2.0          # Comprehensive metrics for model evaluation
+wandb==0.15.12                # Experiment tracking and visualization
+tensorboard==2.14.1          # Training visualization and monitoring
+
+# Advanced Optimization and Regularization
+optuna==3.4.0                 # Hyperparameter optimization
+transformers[torch]           # Additional PyTorch integrations
+sentence-transformers==2.2.2  # Semantic similarity for governance text
+
+# Model Serving and Deployment
+onnx==1.15.0                  # Model format for deployment optimization
+onnxruntime==1.16.1          # Efficient model inference
+
+# Text Processing for Governance Documents
+nltk==3.8.1                   # Natural language toolkit
+textblob==0.17.1              # Simple text processing
+langdetect==1.0.9             # Language detection for multilingual governance
+
+# Time Series Analysis for Voting Patterns
+tsfresh==0.20.1               # Time series feature extraction

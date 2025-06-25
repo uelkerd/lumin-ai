@@ -7,7 +7,7 @@ import pytest
 from lumin_ai.utils import add, divide, multiply, subtract
 
 
-def test_add():
+def test_add() -> None:
     """Test the add function."""
     assert add(2, 2) == 4
     assert add(0, 0) == 0
@@ -15,7 +15,7 @@ def test_add():
     assert add(0.1, 0.2) == pytest.approx(0.3)
 
 
-def test_subtract():
+def test_subtract() -> None:
     """Test the subtract function."""
     assert subtract(3, 2) == 1
     assert subtract(1, 1) == 0
@@ -23,7 +23,7 @@ def test_subtract():
     assert subtract(10.5, 5.5) == 5.0
 
 
-def test_multiply():
+def test_multiply() -> None:
     """Test the multiply function."""
     assert multiply(2, 3) == 6
     assert multiply(0, 100) == 0
@@ -32,7 +32,7 @@ def test_multiply():
     assert multiply(1.5, 2) == 3.0
 
 
-def test_divide():
+def test_divide() -> None:
     """Test the divide function."""
     assert divide(6, 3) == 2
     assert divide(5, 2) == 2.5
@@ -41,7 +41,7 @@ def test_divide():
     assert divide(-6, -2) == 3
 
 
-def test_divide_by_zero():
+def test_divide_by_zero() -> None:
     """Test division by zero raises an exception."""
     with pytest.raises(ZeroDivisionError):
         divide(5, 0)

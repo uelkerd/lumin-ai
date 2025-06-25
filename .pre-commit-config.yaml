@@ -100,6 +100,7 @@ repos:
         # Use configuration from pyproject.toml
         exclude: ^tests/
         # Don't scan test files as they often contain intentionally insecure patterns
+        additional_dependencies: [tomli]
 
   # Repository 5: Jupyter notebook cleaning and validation
   - repo: https://github.com/nbQA-dev/nbQA
@@ -110,12 +111,13 @@ repos:
         name: "Lint Jupyter notebooks"
         description: "Applies Ruff linting to code cells in Jupyter notebooks"
         args: [--fix]
+        additional_dependencies: [ruff]
 
       # Use Ruff for formatting notebook code cells
-      - id: nbqa
+      - id: nbqa-ruff-format
         name: "Format Jupyter notebooks"
         description: "Formats code cells in Jupyter notebooks with Ruff formatter"
-        args: [ruff, format]
+        additional_dependencies: [ruff]
 
   # Repository 6: Documentation and README checks
   - repo: https://github.com/pycqa/doc8

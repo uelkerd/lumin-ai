@@ -1,0 +1,194 @@
+# LUMIN.AI Development Environment
+# This Docker Compose configuration creates a comprehensive development setup
+# supporting all tracks: Deep Learning, Data Science, Web Development, UX Design
+
+version: '3.8'
+
+services:
+  # Main development environment container
+  # Contains all tools needed for cross-track collaboration
+  lumin-dev-environment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Build arguments for customizing the development environment
+        PYTHON_VERSION: "3.11"
+        NODE_VERSION: "18"
+        USERNAME: "lumin-dev"
+
+    # Container name for easy identification
+    container_name: lumin-ai-dev
+
+    # Keep container running for development
+    command: sleep infinity
+
+    # Volume mounts for persistent development
+    volumes:
+      # Project source code (bidirectional sync for live development)
+      - ../:/workspace:cached
+
+      # Persistent Python package cache (speeds up pip installs)
+      - lumin-python-packages:/home/lumin-dev/.cache/pip
+
+      # Persistent Node.js modules (speeds up npm installs)
+      - lumin-node-modules:/workspace/web/node_modules
+
+      # Jupyter configuration persistence
+      - lumin-jupyter-config:/home/lumin-dev/.jupyter
+
+      # Git configuration persistence (maintains your git settings)
+      - lumin-git-config:/home/lumin-dev/.gitconfig
+
+      # Model storage for Deep Learning track (persistent across container restarts)
+      - lumin-ml-models:/workspace/models
+
+      # Processed datasets cache (avoids reprocessing Austria Democracy Radar data)
+      - lumin-processed-data:/workspace/data/processed
+
+    # Network configuration for service communication
+    ports:
+      - "3000:3000"   # React development server (Web Development track)
+      - "8000:8000"   # FastAPI/Flask ML services (Deep Learning/Data Science integration)
+      - "8888:8888"   # Jupyter notebook server (Data Science exploration)
+      - "8080:8080"   # Alternative web server port
+      - "5000:5000"   # Flask development server (Python API services)
+
+    # Environment variables for development configuration
+    environment:
+      # Python environment settings
+      - PYTHONPATH=/workspace
+      - PYTHONUNBUFFERED=1
+      - PIP_CACHE_DIR=/home/lumin-dev/.cache/pip
+
+      # Development mode flags
+      - NODE_ENV=development
+      - FLASK_ENV=development
+      - JUPYTER_ENABLE_LAB=yes
+
+      # Database connection for governance data
+      - MONGO_USERNAME=lumin
+      - MONGO_PASSWORD=dummy_password # pragma: allowlist secret
+      - MONGO_DB_NAME=governance_analysis
+      - DATABASE_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@governance-db:27017/${MONGO_DB_NAME}
+      - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@governance-db:27017/${MONGO_DB_NAME}
+
+      # API configuration for cross-track integration
+      - ML_API_BASE_URL=http://localhost:8000
+      - WEB_API_BASE_URL=http://localhost:3000
+
+      # Data paths standardized across team
+      - GOVERNANCE_DATA_PATH=/workspace/data/raw
+      - PROCESSED_DATA_PATH=/workspace/data/processed
+      - MODELS_PATH=/workspace/models
+
+      # Development convenience settings
+      - TERM=xterm-256color
+
+    # Network connection to other services
+    networks:
+      - lumin-network
+
+    # Dependency on database service
+    depends_on:
+      - governance-db
+
+  # MongoDB database for multimodal governance analysis data
+  # Provides flexible document storage for diverse governance data types
+  governance-db:
+    image: mongo:7.0
+    container_name: lumin-governance-db
+
+    # Database configuration
+    environment:
+      - MONGO_USERNAME=lumin
+      - MONGO_PASSWORD=dummy_password # pragma: allowlist secret
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=governance_analysis
+
+    # Persistent database storage and initialization
+    volumes:
+      - lumin-mongodb-data:/data/db
+      - lumin-mongodb-config:/data/configdb
+      - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
+      - ./mongodb-setup.sh:/docker-entrypoint-initdb.d/mongodb-setup.sh:ro
+
+    # Database port (not exposed externally for security)
+    ports:
+      - "27017:27017"
+
+    # Health check to ensure database is ready before dev environment starts
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - lumin-network
+
+  # Redis cache for ML model results and API caching
+  # Improves performance for repeated governance analysis queries
+  cache-service:
+    image: redis:7-alpine
+    container_name: lumin-cache
+
+    # Redis configuration for development
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+    volumes:
+      - lumin-redis-data:/data
+
+    ports:
+      - "6379:6379"
+
+    networks:
+      - lumin-network
+
+# Persistent volumes for development data
+# These maintain state across container restarts, improving development efficiency
+volumes:
+  # Python package cache (avoids re-downloading PyTorch, transformers, etc.)
+  lumin-python-packages:
+    driver: local
+
+  # Node.js modules (avoids re-installing React, TypeScript, etc.)
+  lumin-node-modules:
+    driver: local
+
+  # Database persistence (keeps your governance analysis data)
+  lumin-mongodb-data:
+    driver: local
+
+  # MongoDB configuration persistence
+  lumin-mongodb-config:
+    driver: local
+
+  # Redis cache persistence
+  lumin-redis-data:
+    driver: local
+
+  # Jupyter configuration (maintains notebook preferences)
+  lumin-jupyter-config:
+    driver: local
+
+  # Git configuration persistence
+  lumin-git-config:
+    driver: local
+
+  # ML model storage (trained models persist across sessions)
+  lumin-ml-models:
+    driver: local
+
+  # Processed dataset cache (Austria Democracy Radar preprocessing results)
+  lumin-processed-data:
+    driver: local
+
+# Network for inter-service communication
+# Enables your ML services to communicate with your web dashboard
+networks:
+  lumin-network:
+    driver: bridge
+    name: lumin-ai-network
