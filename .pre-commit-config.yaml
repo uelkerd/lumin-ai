@@ -96,7 +96,7 @@ repos:
       - id: prevent-nested-venv
         name: Prevent nested virtual environments
         entry: |
-          #!/usr/bin/env sh
+          #!/usr/bin/env bash
           if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then
             echo "⚠️  ERROR: Nested virtual environment detected!"
             echo "❌  Current virtual environment: $VIRTUAL_ENV"
