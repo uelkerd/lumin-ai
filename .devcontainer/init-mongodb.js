@@ -2,20 +2,39 @@
 // Sets up MongoDB collections and indexes for democratic governance analysis
 // Supports multimodal data: text, images, audio, structured survey data, ML embeddings
 
-print('LUMIN.AI: Setting up MongoDB with environment variables');
+print('LUMIN.AI: Starting MongoDB initialization...');
+print('LUMIN.AI: Reading database configuration from environment variables');
 
-// Create user for application access
-// User credentials come from the environment variables or fall back to defaults
-db.createUser({
-  user: process.env.MONGO_USERNAME || 'lumin',
-  pwd: process.env.MONGO_PASSWORD || 'devpassword',  // pragma: allowlist secret
-  roles: [
-    { role: 'readWrite', db: process.env.MONGO_DB_NAME || 'governance_analysis' },
-    { role: 'dbAdmin', db: process.env.MONGO_DB_NAME || 'governance_analysis' }
-  ]
-});
+// Get MongoDB configuration from environment variables
+const username = process.env.MONGO_USERNAME || 'lumin';
+const password = process.env.MONGO_PASSWORD || 'devpassword';  // pragma: allowlist secret
+const dbName = process.env.MONGO_DB_NAME || 'governance_analysis';
 
-print('LUMIN.AI: MongoDB user created successfully');
+try {
+  // Create database if it doesn't exist
+  db = db.getSiblingDB(dbName);
+
+  // Create user for application access if it doesn't already exist
+  const existingUser = db.getUser(username);
+  if (!existingUser) {
+    print(`LUMIN.AI: Creating new MongoDB user '${username}' for database '${dbName}'`);
+    db.createUser({
+      user: username,
+      pwd: password,
+      roles: [
+        { role: 'readWrite', db: dbName },
+        { role: 'dbAdmin', db: dbName }
+      ]
+    });
+    print('LUMIN.AI: MongoDB user created successfully');
+  } else {
+    print(`LUMIN.AI: MongoDB user '${username}' already exists, skipping creation`);
+  }
+} catch (error) {
+  print('LUMIN.AI: Error during MongoDB initialization: ' + error.message);
+  throw error;
+}
+
 print('LUMIN.AI: Setting up MongoDB collections for democratic governance analysis...');
 
 // ===== DEMOCRACY RADAR COLLECTION =====
