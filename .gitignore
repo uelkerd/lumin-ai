@@ -335,3 +335,5 @@ venv.bak/
 .env
 .logs/
 tmp/
+# Devcontainer environment variables
+.devcontainer/.env

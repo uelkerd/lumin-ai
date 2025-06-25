@@ -2,19 +2,20 @@
 // Sets up MongoDB collections and indexes for democratic governance analysis
 // Supports multimodal data: text, images, audio, structured survey data, ML embeddings
 
-// Connect to the governance analysis database
-db = db.getSiblingDB('governance_analysis');
+print('LUMIN.AI: Setting up MongoDB with environment variables');
 
 // Create user for application access
+// User credentials come from the environment variables or fall back to defaults
 db.createUser({
-  user: 'lumin',
-  pwd: process.env.MONGO_PASSWORD || 'dummy_password_placeholder', // pragma: allowlist secret
+  user: process.env.MONGO_USERNAME || 'lumin',
+  pwd: process.env.MONGO_PASSWORD || 'devpassword',  // pragma: allowlist secret
   roles: [
-    { role: 'readWrite', db: 'governance_analysis' },
-    { role: 'dbAdmin', db: 'governance_analysis' }
+    { role: 'readWrite', db: process.env.MONGO_DB_NAME || 'governance_analysis' },
+    { role: 'dbAdmin', db: process.env.MONGO_DB_NAME || 'governance_analysis' }
   ]
 });
 
+print('LUMIN.AI: MongoDB user created successfully');
 print('LUMIN.AI: Setting up MongoDB collections for democratic governance analysis...');
 
 // ===== DEMOCRACY RADAR COLLECTION =====
