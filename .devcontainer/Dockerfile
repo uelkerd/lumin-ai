@@ -129,17 +129,14 @@ RUN mkdir -p /home/${USERNAME}/.jupyter && \
     echo "c.NotebookApp.port = 9000" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py && \
     chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.jupyter
 
+# Install pre-commit directly
+RUN pip install --no-cache-dir pre-commit
+
 # Set proper ownership and permissions
 RUN chown -R ${USERNAME}:${USERNAME} /workspace
 
 # Copy pre-commit setup script
 COPY --chown=${USERNAME}:${USERNAME} .devcontainer/setup.sh /tmp/setup.sh
-
-# Install pre-commit hooks if config exists
-RUN if [ -f "/workspace/.pre-commit-config.yaml" ]; then \
-    pip install --no-cache-dir pre-commit && \
-    sudo -u ${USERNAME} pre-commit install; \
-    fi
 
 # Switch to non-root user for security
 USER $USERNAME
