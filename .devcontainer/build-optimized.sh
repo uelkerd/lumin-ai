@@ -92,13 +92,15 @@ run_build() {
 
     # Directory where this script is located
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    PROJECT_ROOT="$( cd "${SCRIPT_DIR}/.." && pwd )"
 
     # Run docker compose build with optimization flags
     cd "${SCRIPT_DIR}" || exit 1
 
     if [ "$COMPOSE_BAKE" = "true" ]; then
         # Use docker buildx bake for optimized parallel builds
-        docker buildx bake --progress=plain
+        # Set context to project root to find all required files
+        docker buildx bake --progress=plain --set *.context="${PROJECT_ROOT}" --allow=fs.read=..
     else
         # Regular docker compose build
         docker compose build \

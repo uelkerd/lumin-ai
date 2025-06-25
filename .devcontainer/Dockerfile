@@ -27,7 +27,7 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python dependencies
-COPY requirements-dev.txt requirements-ds.txt /tmp/
+COPY .devcontainer/requirements-dev.txt .devcontainer/requirements-ds.txt /tmp/
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip wheel setuptools && \
     pip install --no-cache-dir jupyter && \
@@ -118,7 +118,7 @@ RUN mkdir -p /home/${USERNAME}/.jupyter && \
 RUN chown -R ${USERNAME}:${USERNAME} /workspace
 
 # Copy pre-commit setup script
-COPY --chown=${USERNAME}:${USERNAME} ./setup.sh /tmp/setup.sh
+COPY --chown=${USERNAME}:${USERNAME} .devcontainer/setup.sh /tmp/setup.sh
 
 # Install pre-commit hooks if config exists
 RUN if [ -f "/workspace/.pre-commit-config.yaml" ]; then \
