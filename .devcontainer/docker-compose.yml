@@ -1,8 +1,6 @@
 # LUMIN.AI Development Environment - Minimal Version
 # Simplified Docker Compose configuration for stable development setup
 
-version: '3.8'
-
 services:
   # Main development environment container
   lumin-dev-environment:
@@ -27,57 +25,43 @@ services:
     # Essential ports only
     ports:
       - "3000:3000"   # React development server
-      - "8000:8000"   # FastAPI/Flask services
-      - "8888:8888"   # Jupyter notebook server
+      - "8000:8000"   # FastAPI/Flask service
+      - "9000:9000"   # Jupyter notebook
+      - "27017:27017" # MongoDB (for direct access if needed)
 
-    # Environment variables for development configuration
-    environment:
-      - PYTHONPATH=/workspace
-      - PYTHONUNBUFFERED=1
-      - NODE_ENV=development
-      - MONGO_USERNAME=lumin
-      - MONGO_PASSWORD=dummy_password # pragma: allowlist secret
-      - MONGO_DB_NAME=governance_analysis
-      - DATABASE_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@governance-db:27017/${MONGO_DB_NAME}
+    # Environment variables
+    env_file:
+      - .env
 
+    # Configure network for service communication
     networks:
       - lumin-network
 
-    depends_on:
-      - governance-db
-
-  # MongoDB database
+  # MongoDB service for data storage
   governance-db:
-    image: mongo:7.0
+    image: mongo:6.0
     container_name: lumin-governance-db
+    restart: unless-stopped
 
-    environment:
-      - MONGO_USERNAME=lumin
-      - MONGO_PASSWORD=dummy_password # pragma: allowlist secret
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-      - MONGO_INITDB_DATABASE=governance_analysis
-
+    # Store data outside container for persistence
     volumes:
-      - lumin-mongodb-data:/data/db
+      - governance-data:/data/db
       - ./init-mongodb.js:/docker-entrypoint-initdb.d/init-mongodb.js:ro
-      - ./mongodb-setup.sh:/docker-entrypoint-initdb.d/mongodb-setup.sh:ro
 
-    ports:
-      - "27017:27017"
+    # Environment variables for DB setup
+    env_file:
+      - .env
 
+    # Configure network
     networks:
       - lumin-network
 
-# Minimal set of volumes
+# Persistent volumes
 volumes:
+  governance-data:
   lumin-python-packages:
-    driver: local
-  lumin-mongodb-data:
-    driver: local
 
-# Network for inter-service communication
+# Network for container communication
 networks:
   lumin-network:
     driver: bridge
-    name: lumin-ai-network
