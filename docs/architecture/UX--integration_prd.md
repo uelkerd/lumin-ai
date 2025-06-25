@@ -104,7 +104,7 @@ This document outlines the integration requirements for connecting frontend dash
       },
       visualization_data: object // TODO: Define the structure needed for frontend charts.
     }],
-    sample_sizes: object,
+    sample_sizes: object, // TODO: Define the structure, e.g., { "segment_name": { "group": size } }
     methodology_notes: string[]
   }
   ```
