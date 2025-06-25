@@ -1,4 +1,5 @@
 """Utility functions for the LUMIN.AI project."""
+
 from typing import Union
 
 
