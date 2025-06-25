@@ -6,7 +6,7 @@
 repos:
   # Repository 1: Pre-commit's own hooks for basic file hygiene
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0  # Use the latest stable version
+    rev: v4.4.0
     hooks:
       # Basic file checks that prevent common mistakes
       - id: trailing-whitespace
@@ -22,45 +22,44 @@ repos:
         description: "Ensures YAML files are properly formatted"
         files: \.(yaml|yml)$
 
-      - id: check-toml
-        name: "Validate TOML files"
-        description: "Ensures pyproject.toml and other TOML files are valid"
-
-      - id: check-json
-        name: "Validate JSON files"
-        description: "Ensures JSON configuration files are properly formatted"
+      - id: check-added-large-files
+        name: "Check for added large files"
+        description: "Prevents committing files larger than a specified size"
 
       - id: check-merge-conflict
         name: "Check for merge conflicts"
         description: "Prevents committing files with unresolved merge conflict markers"
 
-      - id: check-case-conflict
-        name: "Check for case conflicts"
-        description: "Prevents case-insensitive filesystem conflicts"
+      - id: check-ast
+        name: "Check for AST issues"
+        description: "Prevents committing files with AST issues"
 
-      - id: mixed-line-ending
-        name: "Normalize line endings"
-        description: "Ensures consistent line endings across the project"
-        args: ['--fix=lf']  # Use Unix-style line endings
+      - id: check-json
+        name: "Validate JSON files"
+        description: "Ensures JSON configuration files are properly formatted"
 
-      - id: check-docstring-first
-        name: "Check docstring placement"
-        description: "Ensures docstrings appear before other code in Python files"
+      - id: check-toml
+        name: "Validate TOML files"
+        description: "Ensures pyproject.toml and other TOML files are valid"
 
       - id: debug-statements
         name: "Check for debug statements"
         description: "Prevents committing Python debug statements like pdb.set_trace()"
 
-      - id: name-tests-test
-        name: "Ensure test files are named correctly"
-        description: "Verifies test files follow proper naming conventions"
-        args: ['--pytest-test-first']
-
-  # Repository 2: Ruff for Python linting and formatting
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.0  # Use the latest stable version of Ruff
+  # Repository 2: Black for Python formatting
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
     hooks:
-      # Ruff linting - catches code quality issues and potential bugs
+      - id: black
+        language_version: python3
+        name: "Black formatting"
+        description: "Applies consistent Python code formatting"
+        # This will format your code according to the rules in pyproject.toml
+
+  # Repository 3: Ruff for Python linting and formatting
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.0.265'
+    hooks:
       - id: ruff
         name: "Ruff linting"
         description: "Runs comprehensive Python linting using Ruff"
@@ -68,76 +67,38 @@ repos:
         # --fix: Automatically fix issues that can be safely corrected
         # --exit-non-zero-on-fix: Fail the hook if fixes were applied (forces review)
 
-      # Ruff formatting - ensures consistent code style
-      - id: ruff-format
-        name: "Ruff formatting"
-        description: "Applies consistent Python code formatting"
-        # This will format your code according to the rules in pyproject.toml
-
-  # Repository 3: MyPy for static type checking
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.16.1
+  # Repository 4: ESLint for JavaScript linting
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.40.0
     hooks:
-      - id: mypy
-        name: "MyPy type checking"
-        description: "Performs static type analysis to catch type-related bugs"
+      - id: eslint
+        name: "ESLint linting"
+        description: "Runs JavaScript linting using ESLint"
+        files: \.(js|jsx|ts|tsx)$
+        types: [file]
         additional_dependencies:
-          # Include type stubs for libraries that don't have built-in types
-          - types-requests
-          - types-python-dateutil
-          - pandas-stubs
-        args: [--ignore-missing-imports, --scripts-are-modules]
-        # Configuration managed in pyproject.toml
+          - eslint@8.40.0
+          - eslint-config-prettier@8.8.0
 
-  # Repository 4: Security scanning with Bandit
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.5
-    hooks:
-      - id: bandit
-        name: "Security scanning"
-        description: "Scans Python code for common security issues"
-        args: ['-c', 'pyproject.toml']
-        # Use configuration from pyproject.toml
-        exclude: ^tests/
-        # Don't scan test files as they often contain intentionally insecure patterns
-        additional_dependencies: [tomli]
-
-  # Repository 5: Jupyter notebook cleaning and validation
-  - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.9.1
-    hooks:
-      # Clean Jupyter notebook outputs before committing
-      - id: nbqa-ruff
-        name: "Lint Jupyter notebooks"
-        description: "Applies Ruff linting to code cells in Jupyter notebooks"
-        args: [--fix]
-        additional_dependencies: [ruff]
-
-      # Use Ruff for formatting notebook code cells
-      - id: nbqa-ruff-format
-        name: "Format Jupyter notebooks"
-        description: "Formats code cells in Jupyter notebooks with Ruff formatter"
-        additional_dependencies: [ruff]
-
-  # Repository 6: Documentation and README checks
-  - repo: https://github.com/pycqa/doc8
-    rev: v2.0.0
-    hooks:
-      - id: doc8
-        name: "Documentation style checking"
-        description: "Checks documentation files for style issues"
-        files: \.(rst|txt)$
-        args: ['--max-line-length=100']
-
-  # Repository 7: Secrets detection
+  # Repository 5: Security scanning with Detect Secrets
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
+    rev: v1.4.0
     hooks:
       - id: detect-secrets
         name: "Detect secrets"
         description: "Scans for accidentally committed secrets like API keys"
+        exclude: ".allowlist|package-lock.json|yarn.lock|.devcontainer/docker-compose.yml"
         args: ['--baseline', '.secrets.baseline']
-        exclude: package.lock.json
+
+  # Repository 6: Prevent nested virtual environments
+  - repo: local
+    hooks:
+      - id: prevent-nested-venv
+        name: Prevent nested virtual environments
+        entry: bash prevent_nested_venv.sh
+        language: system
+        pass_filenames: false
+        always_run: true
 
 # Global configuration for all hooks
 default_stages: [pre-commit]  # Run hooks on commit by default
