@@ -70,14 +70,42 @@ git clone https://github.com/yourusername/lumin-ai.git
 cd lumin-ai
 ```
 
-2. **Set up Python environment (Deep Learning & Data Science)**
+2. **Option A: Using Dev Containers (Recommended)**
+
+The project includes a fully configured development environment using VS Code Dev Containers or GitHub Codespaces.
+
+Prerequisites:
+- Docker Desktop
+- Visual Studio Code with Remote - Containers extension
+
+Steps:
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/lumin-ai.git
+cd lumin-ai
+
+# Open with VS Code
+code .
+
+# When prompted, click "Reopen in Container"
+# Or use the command palette (F1) and select "Remote-Containers: Reopen in Container"
+```
+
+The container will automatically:
+- Set up Python 3.11 environment
+- Install Node.js 20
+- Configure MongoDB
+- Install all dependencies
+- Set up pre-commit hooks
+
+3. **Option B: Manual Setup (Python environment)**
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. **Set up Node environment (Web Development)**
+4. **Set up Node environment (Web Development)**
 ```bash
 cd web-development/frontend
 npm install
@@ -85,7 +113,7 @@ cd ../backend
 npm install
 ```
 
-4. **Download datasets**
+5. **Download datasets**
 ```bash
 python scripts/download_data.py
 ```
@@ -210,6 +238,74 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Austria Democracy Radar for providing survey data
 - Humboldt University Berlin for research foundation
 - All project mentors and advisors
+
+## 🛠️ Development Environment
+
+### Dev Container Setup
+
+LUMIN.AI uses a Docker-based development environment to ensure consistent development experiences across different machines.
+
+#### Key Features
+
+- **Python 3.11** with all dependencies pre-installed
+- **Node.js 20** for web development
+- **MongoDB** database for data storage
+- **Pre-commit hooks** for code quality
+- **Docker-in-Docker** support for container development
+- **Persistent volumes** for development data
+- **Health monitoring** for all services
+
+#### Testing the MongoDB Connection
+
+To verify that MongoDB is correctly set up in your development environment:
+
+```bash
+python3 scripts/test_mongodb_connection.py
+```
+
+#### Persistent Data
+
+The development container is configured with the following persistent volumes:
+
+- `governance-data`: MongoDB data storage
+- `governance-logs`: MongoDB logs
+- `lumin-python-packages`: Python package cache
+- `lumin-node-modules`: Node.js modules
+- `lumin-jupyter-data`: Jupyter notebook data
+- `lumin-logs`: Application logs
+
+#### Best Practices
+
+1. **Avoid Nested Virtual Environments**:
+   The container already provides a Python environment. Use the `prevent_nested_venv.sh` script to avoid nesting.
+
+2. **BuildKit Optimization**:
+   Ensure Docker BuildKit is enabled for optimal build performance:
+   ```bash
+   export DOCKER_BUILDKIT=1
+   export COMPOSE_DOCKER_CLI_BUILD=1
+   ```
+
+3. **Non-Interactive Builds**:
+   Use the provided build script for consistent builds:
+   ```bash
+   .devcontainer/build.sh
+   ```
+
+4. **Allowlisting Development Secrets**:
+   Development credentials are allowlisted in `.allowlist` to prevent pre-commit hooks from blocking commits.
+
+#### Troubleshooting
+
+**MongoDB Connection Issues**:
+- Check if the MongoDB container is running: `docker ps | grep governance-db`
+- Verify the environment variables in `.devcontainer/docker-compose.yml`
+- Try connecting manually: `mongosh mongodb://lumin:devpassword@governance-db:27017/governance_analysis`
+
+**Container Build Failures**:
+- Check Docker logs: `docker logs lumin-ai-dev`
+- Ensure BuildKit is enabled: `echo $DOCKER_BUILDKIT`
+- Try rebuilding with `--no-cache`: `.devcontainer/build.sh --no-cache`
 
 ---
 

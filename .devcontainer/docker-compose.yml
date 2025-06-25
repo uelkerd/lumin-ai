@@ -41,6 +41,18 @@ services:
       - type: volume
         source: lumin-python-packages
         target: /home/lumin-dev/.cache/pip
+      # Persistent node modules
+      - type: volume
+        source: lumin-node-modules
+        target: /workspace/node_modules
+      # Persistent Jupyter notebooks data
+      - type: volume
+        source: lumin-jupyter-data
+        target: /workspace/notebooks-data
+      # Store logs in persistent volume
+      - type: volume
+        source: lumin-logs
+        target: /workspace/.logs
       # Docker socket for Docker-in-Docker capabilities if needed
       #- type: bind
       #  source: /var/run/docker.sock
@@ -59,9 +71,12 @@ services:
       COMPOSE_DOCKER_CLI_BUILD: 1
       DOCKER_BUILDKIT: 1
       COMPOSE_BAKE: "true"
-      MONGO_USERNAME: lumin
-      MONGO_PASSWORD: devpassword
-      MONGO_DB_NAME: governance_analysis
+      # MongoDB connection settings
+      MONGODB_HOST: governance-db
+      MONGODB_PORT: 27017
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword
+      MONGODB_DATABASE: governance_analysis
 
     # Enable all capabilities required for development
     # including running Docker in Docker if socket is mounted
@@ -88,6 +103,11 @@ services:
         limits:
           cpus: '2.0'
           memory: 4G
+    
+    # Add dependency on MongoDB
+    depends_on:
+      governance-db:
+        condition: service_healthy
 
   # MongoDB service for data storage
   governance-db:
@@ -100,6 +120,11 @@ services:
       - type: volume
         source: governance-data
         target: /data/db
+      # Separate volume for MongoDB logs
+      - type: volume
+        source: governance-logs
+        target: /var/log/mongodb
+      # Configuration and initialization
       - type: bind
         source: ./init-mongodb.js
         target: /docker-entrypoint-initdb.d/init-mongodb.js
@@ -107,10 +132,9 @@ services:
 
     # Environment variables defined directly
     environment:
-      MONGO_USERNAME: lumin
-      MONGO_PASSWORD: devpassword
-      MONGO_DB_NAME: governance_analysis
-      COMPOSE_BAKE: "true"
+      MONGO_INITDB_ROOT_USERNAME: lumin
+      MONGO_INITDB_ROOT_PASSWORD: devpassword
+      MONGO_INITDB_DATABASE: governance_analysis
 
     # Health check for MongoDB
     healthcheck:
@@ -143,10 +167,26 @@ volumes:
     name: lumin-ai-governance-data
     labels:
       com.luminai.description: "MongoDB data storage for LUMIN.AI governance analysis"
+  governance-logs:
+    name: lumin-ai-governance-logs
+    labels:
+      com.luminai.description: "MongoDB logs for LUMIN.AI governance analysis"
   lumin-python-packages:
     name: lumin-ai-python-packages
     labels:
       com.luminai.description: "Python package cache for faster builds"
+  lumin-node-modules:
+    name: lumin-ai-node-modules
+    labels:
+      com.luminai.description: "Node.js modules for faster builds"
+  lumin-jupyter-data:
+    name: lumin-ai-jupyter-data
+    labels:
+      com.luminai.description: "Persistent Jupyter notebooks data"
+  lumin-logs:
+    name: lumin-ai-logs
+    labels:
+      com.luminai.description: "Application logs for LUMIN.AI"
 
 # Network for container communication
 networks:
