@@ -165,7 +165,7 @@ This document outlines the functional and non-functional requirements for the ba
 - **Description**: Backend infrastructure must support multiple simultaneous users without performance degradation
 - **Priority**: High
 - **Acceptance Criteria**:
-  - Support for 100+ concurrent API requests during peak usage periods
+  - Support for 100+ concurrent API requests during peak usage periods (MVP), with a long-term goal of 1000+
   - Connection pooling and resource management preventing system overload
   - Load balancing capabilities distributing traffic across multiple server instances
   - Auto-scaling mechanisms responding to traffic spikes and resource demands
