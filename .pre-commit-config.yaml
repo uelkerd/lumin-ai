@@ -67,20 +67,30 @@ repos:
         # --fix: Automatically fix issues that can be safely corrected
         # --exit-non-zero-on-fix: Fail the hook if fixes were applied (forces review)
 
-  # Repository 4: ESLint for JavaScript linting
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.40.0
-    hooks:
-      - id: eslint
-        name: "ESLint linting"
-        description: "Runs JavaScript linting using ESLint"
-        files: \.(js|jsx|ts|tsx)$
-        types: [file]
-        additional_dependencies:
-          - eslint@8.40.0
-          - eslint-config-prettier@8.8.0
+  # Repository 4: ESLint for JavaScript linting (disabled until JS files are added)
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: v8.40.0
+  #   hooks:
+  #     - id: eslint
+  #       name: "ESLint linting"
+  #       description: "Runs JavaScript linting using ESLint"
+  #       files: \.(js|jsx|ts|tsx)$
+  #       types: [file]
+  #       additional_dependencies:
+  #         - eslint@8.40.0
+  #         - eslint-config-prettier@8.8.0
 
-  # Repository 5: Security scanning with Detect Secrets
+  # Repository 5: Jupyter notebook cleaning and validation
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      # Format Jupyter notebook code cells with Black
+      - id: nbqa-black
+        name: "Format Jupyter notebooks"
+        description: "Formats code cells in Jupyter notebooks with Black"
+        additional_dependencies: [black]
+
+  # Repository 6: Security scanning with Detect Secrets
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
@@ -90,20 +100,13 @@ repos:
         exclude: ".allowlist|package-lock.json|yarn.lock|.devcontainer/docker-compose.yml"
         args: ['--baseline', '.secrets.baseline']
 
-  # Repository 6: Prevent nested virtual environments
+  # Repository 7: Prevent nested virtual environments
   - repo: local
     hooks:
       - id: prevent-nested-venv
         name: Prevent nested virtual environments
-        entry: |
-          #!/usr/bin/env bash
-          if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then
-            echo "⚠️  ERROR: Nested virtual environment detected!"
-            echo "❌  Current virtual environment: $VIRTUAL_ENV"
-            echo "🔄  Please run 'deactivate' before activating another environment."
-            exit 1
-          fi
-          exit 0
+        entry: bash
+        args: ['-c', 'if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then echo "⚠️  ERROR: Nested virtual environment detected!"; echo "❌  Current virtual environment: $VIRTUAL_ENV"; echo "🔄  Please run deactivate before activating another environment."; exit 1; fi; exit 0']
         language: system
         pass_filenames: false
         always_run: true

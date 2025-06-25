@@ -37,6 +37,22 @@ else
     fi
 fi
 
+# Set proper permissions for development workflow
+echo "Setting proper file permissions for development..."
+
+# Set permissions only on necessary files and directories
+# Avoid recursive chown/chmod on /workspace to prevent unintended side effects
+if [ -d "/workspace/scripts" ]; then
+    chmod 755 /workspace/scripts
+    find /workspace/scripts -name "*.sh" -exec chmod +x {} \;
+    echo "Scripts directory permissions updated"
+fi
+
+if [ -d "/workspace/src/api" ]; then
+    find /workspace/src/api -name "*.py" -exec chmod +x {} \;
+    echo "API scripts permissions updated"
+fi
+
 # Set up Python environment
 echo "Setting up Python environment..."
 pip install --upgrade pip wheel setuptools

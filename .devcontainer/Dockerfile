@@ -47,7 +47,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Install the rest of the data science packages
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir -r /dev/stdin || true
+    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir -r /dev/stdin
 
 # Final stage
 FROM python:${PYTHON_VERSION}-slim-bullseye
