@@ -12,14 +12,16 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 
 # Set environment variables for development
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PIP_NO_CACHE_DIR=1
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PATH=$PATH:/home/lumin-dev/.local/bin
 
 # Install essential system dependencies only
-RUN apt-get update && apt-get install -y \
+# Group installations to reduce layer size and cleanup in the same layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     wget \
@@ -36,13 +38,13 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-archive-keyring.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/mongodb-archive-keyring.gpg] http://repo.mongodb.org/apt/debian bullseye/mongodb-org/6.0 main" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list \
     && apt-get update \
-    && apt-get install -y mongodb-mongosh \
+    && apt-get install -y --no-install-recommends mongodb-mongosh \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js for frontend development
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g npm@latest
@@ -53,18 +55,20 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && mkdir -p /home/$USERNAME/.vscode-server /workspace \
     && chown -R $USERNAME:$USERNAME /home/$USERNAME/.vscode-server /workspace
 
-# Set up Python environment and install baseline dependencies
+# Set up working directory
 WORKDIR /workspace
+
+# Copy requirements files first for better layer caching
 COPY requirements-dev.txt requirements-ds.txt ./
 
-# Install base Python packages (note: install jupyter first for setup)
+# Install base Python packages - Install Jupyter first for later configuration
 RUN pip install --upgrade pip wheel setuptools \
-    && pip install jupyter \
-    && pip install -r requirements-dev.txt \
-    && pip install -r requirements-ds.txt \
+    && pip install --no-cache-dir jupyter \
+    && pip install --no-cache-dir -r requirements-dev.txt \
+    && pip install --no-cache-dir -r requirements-ds.txt \
     && rm requirements-*.txt
 
-# Configure Jupyter for remote access (only after we've installed it)
+# Configure Jupyter for remote access (after installation)
 RUN mkdir -p /home/${USERNAME}/.jupyter \
     && jupyter notebook --generate-config \
     && echo "c.NotebookApp.token = ''" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
@@ -74,14 +78,18 @@ RUN mkdir -p /home/${USERNAME}/.jupyter \
     && echo "c.NotebookApp.port = 9000" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
     && chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.jupyter
 
-# Set up project directory permissions
+# Set proper ownership and permissions
 RUN chown -R ${USERNAME}:${USERNAME} /workspace
 
-# Switch to non-root user for better security
+# Install pre-commit hooks if .pre-commit-config.yaml exists
+COPY --chown=${USERNAME}:${USERNAME} ./setup.sh /tmp/setup.sh
+RUN if [ -f "/workspace/.pre-commit-config.yaml" ]; then \
+    pip install --no-cache-dir pre-commit && \
+    sudo -u ${USERNAME} pre-commit install; \
+    fi
+
+# Switch to non-root user for security
 USER $USERNAME
 
-# Set up working directory
-WORKDIR /workspace
-
-# Default command
+# Keep container running
 CMD ["zsh"]
