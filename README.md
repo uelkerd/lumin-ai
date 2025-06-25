@@ -304,7 +304,7 @@ The development container is configured with the following persistent volumes:
 **MongoDB Connection Issues**:
 - Check if the MongoDB container is running: `docker ps | grep governance-db`
 - Verify the environment variables in `.devcontainer/docker-compose.yml`
-- Try connecting manually: `mongosh mongodb://lumin:devpassword@governance-db:27017/governance_analysis`
+- Try connecting manually: `mongosh mongodb://lumin:<your_password>@governance-db:27017/governance_analysis`
 
 **Container Build Failures**:
 - Check Docker logs: `docker logs lumin-ai-dev`
