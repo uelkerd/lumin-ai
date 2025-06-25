@@ -10,7 +10,7 @@ echo "🍃 Configuring MongoDB for LUMIN.AI democratic governance analysis..."
 
 # Wait for MongoDB to be fully ready
 echo "Waiting for MongoDB to be ready..."
-until mongosh --eval "print('MongoDB is ready')" > /dev/null 2>&1; do
+until mongosh --eval "print('MongoDB is ready')" --connectTimeoutMS 5000 > /dev/null 2>&1; do
   echo "Waiting for MongoDB..."
   sleep 2
 done
