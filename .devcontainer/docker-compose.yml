@@ -66,7 +66,7 @@ services:
       - "9000:9000"   # Jupyter notebook
       # Note: MongoDB is not directly exposed to host by default for security
 
-    # Environment variables directly defined (no env_file)
+    # Environment variables for development
     environment:
       BUILDKIT_PROGRESS: plain
       COMPOSE_DOCKER_CLI_BUILD: 1
@@ -75,9 +75,13 @@ services:
       # MongoDB connection settings
       MONGODB_HOST: governance-db
       MONGODB_PORT: 27017
-      MONGODB_USERNAME: lumin
-      MONGODB_PASSWORD: devpassword
-      MONGODB_DATABASE: governance_analysis
+      MONGODB_USERNAME: ${MONGODB_USERNAME:-lumin}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
+      # Use these for MongoDB initialization script
+      MONGO_USERNAME: ${MONGODB_USERNAME:-lumin}
+      MONGO_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
+      MONGO_DB_NAME: ${MONGODB_DATABASE:-governance_analysis}
 
     # Enable all capabilities required for development
     # including running Docker in Docker if socket is mounted
@@ -131,11 +135,11 @@ services:
         target: /docker-entrypoint-initdb.d/init-mongodb.js
         read_only: true
 
-    # Environment variables defined directly
+    # Environment variables for MongoDB initialization
     environment:
-      MONGO_INITDB_ROOT_USERNAME: lumin
-      MONGO_INITDB_ROOT_PASSWORD: devpassword
-      MONGO_INITDB_DATABASE: governance_analysis
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-lumin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
 
     # Health check for MongoDB
     healthcheck:
