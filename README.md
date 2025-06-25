@@ -15,7 +15,7 @@
 
 ## 🌱 Project Overview
 
-LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems. 
+LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems.
 
 Our MVP-first approach ensures meaningful deliverables while building towards advanced AI-powered policy insights.
 
@@ -260,7 +260,7 @@ LUMIN.AI uses a Docker-based development environment to ensure consistent develo
 To verify that MongoDB is correctly set up in your development environment:
 
 ```bash
-python3 scripts/test_mongodb_connection.py
+python3 scripts/test_mongodb_connection.py  # pragma: allowlist secret
 ```
 
 #### Persistent Data
@@ -277,7 +277,11 @@ The development container is configured with the following persistent volumes:
 #### Best Practices
 
 1. **Avoid Nested Virtual Environments**:
-   The container already provides a Python environment. Use the `prevent_nested_venv.sh` script to avoid nesting.
+   The container already provides a Python environment. To prevent accidentally nesting virtual environments, source the protection script:
+   ```bash
+   source prevent_nested_venv.sh
+   ```
+   This will prevent any attempt to activate a second virtual environment while one is already active.
 
 2. **BuildKit Optimization**:
    Ensure Docker BuildKit is enabled for optimal build performance:
