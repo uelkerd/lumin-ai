@@ -102,7 +102,7 @@ This document outlines the integration requirements for connecting frontend dash
         p_value: number,
         confidence_interval: [number, number]
       },
-      visualization_data: object
+      visualization_data: object // TODO: Define the structure needed for frontend charts.
     }],
     sample_sizes: object,
     methodology_notes: string[]
