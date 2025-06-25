@@ -22,12 +22,12 @@ services:
       # Persistent Python package cache
       - lumin-python-packages:/home/lumin-dev/.cache/pip
 
-    # Essential ports only
+    # Port mapping (must match devcontainer.json forward ports)
     ports:
-      - "3000:3000"   # React development server
-      - "8000:8000"   # FastAPI/Flask service
-      - "9000:9000"   # Jupyter notebook
-      - "27017:27017" # MongoDB (for direct access if needed)
+      - "${DEV_SERVER_PORT:-3000}:3000"   # React development server
+      - "${API_SERVER_PORT:-8000}:8000"   # FastAPI/Flask service
+      - "${JUPYTER_PORT:-9000}:9000"      # Jupyter notebook
+      # Note: MongoDB is not directly exposed to host by default for security
 
     # Environment variables
     env_file:
@@ -52,6 +52,12 @@ services:
     env_file:
       - .env
 
+    # Internal port only - not exposed to host by default for security
+    # Access MongoDB through the lumin-dev-environment container for better security
+    # Uncomment below lines if direct host access is required for development
+    # ports:
+    #   - "${MONGODB_PORT:-27017}:27017"
+
     # Configure network
     networks:
       - lumin-network
@@ -59,7 +65,9 @@ services:
 # Persistent volumes
 volumes:
   governance-data:
+    # Data persists even when containers are removed
   lumin-python-packages:
+    # Package cache for faster builds
 
 # Network for container communication
 networks:
