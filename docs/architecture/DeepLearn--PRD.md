@@ -23,7 +23,7 @@ This document outlines the functional and non-functional requirements for the De
 **DL-F-001: Text Preprocessing Pipeline**
 - **Description**: The system must provide a comprehensive text preprocessing pipeline that cleans and prepares governance texts for sentiment analysis
 - **Priority**: High
-- **Acceptance Criteria**: 
+- **Acceptance Criteria**:
   - Pipeline handles various input formats (plain text, CSV, JSON)
   - Removes irrelevant characters while preserving meaning
   - Tokenizes text while maintaining governance-specific terminology

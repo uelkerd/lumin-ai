@@ -23,7 +23,7 @@ This document outlines the comprehensive functional and non-functional requireme
 **PROJ-F-001: Integrated Governance Analysis Platform**
 - **Description**: The system must provide a comprehensive governance analysis platform integrating AI-powered sentiment analysis, statistical trust metrics, and interactive data visualization through an accessible web interface
 - **Priority**: High
-- **Acceptance Criteria**: 
+- **Acceptance Criteria**:
   - Complete end-to-end workflow from Austria Democracy Radar data through AI analysis, statistical processing, and stakeholder-accessible presentation
   - Real-time sentiment analysis of governance texts with confidence scoring and interpretation guidance
   - Interactive trust metrics exploration across demographic groups and temporal patterns with statistical significance indicators

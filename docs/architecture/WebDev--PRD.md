@@ -23,7 +23,7 @@ This document outlines the functional and non-functional requirements for the We
 **WD-F-001: Responsive Dashboard Interface**
 - **Description**: The system must provide a responsive web interface that functions effectively across desktop, tablet, and mobile devices
 - **Priority**: High
-- **Acceptance Criteria**: 
+- **Acceptance Criteria**:
   - Dashboard displays correctly on screens from 320px to 1920px width
   - All interactive features remain accessible and usable on touch devices
   - Navigation adapts appropriately to different screen sizes without losing functionality

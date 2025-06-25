@@ -23,7 +23,7 @@ This document outlines the functional and non-functional requirements for the UX
 **UX-F-001: Comprehensive Stakeholder Analysis**
 - **Description**: The UX team must conduct thorough analysis of all stakeholder groups who will interact with governance transparency tools
 - **Priority**: High
-- **Acceptance Criteria**: 
+- **Acceptance Criteria**:
   - Identification and documentation of primary stakeholders (governance researchers, policy analysts, civic practitioners)
   - Analysis of secondary stakeholders (citizens, journalists, advocacy organizations) with varying technical backgrounds
   - Stakeholder persona development based on governance engagement patterns and technological access levels

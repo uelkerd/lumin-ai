@@ -7,49 +7,49 @@ const App = () => {
 
     // Configuration for fetching docs from GitHub
     const docFileMapping = {
-        "project": { 
-            name: "Project Overview", 
-            icon: "🌟", 
-            files: { 
-                prd: "PROJECT--PRD.md", 
-                mvp: "PROJECT--MVP.md", 
-                roadmap: "PROJECT--ROADMAP.md" 
+        "project": {
+            name: "Project Overview",
+            icon: "🌟",
+            files: {
+                prd: "PROJECT--PRD.md",
+                mvp: "PROJECT--MVP.md",
+                roadmap: "PROJECT--ROADMAP.md"
             }
         },
-        "web-dev": { 
-            name: "Web Development", 
-            icon: "💻", 
-            files: { 
-                prd: "WebDev--PRD.md", 
-                mvp: "WebDev--MVP.md", 
-                roadmap: "WebDev--ROADMAP.md" 
+        "web-dev": {
+            name: "Web Development",
+            icon: "💻",
+            files: {
+                prd: "WebDev--PRD.md",
+                mvp: "WebDev--MVP.md",
+                roadmap: "WebDev--ROADMAP.md"
             }
         },
-        "ux-design": { 
-            name: "UX Design", 
-            icon: "🎨", 
-            files: { 
-                prd: "UX--PRD.md", 
-                mvp: "UX--MVP.md", 
-                roadmap: "UX--ROADMAP.md" 
+        "ux-design": {
+            name: "UX Design",
+            icon: "🎨",
+            files: {
+                prd: "UX--PRD.md",
+                mvp: "UX--MVP.md",
+                roadmap: "UX--ROADMAP.md"
             }
         },
-        "data-science": { 
-            name: "Data Science", 
-            icon: "📊", 
-            files: { 
-                prd: "DataSci--PRD.md", 
-                mvp: "DataSci--MVP.md", 
-                roadmap: "DataSci--ROADMAP.md" 
+        "data-science": {
+            name: "Data Science",
+            icon: "📊",
+            files: {
+                prd: "DataSci--PRD.md",
+                mvp: "DataSci--MVP.md",
+                roadmap: "DataSci--ROADMAP.md"
             }
         },
-        "deep-learning": { 
-            name: "Deep Learning", 
-            icon: "🧠", 
-            files: { 
-                prd: "DeepLearn--PRD.md", 
-                mvp: "DeepLearn--MVP.md", 
-                roadmap: "DeepLearn--ROADMAP.md" 
+        "deep-learning": {
+            name: "Deep Learning",
+            icon: "🧠",
+            files: {
+                prd: "DeepLearn--PRD.md",
+                mvp: "DeepLearn--MVP.md",
+                roadmap: "DeepLearn--ROADMAP.md"
             }
         }
     };
@@ -81,25 +81,25 @@ const App = () => {
                 <text x="150" y="62" fontFamily="'Exo 2', sans-serif" fontSize="40" fontWeight="600" fill="url(#logoGradient)">LUMIN.AI</text>
             </svg>
         );
-        
+
         const NavButton = ({ pageId, children }) => (
-            <button 
-                onClick={() => setActivePage(pageId)} 
+            <button
+                onClick={() => setActivePage(pageId)}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                    activePage === pageId ? 
-                    'bg-indigo-600 text-white shadow' : 
+                    activePage === pageId ?
+                    'bg-indigo-600 text-white shadow' :
                     'text-gray-600 hover:bg-gray-200'
                 }`}
             >
                 {children}
             </button>
         );
-        
+
         return (
             <header className="bg-white shadow-sm sticky top-0 z-20 flex items-center justify-between p-4 border-b border-gray-200">
                 <div className="flex items-center">
-                    <button 
-                        onClick={handleMenuToggle} 
+                    <button
+                        onClick={handleMenuToggle}
                         className="p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 mr-4 md:hidden"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,8 +121,8 @@ const App = () => {
     const renderPage = () => {
         switch(activePage) {
             case 'docsHub':
-                return <DocsHub 
-                    isSidebarOpen={isSidebarOpen} 
+                return <DocsHub
+                    isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                     docFileMapping={docFileMapping}
                 />;
@@ -139,8 +139,8 @@ const App = () => {
                     </main>
                 );
             default:
-                return <DocsHub 
-                    isSidebarOpen={isSidebarOpen} 
+                return <DocsHub
+                    isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                     docFileMapping={docFileMapping}
                 />;

@@ -238,8 +238,8 @@ for chunk in pd.read_csv('large.csv', chunksize=10000):
 - Discussion threads: 25,000+
 
 ---
-**Data Manager**: [Name]  
-**Last Updated**: [Date]  
+**Data Manager**: [Name]
+**Last Updated**: [Date]
 **Next Review**: [Date]
 
 ⚠️ **Remember**: Never commit sensitive data or API keys!

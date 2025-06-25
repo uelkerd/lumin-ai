@@ -185,7 +185,7 @@ export const theme = {
 ```javascript
 import { TrustTrendChart } from './components/DataVisualization';
 
-<TrustTrendChart 
+<TrustTrendChart
   data={democracyData}
   timeRange="6months"
   showConfidence={true}
@@ -321,6 +321,6 @@ npm install
 - [API Design Best Practices](https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design)
 
 ---
-**Track Lead**: [Name]  
-**Last Updated**: [Date]  
+**Track Lead**: [Name]
+**Last Updated**: [Date]
 **Status**: 🟢 Active Development

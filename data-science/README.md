@@ -181,6 +181,6 @@ correlation = np.corrcoef(data.T)  # Faster than pandas.corr()
 5. Commit cleaned data to `data/processed/`
 
 ---
-**Track Lead**: [Name]  
-**Last Updated**: [Date]  
+**Track Lead**: [Name]
+**Last Updated**: [Date]
 **Status**: 🟢 Active Development
