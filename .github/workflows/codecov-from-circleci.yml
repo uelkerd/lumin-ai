@@ -1,0 +1,147 @@
+name: Codecov Upload from CircleCI
+
+on:
+  # Run when CircleCI completes a workflow
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
+        default: 'main'
+      circleci_build_num:
+        description: 'CircleCI build number (optional)'
+        required: false
+
+jobs:
+  upload-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Download CircleCI artifacts
+        id: download_artifacts
+        env:
+          CIRCLECI_TOKEN: ${{ secrets.CIRCLECI_TOKEN }}
+        run: |
+          # Use Python to download artifacts from CircleCI API
+          python - <<EOF
+          import os
+          import requests
+          import json
+
+          token = os.environ.get("CIRCLECI_TOKEN")
+          if not token:
+              print("ERROR: CIRCLECI_TOKEN not set")
+              exit(1)
+
+          # Set headers for API requests
+          headers = {
+              "Circle-Token": token,
+              "Accept": "application/json"
+          }
+
+          # Get project slug
+          project_slug = "github/uelkerd/lumin-ai"
+
+          # Get latest build or specific build
+          build_num = "${{ github.event.inputs.circleci_build_num }}"
+
+          if build_num:
+              # Get specific build
+              url = f"https://circleci.com/api/v2/project/{project_slug}/job/{build_num}/artifacts"
+          else:
+              # Get builds for the branch
+              branch = "${{ github.event.inputs.branch }}"
+              pipeline_url = f"https://circleci.com/api/v2/project/{project_slug}/pipeline"
+              pipeline_response = requests.get(pipeline_url, headers=headers, params={"branch": branch})
+              pipeline_data = pipeline_response.json()
+
+              if not pipeline_data.get("items"):
+                  print("ERROR: No pipelines found for branch", branch)
+                  exit(1)
+
+              latest_pipeline_id = pipeline_data["items"][0]["id"]
+
+              # Get workflows for the pipeline
+              workflow_url = f"https://circleci.com/api/v2/pipeline/{latest_pipeline_id}/workflow"
+              workflow_response = requests.get(workflow_url, headers=headers)
+              workflow_data = workflow_response.json()
+
+              if not workflow_data.get("items"):
+                  print("ERROR: No workflows found for the pipeline")
+                  exit(1)
+
+              latest_workflow_id = workflow_data["items"][0]["id"]
+
+              # Get jobs for the workflow
+              jobs_url = f"https://circleci.com/api/v2/workflow/{latest_workflow_id}/job"
+              jobs_response = requests.get(jobs_url, headers=headers)
+              jobs_data = jobs_response.json()
+
+              if not jobs_data.get("items"):
+                  print("ERROR: No jobs found for the workflow")
+                  exit(1)
+
+              # Find the job that generates test coverage
+              test_job = None
+              for job in jobs_data["items"]:
+                  if "test" in job["name"].lower():
+                      test_job = job
+                      break
+
+              if not test_job:
+                  print("ERROR: Could not find a test job")
+                  exit(1)
+
+              # Get artifacts from the job
+              url = f"https://circleci.com/api/v2/project/{project_slug}/job/{test_job['job_number']}/artifacts"
+
+          # Download artifacts
+          artifacts_response = requests.get(url, headers=headers)
+          artifacts_data = artifacts_response.json()
+
+          if not artifacts_data.get("items"):
+              print("ERROR: No artifacts found")
+              exit(1)
+
+          # Find coverage report artifact
+          coverage_artifact = None
+          for artifact in artifacts_data["items"]:
+              if "coverage" in artifact["path"].lower() and artifact["path"].endswith(".xml"):
+                  coverage_artifact = artifact
+                  break
+
+          if not coverage_artifact:
+              print("ERROR: Could not find a coverage report artifact")
+              exit(1)
+
+          # Download the coverage report
+          download_url = coverage_artifact["url"]
+          coverage_response = requests.get(download_url, headers=headers)
+
+          with open("coverage.xml", "wb") as f:
+              f.write(coverage_response.content)
+
+          print("Successfully downloaded coverage report to coverage.xml")
+          EOF
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: uelkerd/lumin-ai
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          verbose: true

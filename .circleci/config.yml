@@ -3,10 +3,9 @@
 
 version: 2.1
 
-# Using the latest version of the Python and Codecov orbs
+# Using the latest version of the Python orb
 orbs:
   python: circleci/python@2.0.1
-  codecov: codecov/codecov@4.0.1
 
 # Define jobs for linting, testing, and coverage reporting
 jobs:
@@ -85,7 +84,7 @@ jobs:
 
     steps:
       - checkout
-      
+
       # Setup Python dependency caching
       - restore_cache:
           keys:
@@ -97,7 +96,12 @@ jobs:
           name: "Install project with test dependencies"
           command: |
             python -m pip install --upgrade pip
+            # First install pytest explicitly
+            pip install pytest==7.4.0 pytest-cov==4.1.0
+            # Then install the project in development mode with test dependencies
             pip install -e ".[test]"
+            # Verify pytest is installed
+            python -c "import pytest; print(f'Pytest version: {pytest.__version__}')"
 
       # Save the dependency cache for future runs
       - save_cache:
@@ -106,30 +110,53 @@ jobs:
             - ~/.cache/pip
 
       - run:
+          name: "Check Python environment"
+          command: |
+            echo "Python executable path:"
+            which python
+            echo "Python version:"
+            python --version
+            echo "Pip version:"
+            pip --version
+            echo "Installed packages:"
+            pip list
+            echo "Current directory:"
+            pwd
+            echo "Directory contents:"
+            ls -la
+
+      - run:
+          name: "Test importing the package"
+          command: |
+            echo "Trying to import the lumin_ai package..."
+            echo "Python sys.path:"
+            python -c "import sys; print('\n'.join(sys.path))"
+            echo "PYTHONPATH environment variable:"
+            echo $PYTHONPATH
+            # Try importing the package
+            python -c "import lumin_ai; print(f'Successfully imported lumin_ai version {lumin_ai.__version__}')"
+
+      - run:
           name: "Run tests with coverage"
           command: |
             echo "Running tests with coverage analysis..."
+            # Use python -m to ensure we use the correct environment
             python -m pytest --cov=lumin_ai --cov-report=xml --cov-report=html:.htmlcov tests/
             echo "Tests completed!"
 
-      - store_artifacts:
-          path: coverage.xml
-          destination: coverage-report
-
+      # Store coverage reports as artifacts only
       - store_artifacts:
           path: .htmlcov
           destination: html-coverage-report
+
+      - store_artifacts:
+          path: coverage.xml
+          destination: coverage.xml
 
       - persist_to_workspace:
           root: .
           paths:
             - coverage.xml
-
-      # Upload coverage report to Codecov directly from this job
-      # This replaces the separate codecov/upload job
-      - codecov/upload:
-          file: coverage.xml
-          flags: python-tests
 
 # Define the workflows that determine when jobs run
 workflows:
