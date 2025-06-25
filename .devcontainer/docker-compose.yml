@@ -14,8 +14,7 @@ services:
       # BuildKit optimizations
       cache_from:
         - type=registry,ref=python:3.11-slim-bullseye
-        - type=local,src=lumin-ai-cache.tar
-        - lumin-ai_devcontainer-lumin-dev-environment:latest
+        - devcontainer-lumin-dev-environment:latest
       # Use Compose BuildKit integration
       x-bake:
         platforms:
@@ -105,7 +104,7 @@ services:
         limits:
           cpus: '2.0'
           memory: 4G
-    
+
     # Add dependency on MongoDB
     depends_on:
       governance-db:
