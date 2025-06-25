@@ -8,7 +8,7 @@ db = db.getSiblingDB('governance_analysis');
 // Create user for application access
 db.createUser({
   user: 'lumin',
-  pwd: 'dummy_password_placeholder', // pragma: allowlist secret
+  pwd: process.env.MONGO_PASSWORD || 'dummy_password_placeholder', // pragma: allowlist secret
   roles: [
     { role: 'readWrite', db: 'governance_analysis' },
     { role: 'dbAdmin', db: 'governance_analysis' }
