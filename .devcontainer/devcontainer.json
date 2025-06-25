@@ -9,7 +9,7 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "ms-toolsai.jupyter",
-                "ms-toolsai.vscode-jupyter-cell-tags",
+                "ms-toolsai.jupyter-cell-tags",
                 "bradlc.vscode-tailwindcss",
                 "esbenp.prettier-vscode",
                 "ms-vscode.vscode-typescript-next",
@@ -83,7 +83,7 @@
             "onAutoForward": "notify"
         }
     },
-    "postCreateCommand": "bash -c 'if [ -f \"/tmp/setup.sh\" ]; then chmod +x /tmp/setup.sh && /tmp/setup.sh; fi && if [ -f \"requirements-dev.txt\" ]; then pip install -r requirements-dev.txt; fi && if [ -f \"requirements-ds.txt\" ]; then pip install -r requirements-ds.txt; fi && if [ -f \"package.json\" ]; then npm install; fi && if [ -f \".pre-commit-config.yaml\" ]; then pre-commit install; fi'",
+    "postCreateCommand": "bash -c 'if [ -f \"/tmp/setup.sh\" ]; then chmod +x /tmp/setup.sh && /tmp/setup.sh; fi && if [ -f \"requirements-dev.txt\" ]; then pip install -r requirements-dev.txt; fi && if [ -f \"requirements-ds.txt\" ]; then pip install -r requirements-ds.txt; fi && if [ -f \"package.json\" ]; then npm install; fi && if [ -f \".pre-commit-config.yaml\" ]; then pip install pre-commit && pre-commit install; fi'",
     "mounts": [
         "source=${localWorkspaceFolder}/data,target=/workspace/data,type=bind,consistency=cached",
         "source=${localWorkspaceFolder}/models,target=/workspace/models,type=bind,consistency=cached",
@@ -95,9 +95,6 @@
             "version": "latest",
             "enableNonRootDocker": "true",
             "moby": "true"
-        },
-        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {
-            "version": "latest"
         }
     },
     "initializeCommand": "echo 'Preparing build context for devcontainer...'",
