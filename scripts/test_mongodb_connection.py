@@ -22,11 +22,11 @@ logger = logging.getLogger(__name__)
 def test_mongodb_connection():
     """Test connection to MongoDB and perform basic operations."""
     # Get connection details from environment or use defaults
-    mongo_host = os.environ.get('MONGODB_HOST', 'mongodb')
+    mongo_host = os.environ.get('MONGODB_HOST', 'localhost')
     mongo_port = int(os.environ.get('MONGODB_PORT', 27017))
-    mongo_username = os.environ.get('MONGODB_USERNAME', 'dev')
+    mongo_username = os.environ.get('MONGODB_USERNAME', 'lumin')
     mongo_password = os.environ.get('MONGODB_PASSWORD', 'devpassword')
-    mongo_database = os.environ.get('MONGODB_DATABASE', 'luminai')
+    mongo_database = os.environ.get('MONGODB_DATABASE', 'governance_analysis')
 
     connection_string = f"mongodb://{mongo_username}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_database}"
 
