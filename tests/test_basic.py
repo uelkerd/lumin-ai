@@ -1,12 +1,12 @@
 """Basic tests for the LUMIN.AI project."""
 
 
-def test_truth():
+def test_truth() -> None:
     """Test that True is indeed True."""
     assert True
 
 
-def test_math():
+def test_math() -> None:
     """Test that basic arithmetic works."""
     assert 2 + 2 == 4
     assert 10 - 5 == 5
@@ -14,7 +14,7 @@ def test_math():
     assert 10 / 2 == 5
 
 
-def test_string_operations():
+def test_string_operations() -> None:
     """Test that string operations work correctly."""
     # String concatenation
     assert "Hello, " + "World!" == "Hello, World!"
