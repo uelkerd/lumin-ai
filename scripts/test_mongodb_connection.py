@@ -25,8 +25,10 @@ def test_mongodb_connection():
     mongo_host = os.environ.get('MONGODB_HOST', 'localhost')
     mongo_port = int(os.environ.get('MONGODB_PORT', 27017))
     mongo_username = os.environ.get('MONGODB_USERNAME', 'lumin')
-    mongo_password = os.environ.get('MONGODB_PASSWORD', 'devpassword')
-    mongo_database = os.environ.get('MONGODB_DATABASE', 'governance_analysis')
+    mongo_password = os.environ.get('MONGODB_PASSWORD')
+    if not mongo_password:
+        logger.error("Error: MONGODB_PASSWORD environment variable is not set.")
+        return False
 
     connection_string = f"mongodb://{mongo_username}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_database}"
 
