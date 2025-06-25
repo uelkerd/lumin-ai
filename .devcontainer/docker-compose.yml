@@ -144,11 +144,9 @@ services:
       retries: 5
       start_period: 40s
 
-    # Internal port only - not exposed to host by default for security
-    # Access MongoDB through the lumin-dev-environment container for better security
-    # Uncomment below lines if direct host access is required for development
-    # ports:
-    #   - "27017:27017"
+    # Expose MongoDB port to the host for testing
+    ports:
+      - "27017:27017"
 
     # Configure network
     networks:
