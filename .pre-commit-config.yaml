@@ -95,7 +95,15 @@ repos:
     hooks:
       - id: prevent-nested-venv
         name: Prevent nested virtual environments
-        entry: bash prevent_nested_venv.sh
+        entry: |
+          #!/usr/bin/env sh
+          if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then
+            echo "⚠️  ERROR: Nested virtual environment detected!"
+            echo "❌  Current virtual environment: $VIRTUAL_ENV"
+            echo "🔄  Please run 'deactivate' before activating another environment."
+            exit 1
+          fi
+          exit 0
         language: system
         pass_filenames: false
         always_run: true
