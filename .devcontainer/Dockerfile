@@ -26,13 +26,28 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
+# Install Python dependencies in stages to better handle conflicts
 COPY .devcontainer/requirements-dev.txt .devcontainer/requirements-ds.txt /tmp/
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip wheel setuptools && \
-    pip install --no-cache-dir jupyter && \
-    pip install --no-cache-dir -r /tmp/requirements-dev.txt && \
-    pip install --no-cache-dir -r /tmp/requirements-ds.txt
+    pip install --no-cache-dir jupyter
+
+# Install development dependencies first
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-cache-dir -r /tmp/requirements-dev.txt
+
+# Install data science dependencies with conflict resolution
+# Install numpy first at the compatible version
+RUN --mount=type=cache,target=/root/.cache/pip \
+    grep "^numpy==" /tmp/requirements-ds.txt | pip install --no-cache-dir -r /dev/stdin
+
+# Install tensorflow separately since it's picky about numpy version
+RUN --mount=type=cache,target=/root/.cache/pip \
+    grep "^tensorflow==" /tmp/requirements-ds.txt | pip install --no-cache-dir -r /dev/stdin
+
+# Install the rest of the data science packages
+RUN --mount=type=cache,target=/root/.cache/pip \
+    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir -r /dev/stdin || true
 
 # Final stage
 FROM python:${PYTHON_VERSION}-slim-bullseye
