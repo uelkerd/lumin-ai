@@ -8,7 +8,7 @@ db = db.getSiblingDB('admin');
 try {
     db.createUser({
         user: 'lumin',
-        pwd: 'devpassword',
+        pwd: process.env.MONGO_PASSWORD, // This will not work directly, see comment body for a better approach.
         roles: [
             { role: 'readWrite', db: 'governance_analysis' },
             { role: 'dbAdmin', db: 'governance_analysis' }
