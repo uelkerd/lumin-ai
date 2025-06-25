@@ -36,7 +36,7 @@ This document outlines the integration requirements for connecting frontend dash
       timestamp: "ISO-8601",
       trust_score: number,
       confidence_interval: [number, number],
-      demographic_breakdown: object,
+      demographic_breakdown: object, // TODO: Define the specific structure, e.g., { "age": { "18-29": 0.6, ... } }
       sample_size: number
     }],
     metadata: {
