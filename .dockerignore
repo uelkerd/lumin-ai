@@ -79,7 +79,5 @@ logs/
 
 # Docker specific
 .dockerignore
-**/Dockerfile*
-**/docker-compose*
 **/.git
 **/.DS_Store

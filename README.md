@@ -62,82 +62,50 @@ Transform complex governance data into actionable insights that strengthen democ
 - Git
 - Docker (optional, for containerized deployment)
 
-### Installation
+### Environment Configuration
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/lumin-ai.git
-cd lumin-ai
-```
+For security reasons, sensitive configuration should be managed through environment variables:
 
-2. **Option A: Using Dev Containers (Recommended)**
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-The project includes a fully configured development environment using VS Code Dev Containers or GitHub Codespaces.
+2. Update the `.env` file with your specific configuration:
+   ```bash
+   # MongoDB Configuration
+   MONGODB_USERNAME=your_username
+   MONGODB_PASSWORD=your_secure_password  # pragma: allowlist secret
+   MONGODB_DATABASE=your_database_name
 
-Prerequisites:
-- Docker Desktop
-- Visual Studio Code with Remote - Containers extension
+   # API Keys
+   OPENAI_API_KEY=your_api_key
+   ANTHROPIC_API_KEY=your_api_key
+   ```
 
-Steps:
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/lumin-ai.git
-cd lumin-ai
+### Development Setup
 
-# Open with VS Code
-code .
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/uelkerd/lumin-ai.git
+   cd lumin-ai
+   ```
 
-# When prompted, click "Reopen in Container"
-# Or use the command palette (F1) and select "Remote-Containers: Reopen in Container"
-```
+2. Open in VS Code:
+   ```bash
+   code .
+   ```
 
-The container will automatically:
-- Set up Python 3.11 environment
-- Install Node.js 20
-- Configure MongoDB
-- Install all dependencies
-- Set up pre-commit hooks
+3. When prompted, reopen in container or use Command Palette:
+   - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
+   - Type "Dev Containers: Reopen in Container"
+   - Select the option and wait for the container to build
 
-3. **Option B: Manual Setup (Python environment)**
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-4. **Set up Node environment (Web Development)**
-```bash
-cd web-development/frontend
-npm install
-cd ../backend
-npm install
-```
-
-5. **Download datasets**
-```bash
-python scripts/download_data.py
-```
-
-### Running the Application
-
-**Start the backend API:**
-```bash
-cd web-development/backend
-npm start
-```
-
-**Start the frontend dashboard:**
-```bash
-cd web-development/frontend
-npm start
-```
-
-**Run Jupyter notebooks:**
-```bash
-jupyter notebook
-```
-
-The application will be available at `http://localhost:3000`
+4. The development environment will automatically:
+   - Install all dependencies
+   - Set up MongoDB with proper indexes
+   - Configure pre-commit hooks
+   - Start all necessary services
 
 ## 📁 Project Structure
 
