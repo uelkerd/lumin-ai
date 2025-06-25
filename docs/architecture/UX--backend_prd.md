@@ -189,7 +189,7 @@ This document outlines the functional and non-functional requirements for the ba
 - **Description**: Backend services must maintain high availability ensuring consistent access to governance insights
 - **Priority**: High
 - **Acceptance Criteria**:
-  - 99.5% uptime during business hours with 99% overall availability target
+  - 99.9% uptime during business hours with 99.5% overall availability target
   - Health monitoring and automated alerting for service failures and performance degradation
   - Graceful error handling preventing cascade failures across integrated services
   - Disaster recovery procedures enabling rapid service restoration after outages
