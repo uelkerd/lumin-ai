@@ -259,7 +259,7 @@ This document outlines the functional and non-functional requirements for the fr
 - **Framework Lock-in**: React.js with TypeScript for consistency and maintainability
 - **Library Restrictions**: Preference for well-maintained, lightweight libraries with TypeScript support
 - **Performance Requirements**: Code splitting and lazy loading required for complex visualizations
-- **Testing Requirements**: 90%+ test coverage for React components and user interactions
+- **Testing Requirements**: High test coverage (e.g., 85%+) for critical logic, with comprehensive E2E tests for key user workflows
 
 ### User Experience Assumptions
 - **User Technical Proficiency**: Mixed technical backgrounds requiring progressive disclosure of complexity
