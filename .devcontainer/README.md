@@ -75,6 +75,12 @@ The environment includes pre-configured pre-commit hooks to maintain code qualit
 - **Detect-secrets**: Security scanning for accidental credential exposure
 - **Prevent-nested-venv**: Avoids creating nested virtual environments
 
+You can activate the nested virtual environment prevention script manually:
+```bash
+source /workspaces/lumin-ai/prevent_nested_venv.sh
+```
+If you see `(.venv) (.venv)` in your prompt, you have nested environments and should run `deactivate` once before activating any environments.
+
 Development secrets are allowlisted in `.allowlist` to prevent pre-commit hooks from blocking commits with known development credentials.
 
 ## Build Optimizations
@@ -133,5 +139,5 @@ If you encounter any issues with the container:
    ```bash
    pre-commit run --all-files
    ```
-   
+
 6. If secrets detection is blocking legitimate development credentials, ensure they're listed in `.allowlist`
