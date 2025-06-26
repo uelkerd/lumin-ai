@@ -188,36 +188,50 @@ class GitHubIssueCreator:
         return True
 
     def get_issues_to_sync(self, start_issue_num: int) -> List[Dict]:
-        """Fetch all open issues since a given issue number."""
+        """Fetch all open issues since a given issue number and check project assignments."""
         issues_to_sync = []
-        page = 1
-        per_page = 100
 
-        print("Fetching open issues from repository...")
+        print("Fetching open issues and checking project assignments...")
 
-        while True:
-            # Fetch issues newest first
-            url = f"{self.base_url}/issues?state=open&sort=created&direction=desc&per_page={per_page}&page={page}"
-            response = requests.get(url, headers=self.headers)
+        query = f"""
+        query {{
+          repository(owner: "{self.owner}", name: "{self.repo}") {{
+            issues(first: 100, states: OPEN, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+              edges {{
+                node {{
+                  number
+                  title
+                  projectItems(first: 1) {{
+                    edges {{
+                      node {{
+                        project {{
+                          id
+                        }}
+                      }}
+                    }}
+                  }}
+                }}
+              }}
+            }}
+          }}
+        }}
+        """
 
-            if response.status_code != 200:
-                print(f"Error fetching issues: {response.status_code}")
-                break
+        result = self.graphql_query(query)
 
-            issues_page = response.json()
-            if not issues_page:
-                break
+        if 'data' not in result or 'repository' not in result['data']:
+            print("Error fetching issues via GraphQL")
+            return issues_to_sync
 
-            for issue in issues_page:
-                # Stop if we've gone past the start number
-                if issue['number'] < start_issue_num:
-                    return issues_to_sync
-                # Only add issues that haven't been assigned to the project
-                if not issue.get('project'):
-                    issues_to_sync.append(issue)
-
-            page += 1
-
+        issues = result['data']['repository']['issues']['edges']
+        for issue_edge in issues:
+            issue = issue_edge['node']
+            # Stop if we've gone past the start number
+            if issue['number'] < start_issue_num:
+                return issues_to_sync
+            # Only add issues that haven't been assigned to the project
+            if not issue['projectItems']['edges']:
+                issues_to_sync.append(issue)
         return issues_to_sync
 
     def create_issue(self, issue_data: Dict, add_to_project: bool = True) -> bool:
