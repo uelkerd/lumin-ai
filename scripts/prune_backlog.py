@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 import argparse
 import logging
+import sys
+import os
 
-from .github_client import GitHubClient
+# Add the parent directory to the path so we can import github_client
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts.github_client import GitHubClient
 
 # Issues to find and close based on our MVP scope refinement
 ISSUES_TO_CLOSE = [
