@@ -6,6 +6,24 @@
 
 set -e
 
+# --- Configuration ---
+# It's better to use environment variables passed from docker-compose.yml
+# but we have defaults here for clarity and standalone execution.
+MONGODB_DATABASE=${MONGODB_DATABASE:-governance_analysis}
+MONGODB_USERNAME=${MONGODB_USERNAME:-lumin}
+MONGODB_PASSWORD=${MONGODB_PASSWORD:-devpassword}
+INIT_FLAG_FILE="/data/db/mongodb_initialized.flag"
+
+# --- Main Script ---
+
+# Check if initialization has already been done
+if [ -f "$INIT_FLAG_FILE" ]; then
+    echo "✅ MongoDB already initialized. Skipping setup."
+    exit 0
+fi
+
+echo "🚀 Starting MongoDB initial setup..."
+
 echo "🍃 Configuring MongoDB for LUMIN.AI democratic governance analysis..."
 
 # Wait for MongoDB to be fully ready
@@ -351,3 +369,8 @@ echo "  ✅ System monitoring configured"
 echo ""
 echo "MongoDB is now optimized for democratic governance analysis!"
 echo "Ready for multimodal data: text, images, audio, video, and complex ML outputs"
+
+# --- Finalization ---
+# Create the flag file to indicate that initialization is complete
+touch "$INIT_FLAG_FILE"
+echo "✅ Created initialization flag file: $INIT_FLAG_FILE"

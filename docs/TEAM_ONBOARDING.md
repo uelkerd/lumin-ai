@@ -113,7 +113,7 @@ npm run build
 ### Database Operations
 ```bash
 # Connect to MongoDB
-mongosh mongodb://lumin:devpassword@governance-db:27017/governance_analysis
+mongosh mongodb://lumin:devpassword@governance-db:27017/governance_analysis # pragma: allowlist secret
 
 # Test database connection
 python scripts/test_mongodb_connection.py
@@ -121,6 +121,15 @@ python scripts/test_mongodb_connection.py
 # View database logs
 docker logs lumin-governance-db
 ```
+
+### Script Execution Context
+
+A quick note on how to run the scripts in the `/scripts` directory:
+
+*   **Inside the Container**: Most scripts are designed to be run from *within* the dev container shell. This includes `container-env-check.sh`, `welcome-new-team-member.sh`, and the individual monitoring scripts.
+*   **From the Host Machine**: Some scripts, particularly those that interact with the Docker daemon itself (like `quick-health-check.sh` which runs `docker exec`), can be run from your host machine's terminal, but are primarily intended for use within the container to maintain a consistent environment.
+
+When in doubt, run the script from the container's terminal prompt.
 
 ## ⚠️ Known Issues & Workarounds
 
@@ -325,4 +334,4 @@ docker logs lumin-ai-dev
 
 ---
 
-*Welcome to the team! Let's build something amazing together! 🚀* 
+*Welcome to the team! Let's build something amazing together! 🚀*
