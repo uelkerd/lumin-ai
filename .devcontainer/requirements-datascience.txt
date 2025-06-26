@@ -9,7 +9,7 @@ seaborn==0.12.2
 
 # Jupyter (lightweight)
 jupyter==1.0.0
-notebook==7.0.3
+notebook==7.4.3
 
 # Data processing utilities
 beautifulsoup4==4.12.2
