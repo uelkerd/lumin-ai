@@ -323,3 +323,4 @@ The development container is configured with the following persistent volumes:
 ---
 
 **Made with ❤️ by LUMIN.AI Team | TechLabs Berlin Summer 2025**
+# LFS hooks disabled temporarily
