@@ -57,11 +57,13 @@ python scripts/prune_backlog.py --token YOUR_GITHUB_TOKEN
 Extracts milestones from ROADMAP.md files and creates them in GitHub.
 
 **Usage:**
+
 ```bash
 python scripts/create_milestones.py docs/architecture --token YOUR_GITHUB_TOKEN
 ```
 
 **Options:**
+
 - `--token`: GitHub personal access token (required)
 - `--owner`: Repository owner (default: "uelkerd")
 - `--repo`: Repository name (default: "lumin-ai")
@@ -72,11 +74,13 @@ python scripts/create_milestones.py docs/architecture --token YOUR_GITHUB_TOKEN
 Extracts epics from PRD files and creates them as labeled GitHub issues.
 
 **Usage:**
+
 ```bash
 python scripts/create_epics.py docs/architecture --token YOUR_GITHUB_TOKEN
 ```
 
 **Options:**
+
 - `--token`: GitHub personal access token (required)
 - `--owner`: Repository owner (default: "uelkerd")
 - `--repo`: Repository name (default: "lumin-ai")
@@ -88,11 +92,13 @@ python scripts/create_epics.py docs/architecture --token YOUR_GITHUB_TOKEN
 Links existing GitHub issues to relevant sections in documentation files, helping to maintain traceability between requirements and implementation.
 
 **Usage:**
+
 ```bash
 python scripts/link_issues_to_docs.py docs/architecture --token YOUR_GITHUB_TOKEN
 ```
 
 **Options:**
+
 - `--token`: GitHub personal access token (required)
 - `--owner`: Repository owner (default: "uelkerd")
 - `--repo`: Repository name (default: "lumin-ai")

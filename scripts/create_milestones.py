@@ -2,6 +2,7 @@
 """
 Extract milestones from ROADMAP.md files and create them in GitHub
 """
+
 import argparse
 import logging
 import os
@@ -10,9 +11,10 @@ import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
+from scripts.github_client import GitHubClient
+
 # Add the parent directory to the path so we can import github_client
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scripts.github_client import GitHubClient
 
 # Setup logging
 logging.basicConfig(
@@ -34,12 +36,12 @@ def parse_roadmap_file(file_path: str) -> List[Dict]:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Roadmap file not found: {file_path}")
 
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         content = f.read()
 
     # Define patterns to match milestone information
     # Look for headings like "## Phase 1: Foundation (Weeks 1-3)"
-    milestone_pattern = r'##\s+([\w\s]+)(?:\s*\(([^)]+)\))?\s*\n((?:(?!##).)+)'
+    milestone_pattern = r"##\s+([\w\s]+)(?:\s*\(([^)]+)\))?\s*\n((?:(?!##).)+)"
 
     milestones = []
 
@@ -57,21 +59,23 @@ def parse_roadmap_file(file_path: str) -> List[Dict]:
         due_on = None
         if timeframe:
             # Look for patterns like "Weeks 1-3", "Month 1", etc.
-            weeks_match = re.search(r'Weeks?\s+(\d+)(?:-(\d+))?', timeframe, re.IGNORECASE)
-            months_match = re.search(r'Months?\s+(\d+)(?:-(\d+))?', timeframe, re.IGNORECASE)
+            weeks_match = re.search(r"Weeks?\s+(\d+)(?:-(\d+))?", timeframe, re.IGNORECASE)
+            months_match = re.search(r"Months?\s+(\d+)(?:-(\d+))?", timeframe, re.IGNORECASE)
 
             if weeks_match:
                 # If range like "Weeks 1-3", use the end week
                 end_week = weeks_match.group(2) if weeks_match.group(2) else weeks_match.group(1)
                 due_on = current_date + timedelta(weeks=int(end_week))
             elif months_match:
-                end_month = months_match.group(2) if months_match.group(2) else months_match.group(1)
+                end_month = (
+                    months_match.group(2) if months_match.group(2) else months_match.group(1)
+                )
                 due_on = current_date + timedelta(days=int(end_month) * 30)  # Approximate
 
         milestone = {
             "title": title,
             "description": description,
-            "due_on": due_on.strftime("%Y-%m-%dT%H:%M:%SZ") if due_on else None
+            "due_on": due_on.strftime("%Y-%m-%dT%H:%M:%SZ") if due_on else None,
         }
 
         milestones.append(milestone)
@@ -112,7 +116,7 @@ def create_github_milestones(
         payload = {
             "title": milestone["title"],
             "state": "open",
-            "description": milestone["description"]
+            "description": milestone["description"],
         }
 
         if milestone["due_on"]:
@@ -138,27 +142,15 @@ def main():
     parser = argparse.ArgumentParser(description="Create GitHub milestones from ROADMAP.md files")
     parser.add_argument(
         "roadmap_file",
-        help="Path to ROADMAP.md file or directory containing roadmap files"
+        help="Path to ROADMAP.md file or directory containing roadmap files",
     )
-    parser.add_argument(
-        "--token",
-        required=True,
-        help="GitHub personal access token"
-    )
-    parser.add_argument(
-        "--owner",
-        default="uelkerd",
-        help="Repository owner (default: uelkerd)"
-    )
-    parser.add_argument(
-        "--repo",
-        default="lumin-ai",
-        help="Repository name (default: lumin-ai)"
-    )
+    parser.add_argument("--token", required=True, help="GitHub personal access token")
+    parser.add_argument("--owner", default="uelkerd", help="Repository owner (default: uelkerd)")
+    parser.add_argument("--repo", default="lumin-ai", help="Repository name (default: lumin-ai)")
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Preview milestones without creating them"
+        help="Preview milestones without creating them",
     )
 
     args = parser.parse_args()
@@ -200,7 +192,9 @@ def main():
             continue
 
     if args.dry_run:
-        logger.info(f"DRY RUN: Would create {total_milestones} milestones from {len(roadmap_files)} roadmap files")
+        logger.info(
+            f"DRY RUN: Would create {total_milestones} milestones from {len(roadmap_files)} roadmap files"
+        )
     else:
         logger.info(f"Created {total_created} milestones from {len(roadmap_files)} roadmap files")
 
