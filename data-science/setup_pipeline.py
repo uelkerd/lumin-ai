@@ -15,7 +15,6 @@ from typing import Dict, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -61,9 +60,7 @@ class DemocracyRadarProcessor:
         logs_dir = Path("../.logs")
         logs_dir.mkdir(exist_ok=True)
 
-        logger.info(
-            f"Initialized DemocracyRadarProcessor with data_dir: {self.data_dir}"
-        )
+        logger.info(f"Initialized DemocracyRadarProcessor with data_dir: {self.data_dir}")
 
     def load_democracy_radar_data(self, wave: Optional[int] = None) -> pd.DataFrame:
         """
@@ -74,9 +71,7 @@ class DemocracyRadarProcessor:
             if wave:
                 file_path = self.raw_dir / f"wave-{wave}.csv"
                 if not file_path.exists():
-                    raise FileNotFoundError(
-                        f"Wave {wave} data not found at {file_path}"
-                    )
+                    raise FileNotFoundError(f"Wave {wave} data not found at {file_path}")
 
                 df = pd.read_csv(file_path)
                 logger.info(f"Loaded wave {wave} with {len(df)} records")
@@ -94,9 +89,7 @@ class DemocracyRadarProcessor:
                     raise FileNotFoundError(f"No wave data found in {self.raw_dir}")
 
                 combined_df = pd.concat(all_waves, ignore_index=True)
-                logger.info(
-                    f"Loaded {len(combined_df)} total records from {len(all_waves)} waves"
-                )
+                logger.info(f"Loaded {len(combined_df)} total records from {len(all_waves)} waves")
                 return combined_df
 
         except Exception as e:
@@ -124,9 +117,7 @@ class DemocracyRadarProcessor:
         }
 
         # Apply column mappings if columns exist
-        available_mappings = {
-            old: new for old, new in column_mappings.items() if old in df.columns
-        }
+        available_mappings = {old: new for old, new in column_mappings.items() if old in df.columns}
         df_standardized = df.rename(columns=available_mappings)
 
         # Standardize categorical variables
@@ -143,9 +134,7 @@ class DemocracyRadarProcessor:
                 "Burgenland": "Burgenland",
             }
             df_standardized["region"] = (
-                df_standardized["region"]
-                .map(region_mapping)
-                .fillna(df_standardized["region"])
+                df_standardized["region"].map(region_mapping).fillna(df_standardized["region"])
             )
 
         # Handle missing values
@@ -153,9 +142,7 @@ class DemocracyRadarProcessor:
         for col in numeric_columns:
             if col.startswith("trust_") or col in ["transparency_perception"]:
                 # Use median for trust-related variables
-                df_standardized[col] = df_standardized[col].fillna(
-                    df_standardized[col].median()
-                )
+                df_standardized[col] = df_standardized[col].fillna(df_standardized[col].median())
 
         logger.info(
             f"Standardized {len(df_standardized)} records with {len(df_standardized.columns)} columns"
@@ -170,9 +157,7 @@ class DemocracyRadarProcessor:
         logger.info("Calculating trust metrics")
 
         # Define trust metric components
-        institutional_trust_cols = [
-            col for col in df.columns if col.startswith("trust_")
-        ]
+        institutional_trust_cols = [col for col in df.columns if col.startswith("trust_")]
         process_satisfaction_cols = [
             col for col in df.columns if "transparency" in col or "satisfaction" in col
         ]
@@ -181,9 +166,7 @@ class DemocracyRadarProcessor:
         ]
 
         if not institutional_trust_cols:
-            logger.warning(
-                "No institutional trust columns found, creating mock data for testing"
-            )
+            logger.warning("No institutional trust columns found, creating mock data for testing")
             # Create mock data for development
             df["trust_government"] = np.random.normal(5, 1.5, len(df))
             df["trust_parliament"] = np.random.normal(4.5, 1.3, len(df))
@@ -214,9 +197,7 @@ class DemocracyRadarProcessor:
         democratic_efficacy = df[democratic_efficacy_cols].mean(axis=1)
 
         # Calculate composite trust score
-        composite_score = (
-            institutional_trust + process_satisfaction + democratic_efficacy
-        ) / 3
+        composite_score = (institutional_trust + process_satisfaction + democratic_efficacy) / 3
 
         # Calculate confidence intervals (95%)
         self._calculate_confidence_interval(institutional_trust)
@@ -341,9 +322,7 @@ def main():
         print("=" * 50)
         print(f"✅ Processed {len(df_standardized)} records")
         print(f"✅ Generated {len(trust_metrics)} trust metric groups")
-        print(
-            f"✅ Overall composite trust score: {trust_metrics['overall'].composite_score:.2f}"
-        )
+        print(f"✅ Overall composite trust score: {trust_metrics['overall'].composite_score:.2f}")
         print(f"✅ API data exported with {len(api_data['trust_metrics'])} groups")
         print("=" * 50)
 

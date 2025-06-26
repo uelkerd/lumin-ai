@@ -25,18 +25,20 @@ Do NOT use Git LFS for:
 ## Setup Instructions
 
 1. **Install Git LFS**:
+
    ```bash
    # Ubuntu/Debian
    sudo apt install git-lfs
-   
+
    # macOS
    brew install git-lfs
-   
+
    # Windows
    # Download from https://git-lfs.github.com/
    ```
 
 2. **Run the setup script**:
+
    ```bash
    ./scripts/setup_git_lfs.sh
    ```
@@ -82,11 +84,13 @@ git lfs pull --include="path/to/file.csv"
 If you need to track a new file type with LFS:
 
 1. Update the `.gitattributes` file:
+
    ```bash
    git lfs track "*.new-extension"
    ```
 
 2. Commit the updated `.gitattributes`:
+
    ```bash
    git add .gitattributes
    git commit -m "Track *.new-extension with Git LFS"
@@ -97,18 +101,22 @@ If you need to track a new file type with LFS:
 ## Best Practices
 
 1. **Don't modify .gitattributes without team discussion**
+
    - Changes affect everyone using the repository
 
 2. **Be careful with large JSON files**
+
    - Consider if they should be tracked by LFS or kept as regular files
    - Configuration JSONs should NOT use LFS
    - Large data JSONs SHOULD use LFS
 
 3. **Keep an eye on storage quotas**
+
    - GitHub has LFS storage and bandwidth limits
    - Be mindful when pushing very large files
 
 4. **Use meaningful commit messages for large files**
+
    - Explain what the file is and why it's being added/updated
 
 5. **Consider using data versioning tools for very large datasets**
@@ -119,12 +127,15 @@ If you need to track a new file type with LFS:
 ### Common Issues
 
 1. **"Encountered X file(s) that should have been pointers, but weren't"**
+
    - Solution: `git lfs migrate import --no-rewrite path/to/file`
 
 2. **"Git LFS is not installed"**
+
    - Solution: Run `git lfs install` or the setup script
 
 3. **Slow pushes/pulls**
+
    - Solution: Consider using `--include` to limit which files are transferred
 
 4. **File shows as changed but content is the same**
@@ -136,4 +147,4 @@ If you encounter issues with Git LFS:
 
 1. Check the [official Git LFS documentation](https://git-lfs.github.com/)
 2. Ask the team in the #dev-infrastructure Slack channel
-3. Create an issue in the repository with the "git-lfs" label 
+3. Create an issue in the repository with the "git-lfs" label

@@ -11,7 +11,6 @@ from datetime import datetime
 
 from pymongo import MongoClient
 
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -34,7 +33,9 @@ def test_mongodb_connection():
         logger.error("Error: MONGODB_PASSWORD environment variable is not set.")
         return False
 
-    connection_string = f"mongodb://{mongo_username}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_database}"
+    connection_string = (
+        f"mongodb://{mongo_username}:{mongo_password}@{mongo_host}:{mongo_port}/{mongo_database}"
+    )
 
     try:
         logger.info(f"Connecting to MongoDB at {mongo_host}:{mongo_port}...")
