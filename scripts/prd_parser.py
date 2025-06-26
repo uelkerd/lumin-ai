@@ -84,6 +84,11 @@ def main():
         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
         help='Set the logging level (default: INFO)'
     )
+    parser.add_argument(
+        '--interactive',
+        action='store_true',
+        help='Enable interactive mode to select which PRD files to parse.'
+    )
 
     args = parser.parse_args()
 
@@ -99,12 +104,42 @@ def main():
 
     logger.info(f"🔍 Parsing PRD files from '{args.prd_directory}'...")
 
-    for filename in os.listdir(args.prd_directory):
-        if filename.endswith(('_prd.md', 'PRD.md')):
-            file_path = os.path.join(args.prd_directory, filename)
-            logger.info(f"   - Processing {filename}")
-            issues = parse_markdown_to_issues(file_path)
-            all_issues.extend(issues)
+    all_prd_files = [f for f in os.listdir(args.prd_directory) if f.endswith(('_prd.md', 'PRD.md'))]
+
+    if not all_prd_files:
+        logger.warning("No PRD files found in the specified directory.")
+        return
+
+    selected_files = []
+    if args.interactive:
+        print("Please select which PRD files to parse:")
+        for i, filename in enumerate(all_prd_files, 1):
+            print(f"  {i}. {filename}")
+
+        try:
+            selection_str = input("Enter the numbers of the files to parse (e.g., 1,3,4): ")
+            selected_indices = [int(s.strip()) - 1 for s in selection_str.split(',')]
+
+            for i in selected_indices:
+                if 0 <= i < len(all_prd_files):
+                    selected_files.append(all_prd_files[i])
+                else:
+                    logger.warning(f"Invalid selection: {i+1}. Skipping.")
+        except ValueError:
+            logger.critical("Invalid input. Please enter numbers separated by commas.")
+            sys.exit(1)
+    else:
+        selected_files = all_prd_files
+
+    if not selected_files:
+        logger.warning("No files selected for parsing. Exiting.")
+        return
+
+    for filename in selected_files:
+        file_path = os.path.join(args.prd_directory, filename)
+        logger.info(f"   - Processing {filename}")
+        issues = parse_markdown_to_issues(file_path)
+        all_issues.extend(issues)
 
     try:
         with open(args.output_file, 'w', encoding='utf-8') as f:
