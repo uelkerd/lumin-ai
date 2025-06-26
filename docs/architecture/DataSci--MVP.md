@@ -24,11 +24,11 @@ The Data Science track MVP represents the essential analytical capabilities that
 - Temporal stability showing appropriate consistency while capturing genuine changes in democratic trust
 - Cross-demographic validity ensuring trust measurements are comparable across different population groups
 
-### 2. Statistical Analysis Dashboard
-**Description**: An interactive analytical interface providing comprehensive statistical insights into governance patterns, trust evolution, and demographic variations in democratic engagement.
+### 2. Statistical Analysis Dashboard (Internal Tool)
+**Description**: An interactive analytical interface providing comprehensive statistical insights into governance patterns, trust evolution, and demographic variations in democratic engagement. This dashboard serves as an internal tool for the Data Science team to validate findings before they are integrated into the main web application.
 
 **Technical Specifications**:
-- Platform: Jupyter notebook-based dashboard with interactive widgets for real-time analysis
+- Platform: Jupyter notebook-based interface with interactive widgets for real-time analysis
 - Visualizations: Time series plots, demographic comparisons, correlation matrices, and trend analysis charts
 - Statistical Tests: ANOVA for group comparisons, regression analysis for predictor identification, significance testing for trend analysis
 - Export Capabilities: Data export functionality providing analytics-ready datasets for Web Development track integration
@@ -64,12 +64,10 @@ The Data Science track MVP represents the essential analytical capabilities that
 - Demographic Variables: Age groups, education levels, income brackets, geographic regions, political party affiliation, employment status
 - Trust Dimensions: Separate analysis for institutional trust, process satisfaction, democratic efficacy, and overall composite trust scores
 - Temporal Analysis: Demographic trust pattern evolution over time showing which groups experience trust changes most significantly
-- Predictive Modeling: Regression models identifying demographic characteristics most strongly associated with democratic trust levels
 
 **Validation Criteria**:
 - All demographic comparisons include appropriate statistical significance testing with multiple comparison corrections
 - Effect size calculations provide practical significance assessment beyond statistical significance
-- Predictive models demonstrate meaningful R-squared values and cross-validated predictive accuracy
 - Results interpretable by non-statisticians and actionable for governance practitioners and policy makers
 
 ---

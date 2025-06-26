@@ -58,7 +58,6 @@ The Web Development track MVP represents the essential web application functiona
 - Visualization Library: Chart.js or D3.js implementation providing flexible, customizable charts optimized for governance data characteristics
 - Interactivity: Zoom, pan, filter, and drill-down capabilities enabling detailed exploration of temporal patterns and demographic segments
 - Accessibility: WCAG 2.1 compliant visualizations with proper color contrast, screen reader support, and keyboard navigation capabilities
-- Export Functionality: Download capabilities for visualizations and underlying data enabling users to incorporate insights into reports and presentations
 - Responsive Design: Visualizations adapt effectively to different screen sizes while maintaining readability and analytical utility
 
 **Core Visualization Types**:
@@ -66,7 +65,6 @@ The Web Development track MVP represents the essential web application functiona
 - **Demographic Comparison Charts**: Bar charts, box plots, and violin plots showing trust pattern differences across population segments
 - **Correlation Matrices**: Interactive heatmaps displaying relationships between different governance variables and sentiment measures
 - **Sentiment Analysis Displays**: Real-time text analysis results with confidence indicators and batch processing visualization for governance documents
-- **Geographic Visualizations**: Regional trust pattern displays enabling spatial analysis of governance attitudes across different Austrian regions
 
 **Validation Criteria**:
 - Visualizations accurately represent underlying statistical analysis and machine learning results without distortion or misinterpretation
@@ -85,9 +83,8 @@ The Web Development track MVP represents the essential web application functiona
 - Performance Optimization: Code splitting, lazy loading, and efficient rendering ensuring smooth user experience even with complex governance data
 
 **User Experience Features**:
-- **Guided Tutorial**: Interactive introduction to dashboard capabilities helping new users understand governance analysis features and interpretation methods
+- **Getting Started Guide**: A static guide explaining the dashboard's core features and how to interpret the visualizations.
 - **Contextual Help**: In-line explanations of statistical concepts, uncertainty measures, and analytical limitations supporting informed decision-making
-- **Customizable Views**: User preferences for default visualizations, filtering options, and analytical focus areas enhancing individual workflow efficiency
 - **Search and Filter**: Comprehensive search functionality enabling users to quickly find relevant governance topics, time periods, or demographic segments
 - **Responsive Feedback**: Clear visual and textual feedback for user actions ensuring users understand system responses and analytical results
 

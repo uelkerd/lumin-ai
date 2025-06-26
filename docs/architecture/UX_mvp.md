@@ -13,7 +13,7 @@ The UX Design track MVP represents the essential user experience research, inter
 
 **Research Scope and Methodology**:
 - **Stakeholder Groups**: Governance researchers, policy analysts, civic engagement practitioners, and interested citizens
-- **Research Methods**: In-depth interviews (15-20 participants), stakeholder surveys (50+ responses), observational research of current governance data use
+- **Research Methods**: Foundational user research including in-depth interviews (5-8 participants) and stakeholder surveys to establish core user needs.
 - **Accessibility Inclusion**: Research participants include individuals with diverse abilities, technological access levels, and governance engagement backgrounds
 - **Cultural Considerations**: Research accommodates diverse cultural approaches to governance information and civic engagement
 
@@ -56,31 +56,30 @@ The UX Design track MVP represents the essential user experience research, inter
 **Accessibility Standards Implementation**:
 - **WCAG 2.1 AA Compliance**: Complete specification of color contrast requirements, keyboard navigation patterns, screen reader compatibility, and alternative text standards
 - **Assistive Technology Integration**: Design specifications optimizing interface functionality for screen readers, voice control systems, and alternative input devices
-- **Cognitive Accessibility**: Interface design patterns reducing cognitive load and supporting stakeholders with diverse learning and processing preferences
-- **Motor Accessibility**: Interaction design accommodating diverse motor abilities with appropriate target sizes, timing considerations, and alternative interaction methods
+- **Core Accessibility Focus**: The MVP will prioritize core accessibility features, with a focus on making the dashboard functional for users with visual and motor impairments. Deeper cognitive accessibility features will be explored in future iterations.
 
 **Accessibility Design Specifications**:
 - **Visual Accessibility**: Color contrast ratios exceeding WCAG requirements, alternative visual indicators beyond color coding, and customizable visual presentation options
 - **Keyboard Navigation**: Complete interface functionality accessible through keyboard navigation with logical tab order and clear focus indicators
 - **Screen Reader Optimization**: Semantic HTML specifications, ARIA attribute guidelines, and alternative text frameworks for governance data visualizations
 - **Alternative Interaction Methods**: Design specifications accommodating voice control, switch navigation, and other assistive input technologies
+- **Motor Accessibility**: Interaction design accommodating diverse motor abilities with appropriate target sizes, timing considerations, and alternative interaction methods
 
 **Validation Criteria**:
 - Accessibility specifications verified through testing with assistive technology users and automated compliance validation tools
 - Interface designs enable successful governance analysis task completion by stakeholders using screen readers, keyboard navigation, and voice control systems
 - Accessibility implementation guidelines provide Web Development track with clear specifications for inclusive design implementation
-- Cognitive accessibility features support stakeholders with diverse learning preferences and statistical background levels
 
-### 4. Usability Testing Validation Report
-**Description**: Comprehensive validation of interface designs through systematic usability testing with representative stakeholders, demonstrating that design solutions successfully support governance analysis tasks across diverse user groups and ability levels.
+### 4. Iterative Usability Testing & Feedback
+**Description**: Continuous validation of interface designs through systematic, iterative usability testing with representative stakeholders. The focus is on rapid feedback loops to inform design decisions rather than a formal, final report.
 
 **Testing Methodology and Scope**:
 - **Participant Diversity**: Testing with governance researchers, policy analysts, civic practitioners, and citizens representing diverse abilities, technological backgrounds, and governance engagement levels
 - **Task Scenarios**: Realistic governance analysis scenarios including trust metrics exploration, demographic pattern analysis, and sentiment analysis interpretation
 - **Accessibility Testing**: Specific validation of interface functionality with assistive technology users and accessibility accommodation requirements
-- **Iterative Testing**: Multiple testing rounds enabling design iteration and improvement based on stakeholder feedback
+- **Iterative Testing**: Multiple, small-scale testing rounds enabling design iteration and improvement based on direct stakeholder feedback.
 
-**Usability Validation Results**:
+**Usability Validation Goals**:
 - **Task Completion Metrics**: Quantitative validation of successful task completion rates across different stakeholder groups and governance analysis scenarios
 - **User Satisfaction Assessment**: Stakeholder satisfaction scores and qualitative feedback demonstrating positive user experience with governance transparency tools
 - **Accessibility Effectiveness**: Validation of successful interface use by stakeholders with diverse abilities using various assistive technologies
