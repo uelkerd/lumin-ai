@@ -29,6 +29,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Install Python dependencies in stages to better handle conflicts
 COPY .devcontainer/requirements-dev.txt .devcontainer/requirements-ds.txt /tmp/
 COPY .devcontainer/install_python_deps.sh /tmp/install_python_deps.sh
+COPY .devcontainer/wheels /tmp/wheels
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip wheel setuptools && \
     pip install --no-cache-dir jupyter
