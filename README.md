@@ -60,9 +60,18 @@ Transform complex governance data into actionable insights that strengthen democ
 - Python 3.9+
 - Node.js 16+
 - Git
+- Git LFS (for handling large files)
 - Docker (optional, for containerized deployment)
 
 ### Environment Configuration
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/lumin-ai.git
+cd lumin-ai
+git lfs install  # Initialize Git LFS
+git lfs pull     # Pull any LFS objects
+```
 
 For security reasons, sensitive configuration should be managed through environment variables:
 
@@ -115,6 +124,38 @@ For security reasons, sensitive configuration should be managed through environm
 - `/ux-design` - Design research, wireframes, and prototypes
 - `/data` - Shared datasets and processed data
 - `/docs` - Project documentation and reports
+
+## 📦 Large File Storage with Git LFS
+
+This project uses Git Large File Storage (LFS) to manage large files like datasets, models, and media assets. Git LFS replaces large files with text pointers in Git, while storing the file contents on a remote server.
+
+### Tracked File Types
+- Data files (*.csv, *.json, *.parquet, etc.)
+- Model files (*.pkl, *.h5, *.pt, etc.)
+- Media files (images, audio, video)
+- Documents (*.pdf, *.pptx, etc.)
+
+### Working with Git LFS
+
+**Adding new large files:**
+```bash
+# Files with tracked extensions are automatically handled by Git LFS
+git add path/to/large/file.h5
+git commit -m "Add trained model"
+git push
+```
+
+**Checking LFS status:**
+```bash
+git lfs status
+```
+
+**Pulling LFS objects:**
+```bash
+git lfs pull
+```
+
+See the [.gitattributes](.gitattributes) file for a complete list of file types tracked by Git LFS.
 
 ## 🗓️ Development Timeline
 
