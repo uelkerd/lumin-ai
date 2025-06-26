@@ -4,8 +4,7 @@
 # Data manipulation
 pandas==2.0.3
 
-# Visualization
-matplotlib==3.7.2
+# Visualization (matplotlib moved to ML layer)
 seaborn==0.12.2
 plotly==5.15.0
 

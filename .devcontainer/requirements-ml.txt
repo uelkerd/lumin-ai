@@ -2,13 +2,13 @@
 # These packages support neural network development for governance sentiment analysis
 # and voting pattern recognition using transformer models and graph neural networks
 
-# Machine Learning Core Dependencies - Most Stable Layer
+# Machine Learning Core Dependencies - Fixed Version Conflicts
 # These packages change infrequently and are heavy, so they go in the first layer
 
 # Core numerical computing (foundation for everything else)
 numpy==1.24.3
 
-# Deep Learning frameworks (heaviest packages)
+# Deep Learning frameworks (compatible versions)
 torch==2.0.1
 tensorflow==2.13.0
 
@@ -22,45 +22,56 @@ statsmodels==0.14.0
 # NLP core
 nltk==3.8.1
 
+# PyTorch ecosystem (compatible with torch 2.0.1)
+torchvision==0.15.2  # Compatible with torch 2.0.1
+torchaudio==2.0.2     # Compatible with torch 2.0.1
+
+# Basic transformers (lighter version)
+tokenizers==0.14.1
+datasets==2.14.6
+
+# Basic NLP
+textblob==0.17.1
+langdetect==1.0.9
+
+# Core visualization (moved from datascience for stability)
+matplotlib==3.7.2
+
+# Essential monitoring (compatible with TensorFlow 2.13.0)
+tensorboard==2.13.1  # Fixed version conflict
+
 # Advanced ML (uncomment if needed for project)
 # transformers==4.32.1
 # spacy==3.6.1
 
 # Core Deep Learning Framework
-torchvision==0.16.0            # Computer vision utilities (useful for visualization)
-torchaudio==2.1.0              # Audio processing (if governance data includes speeches)
+# torchvision==0.16.0            # Computer vision utilities (useful for visualization)
+# torchaudio==2.1.0              # Audio processing (if governance data includes speeches)
 
 # Transformer Models for Governance Text Analysis
-tokenizers==0.14.1            # Fast tokenization for governance text processing
-datasets==2.14.6              # Dataset loading and preprocessing utilities
-accelerate==0.24.1             # Distributed training and optimization
+# accelerate==0.24.1             # Distributed training and optimization
 
 # Specialized NLP Libraries for Political Science
-spacy==3.7.2                   # Advanced natural language processing
-spacy-transformers==1.3.4     # SpaCy integration with transformer models
+# spacy==3.7.2                   # Advanced natural language processing
+# spacy-transformers==1.3.4     # SpaCy integration with transformer models
 
 # Graph Neural Networks for Voting Pattern Analysis
-torch-geometric==2.4.0        # Graph neural network framework
-networkx==3.2.1               # Graph creation and analysis for voting patterns
+# torch-geometric==2.4.0        # Graph neural network framework
+# networkx==3.2.1               # Graph creation and analysis for voting patterns
 
 # Model Training and Evaluation
-pytorch-lightning==2.1.0      # Structured training framework
-torchmetrics==1.2.0          # Comprehensive metrics for model evaluation
-wandb==0.15.12                # Experiment tracking and visualization
-tensorboard==2.14.1          # Training visualization and monitoring
+# pytorch-lightning==2.1.0      # Structured training framework
+# torchmetrics==1.2.0          # Comprehensive metrics for model evaluation
+# wandb==0.15.12                # Experiment tracking and visualization
 
 # Advanced Optimization and Regularization
-optuna==3.4.0                 # Hyperparameter optimization
-transformers[torch]           # Additional PyTorch integrations
-sentence-transformers==2.2.2  # Semantic similarity for governance text
+# optuna==3.4.0                 # Hyperparameter optimization
+# transformers[torch]           # Additional PyTorch integrations
+# sentence-transformers==2.2.2  # Semantic similarity for governance text
 
 # Model Serving and Deployment
-onnx==1.15.0                  # Model format for deployment optimization
-onnxruntime==1.16.1          # Efficient model inference
-
-# Text Processing for Governance Documents
-textblob==0.17.1              # Simple text processing
-langdetect==1.0.9             # Language detection for multilingual governance
+# onnx==1.15.0                  # Model format for deployment optimization
+# onnxruntime==1.16.1          # Efficient model inference
 
 # Time Series Analysis for Voting Patterns
-tsfresh==0.20.1               # Time series feature extraction
+# tsfresh==0.20.1               # Time series feature extraction
