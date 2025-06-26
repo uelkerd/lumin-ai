@@ -23,11 +23,7 @@ log "Starting container fixes"
 echo "🔑 Fixing NPM permissions..."
 if [[ -d "node_modules" && "$(stat -c %U node_modules)" == "root" ]]; then
     log "Fixing node_modules ownership from root to $USER"
-    sudo chown -R $USER:$USER node_modules/ 2>/dev/null || {
-        log "Warning: Could not change node_modules ownership, trying alternative fix"
-        rm -rf node_modules
-        log "Removed node_modules, will reinstall with correct permissions"
-    }
+    if [ "$(stat -c %U node_modules)" == "root" ]; then
 else
     log "node_modules permissions already correct or doesn't exist"
 fi
