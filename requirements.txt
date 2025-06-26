@@ -27,6 +27,9 @@ fastapi>=0.68.0
 uvicorn>=0.15.0
 requests>=2.26.0
 
+# Database
+pymongo>=4.5.0
+
 # Utilities
 python-dotenv>=0.19.0
 tqdm>=4.62.0

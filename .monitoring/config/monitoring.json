@@ -1,0 +1,40 @@
+{
+  "monitoring": {
+    "enabled": true,
+    "interval_seconds": 30,
+    "retention_days": 7,
+    "alerts": {
+      "enabled": true,
+      "email_notifications": false,
+      "log_alerts": true
+    }
+  },
+  "containers": {
+    "lumin-ai-dev": {
+      "monitor": true,
+      "health_check_interval": 30,
+      "resource_limits": {
+        "cpu_warning": 70,
+        "cpu_critical": 90,
+        "memory_warning": 80,
+        "memory_critical": 95
+      }
+    },
+    "lumin-governance-db": {
+      "monitor": true,
+      "health_check_interval": 10,
+      "resource_limits": {
+        "cpu_warning": 60,
+        "cpu_critical": 80,
+        "memory_warning": 70,
+        "memory_critical": 90
+      }
+    }
+  },
+  "metrics": {
+    "collect_system_metrics": true,
+    "collect_application_metrics": true,
+    "export_format": "json",
+    "export_interval": 300
+  }
+}
