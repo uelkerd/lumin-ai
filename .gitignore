@@ -145,6 +145,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.devcontainer/.env
 
 # Spyder project settings
 .spyderproject
@@ -335,3 +336,5 @@ venv.bak/
 .env
 .logs/
 tmp/
+# Devcontainer environment variables
+.devcontainer/.env

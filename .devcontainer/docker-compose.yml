@@ -1,0 +1,191 @@
+# LUMIN.AI Development Environment - Optimized Build
+# Using Compose spec
+
+services:
+  # Main development environment container
+  lumin-dev-environment:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        PYTHON_VERSION: "3.11"
+        NODE_VERSION: "20"
+        USERNAME: "lumin-dev"
+      # BuildKit optimizations
+      cache_from:
+        - type=registry,ref=python:3.11-slim-bullseye
+        - devcontainer-lumin-dev-environment:latest
+      # Use Compose BuildKit integration
+      x-bake:
+        platforms:
+          - linux/amd64
+        cache-to:
+          - type=inline
+        output:
+          - type=docker
+
+    container_name: lumin-ai-dev
+    command: sleep infinity
+
+    # Use with host.docker.internal to access host services
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # Improved volume mounts with selective bind mounts
+    volumes:
+      # Project source code (cached mode for better performance)
+      - type: bind
+        source: ..
+        target: /workspace
+        consistency: cached
+      # Persistent Python package cache
+      - type: volume
+        source: lumin-python-packages
+        target: /home/lumin-dev/.cache/pip
+      # Persistent node modules
+      - type: volume
+        source: lumin-node-modules
+        target: /workspace/node_modules
+      # Persistent Jupyter notebooks data
+      - type: volume
+        source: lumin-jupyter-data
+        target: /workspace/notebooks-data
+      # Store logs in persistent volume
+      - type: volume
+        source: lumin-logs
+        target: /workspace/.logs
+      # Docker socket for Docker-in-Docker capabilities if needed
+      #- type: bind
+      #  source: /var/run/docker.sock
+      #  target: /var/run/docker.sock
+
+    # Port mapping (must match devcontainer.json forward ports)
+    ports:
+      - "3000:3000"   # React development server
+      - "8000:8000"   # FastAPI/Flask service
+      - "9000:9000"   # Jupyter notebook
+      # Note: MongoDB is not directly exposed to host by default for security
+
+    # Environment variables for development
+    environment:
+      BUILDKIT_PROGRESS: plain
+      COMPOSE_DOCKER_CLI_BUILD: 1
+      DOCKER_BUILDKIT: 1
+      COMPOSE_BAKE: "true"
+      # MongoDB connection settings
+      MONGODB_HOST: governance-db
+      MONGODB_PORT: 27017
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
+      JUPYTER_PORT: 9000
+
+    # Enable all capabilities required for development
+    # including running Docker in Docker if socket is mounted
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+
+    # Configure network for service communication
+    networks:
+      - lumin-network
+
+    # Health check to ensure container is running properly
+    healthcheck:
+      test: ["CMD", "ps", "aux"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Specify resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+
+    # Add dependency on MongoDB
+    depends_on:
+      governance-db:
+        condition: service_healthy
+
+  # MongoDB service for data storage
+  governance-db:
+    image: mongo:6.0
+    container_name: lumin-governance-db
+    restart: unless-stopped
+
+    # Store data outside container for persistence
+    volumes:
+      - type: volume
+        source: governance-data
+        target: /data/db
+      # Separate volume for MongoDB logs
+      - type: volume
+        source: governance-logs
+        target: /var/log/mongodb
+      # Configuration and initialization
+      - type: bind
+        source: ./init-mongodb.js
+        target: /docker-entrypoint-initdb.d/init-mongodb.js
+        read_only: true
+
+    # Environment variables for MongoDB initialization
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME:-admin}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD:-adminpassword}
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
+
+    # Health check for MongoDB
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+    # Expose MongoDB port to the host for testing
+    ports:
+      - "27017:27017"
+
+    # Configure network
+    networks:
+      - lumin-network
+
+    # Specify resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+
+# Persistent volumes - marked as external since they already exist
+volumes:
+  governance-data:
+    name: lumin-ai-governance-data
+    external: true
+  governance-logs:
+    name: lumin-ai-governance-logs
+    external: true
+  lumin-python-packages:
+    name: lumin-ai-python-packages
+    external: true
+  lumin-node-modules:
+    name: lumin-ai-node-modules
+    external: true
+  lumin-jupyter-data:
+    name: lumin-ai-jupyter-data
+    external: true
+  lumin-logs:
+    name: lumin-ai-logs
+    external: true
+
+# Network for container communication
+networks:
+  lumin-network:
+    driver: bridge
+    name: lumin-ai-network

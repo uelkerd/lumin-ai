@@ -15,7 +15,7 @@
 
 ## 🌱 Project Overview
 
-LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems. 
+LUMIN.AI leverages machine learning to enhance democratic transparency by analyzing governance data from Austria's Democracy Radar surveys and blockchain governance systems.
 
 Our MVP-first approach ensures meaningful deliverables while building towards advanced AI-powered policy insights.
 
@@ -63,7 +63,7 @@ Transform complex governance data into actionable insights that strengthen democ
 - Git LFS (for handling large files)
 - Docker (optional, for containerized deployment)
 
-### Installation
+### Environment Configuration
 
 1. **Clone the repository**
 ```bash
@@ -73,46 +73,48 @@ git lfs install  # Initialize Git LFS
 git lfs pull     # Pull any LFS objects
 ```
 
-2. **Set up Python environment (Deep Learning & Data Science)**
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
+For security reasons, sensitive configuration should be managed through environment variables:
 
-3. **Set up Node environment (Web Development)**
-```bash
-cd web-development/frontend
-npm install
-cd ../backend
-npm install
-```
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-4. **Download datasets**
-```bash
-python scripts/download_data.py
-```
+2. Update the `.env` file with your specific configuration:
+   ```bash
+   # MongoDB Configuration
+   MONGODB_USERNAME=your_username
+   MONGODB_PASSWORD=your_secure_password  # pragma: allowlist secret
+   MONGODB_DATABASE=your_database_name
 
-### Running the Application
+   # API Keys
+   OPENAI_API_KEY=your_api_key
+   ANTHROPIC_API_KEY=your_api_key
+   ```
 
-**Start the backend API:**
-```bash
-cd web-development/backend
-npm start
-```
+### Development Setup
 
-**Start the frontend dashboard:**
-```bash
-cd web-development/frontend
-npm start
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/uelkerd/lumin-ai.git
+   cd lumin-ai
+   ```
 
-**Run Jupyter notebooks:**
-```bash
-jupyter notebook
-```
+2. Open in VS Code:
+   ```bash
+   code .
+   ```
 
-The application will be available at `http://localhost:3000`
+3. When prompted, reopen in container or use Command Palette:
+   - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
+   - Type "Dev Containers: Reopen in Container"
+   - Select the option and wait for the container to build
+
+4. The development environment will automatically:
+   - Install all dependencies
+   - Set up MongoDB with proper indexes
+   - Configure pre-commit hooks
+   - Start all necessary services
 
 ## 📁 Project Structure
 
@@ -246,6 +248,79 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Humboldt University Berlin for research foundation
 - All project mentors and advisors
 
+## 🛠️ Development Environment
+
+### Dev Container Setup
+
+LUMIN.AI uses a Docker-based development environment to ensure consistent development experiences across different machines.
+
+#### Key Features
+
+- **Python 3.11** with all dependencies pre-installed
+- **Node.js 20** for web development
+- **MongoDB** database for data storage
+- **Pre-commit hooks** for code quality
+- **Docker-in-Docker** support for container development
+- **Persistent volumes** for development data
+- **Health monitoring** for all services
+
+#### Testing the MongoDB Connection
+
+To verify that MongoDB is correctly set up in your development environment:
+
+```bash
+python3 scripts/test_mongodb_connection.py  # pragma: allowlist secret
+```
+
+#### Persistent Data
+
+The development container is configured with the following persistent volumes:
+
+- `governance-data`: MongoDB data storage
+- `governance-logs`: MongoDB logs
+- `lumin-python-packages`: Python package cache
+- `lumin-node-modules`: Node.js modules
+- `lumin-jupyter-data`: Jupyter notebook data
+- `lumin-logs`: Application logs
+
+#### Best Practices
+
+1. **Avoid Nested Virtual Environments**:
+   The container already provides a Python environment. To prevent accidentally nesting virtual environments, source the protection script:
+   ```bash
+   source prevent_nested_venv.sh
+   ```
+   This will prevent any attempt to activate a second virtual environment while one is already active.
+
+2. **BuildKit Optimization**:
+   Ensure Docker BuildKit is enabled for optimal build performance:
+   ```bash
+   export DOCKER_BUILDKIT=1
+   export COMPOSE_DOCKER_CLI_BUILD=1
+   ```
+
+3. **Non-Interactive Builds**:
+   Use the provided build script for consistent builds:
+   ```bash
+   .devcontainer/build.sh
+   ```
+
+4. **Allowlisting Development Secrets**:
+   Development credentials are allowlisted in `.allowlist` to prevent pre-commit hooks from blocking commits.
+
+#### Troubleshooting
+
+**MongoDB Connection Issues**:
+- Check if the MongoDB container is running: `docker ps | grep governance-db`
+- Verify the environment variables in `.devcontainer/docker-compose.yml`
+- Try connecting manually: `mongosh mongodb://lumin:<your_password>@governance-db:27017/governance_analysis`
+
+**Container Build Failures**:
+- Check Docker logs: `docker logs lumin-ai-dev`
+- Ensure BuildKit is enabled: `echo $DOCKER_BUILDKIT`
+- Try rebuilding with `--no-cache`: `.devcontainer/build.sh --no-cache`
+
 ---
 
 **Made with ❤️ by LUMIN.AI Team | TechLabs Berlin Summer 2025**
+# LFS hooks disabled temporarily
