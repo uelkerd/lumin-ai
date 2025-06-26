@@ -1,0 +1,24 @@
+# Data Science Dependencies - Medium Frequency Changes
+# These packages are for data manipulation, visualization, and notebooks
+
+# Data manipulation
+pandas==2.0.3
+
+# Visualization
+matplotlib==3.7.2
+seaborn==0.12.2
+plotly==5.15.0
+
+# Jupyter ecosystem
+jupyter==1.0.0
+jupyterlab==4.0.5
+notebook==7.0.3
+ipywidgets==8.1.0
+
+# Data processing utilities
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Additional data science tools
+openpyxl==3.1.2  # Excel file support
+xlsxwriter==3.1.2  # Excel writing

@@ -96,9 +96,9 @@ WORKDIR /home/${USERNAME}
 RUN pip install --user --upgrade pip setuptools wheel
 
 # Copy requirements files
-COPY --chown=${USERNAME}:${USERNAME} .devcontainer/requirements-ml.txt /tmp/
-COPY --chown=${USERNAME}:${USERNAME} .devcontainer/requirements-datascience.txt /tmp/
-COPY --chown=${USERNAME}:${USERNAME} .devcontainer/requirements-dev.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} requirements-ml.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} requirements-datascience.txt /tmp/
+COPY --chown=${USERNAME}:${USERNAME} requirements-dev.txt /tmp/
 
 # Install Python packages efficiently
 # Install in order of likelihood to change (most stable first)
@@ -127,7 +127,7 @@ RUN pip install --user jupyterlab \
     && rm -rf /home/${USERNAME}/.cache/yarn
 
 # ===== SHELL CONFIGURATION =====
-# Use bash with optimized settings instead of oh-my-zsh to reduce size
+# Use zsh instead of oh-my-zsh to reduce size
 RUN echo 'export PATH=$HOME/.local/bin:$PATH' >> /home/${USERNAME}/.bashrc \
     && echo 'export PYTHONPATH=/workspace:$PYTHONPATH' >> /home/${USERNAME}/.bashrc \
     && echo 'alias ll="ls -la"' >> /home/${USERNAME}/.bashrc \
@@ -180,7 +180,7 @@ CMD ["bash"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import torch, pandas, numpy; print('Development environment ready')" || exit 1
+    CMD python -c "import torch, transformers, pandas, numpy; print('Development environment ready')" || exit 1
 
 # Add labels for container management
 LABEL org.lumin-ai.version="1.0" \
