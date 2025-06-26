@@ -62,7 +62,7 @@ class GitHubIssueCreator:
         query = f"""
         {{
           repository(owner: "{self.owner}", name: "{self.repo}") {{
-            projectsV2(first: 100) {{
+            projectsV2(first: 100, after: $cursor) {{
               nodes {{
                 id
                 title
