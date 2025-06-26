@@ -1,0 +1,12 @@
+# Development secrets allowlist
+# MongoDB development connection strings
+mongodb://localhost:27017
+mongodb://mongodb:27017
+mongodb://lumin:devpassword@governance-db:27017/governance_analysis
+
+# Docker Compose environment variables
+MONGODB_USERNAME=dev
+MONGODB_PASSWORD=devpassword
+MONGODB_DATABASE=luminai
+
+# Add application-specific secrets below as needed

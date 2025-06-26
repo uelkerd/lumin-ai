@@ -1,0 +1,126 @@
+# LUMIN.AI Docker Build Optimization
+# This file prevents unnecessary files from being sent to Docker build context
+# Reduces build time and prevents accidental inclusion of large files
+
+# Git and version control
+.git
+.gitignore
+.gitattributes
+*.git
+
+# Documentation that doesn't need to be in container
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+LICENSE
+docs/
+*.md
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# Virtual environments (if any exist)
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files (can be large)
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.json
+data/raw/*.zip
+data/processed/*.pkl
+data/processed/*.parquet
+
+# Model files (can be very large - will be downloaded/trained in container)
+models/trained/*.pt
+models/trained/*.pth
+models/trained/*.pkl
+models/trained/*.h5
+models/checkpoints/
+
+# Logs
+*.log
+logs/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# Deployment files
+docker-compose.override.yml
+.env.local
+.env.production
+
+# Large temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Container-related files that shouldn't be in build context
+Dockerfile.prod
+docker-compose.prod.yml
+
+# Review and optimization files
+.REVIEW/

@@ -1,0 +1,16 @@
+# Data Science Dependencies - Essential Only
+# Minimal set to avoid conflicts
+
+# Data manipulation
+pandas==2.0.3
+
+# Additional visualization
+seaborn==0.12.2
+
+# Jupyter (lightweight)
+jupyter==1.0.0
+notebook==7.0.3
+
+# Data processing utilities
+beautifulsoup4==4.12.2
+openpyxl==3.1.2
