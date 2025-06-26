@@ -34,9 +34,7 @@ def parse_markdown_to_issues(file_path: str) -> List[Dict]:
         h3_match = re.match(r'^###\s+(.*)', line)
         h2_match = re.match(r'^##\s+(.*)', line)
 
-        match = h3_match or h2_match
-
-        if match:
+        if match := h3_match or h2_match:
             if current_issue:
                 # Clean up body content
                 current_issue['body'] = "".join(current_issue['body']).strip()
