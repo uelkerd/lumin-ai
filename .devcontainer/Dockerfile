@@ -6,7 +6,7 @@
 FROM python:3.11-slim as python-base
 
 # Build arguments for customization
-ARG NODE_VERSION=18
+ARG NODE_VERSION=20
 ARG USERNAME=lumin-dev
 ARG USER_UID=1000
 ARG USER_GID=1000
@@ -120,13 +120,10 @@ RUN /home/${USERNAME}/.local/bin/jupyter notebook --generate-config \
     && echo "c.NotebookApp.port = 8888" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
     && echo "c.NotebookApp.allow_root = True" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py
 
-# Install JupyterLab efficiently (minimal extensions)
+# Install JupyterLab efficiently (no extensions to avoid Node.js issues)
 RUN pip install --user jupyterlab \
-    && /home/${USERNAME}/.local/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build \
-    && /home/${USERNAME}/.local/bin/jupyter lab build \
-    # Clean up after build
-    && /home/${USERNAME}/.local/bin/jupyter lab clean \
-    && rm -rf /home/${USERNAME}/.cache/yarn
+    # Clean up pip cache
+    && rm -rf /home/${USERNAME}/.cache/pip/*
 
 # ===== SHELL CONFIGURATION =====
 # Use bash with optimized settings instead of oh-my-zsh to reduce size
