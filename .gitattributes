@@ -9,11 +9,6 @@
 *.feather filter=lfs diff=lfs merge=lfs -text
 *.arrow filter=lfs diff=lfs merge=lfs -text
 # Exceptions for configuration JSON files
-.devcontainer/devcontainer-features.json -filter=lfs -diff=lfs -merge=lfs text
-.monitoring/config/monitoring.json -filter=lfs -diff=lfs -merge=lfs text
-package.json -filter=lfs -diff=lfs -merge=lfs text
-package-lock.json -filter=lfs -diff=lfs -merge=lfs text
-tsconfig.json -filter=lfs -diff=lfs -merge=lfs text
 # Model files
 *.pkl filter=lfs diff=lfs merge=lfs -text
 *.h5 filter=lfs diff=lfs merge=lfs -text
