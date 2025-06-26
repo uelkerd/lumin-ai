@@ -41,7 +41,7 @@ textblob==0.17.1
 langdetect==1.0.9
 
 # Essential monitoring (compatible with TensorFlow 2.13.0)
-tensorboard==2.13.1  # Fixed version conflict
+# tensorboard==2.13.1  # Commented out - included with TensorFlow
 
 # Advanced ML (uncomment if needed for project)
 # transformers==4.32.1
