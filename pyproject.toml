@@ -129,18 +129,13 @@ line-length = 100
 # Target Python version - ensures compatibility across the team
 target-version = "py38"
 
-# Output format for better readability in terminals and CI systems
-output-format = "grouped"
-
 # Show fixes that Ruff can automatically apply
 show-fixes = true
 
 # Show the source code for each violation to aid in understanding
 # show-source is now handled in the lint section
 
-[tool.ruff.lint]
-
-# Select rules to enforce - this is a comprehensive set for high-quality code
+# Select rules to enforce - basic stable rules for high-quality code
 select = [
     # Pyflakes - catches basic Python errors like undefined variables
     "F",
@@ -148,84 +143,22 @@ select = [
     "E", "W",
     # isort - ensures consistent import ordering
     "I",
-    # pydocstyle - enforces docstring conventions for better documentation
-    "D",
-    # pyupgrade - suggests modern Python syntax improvements
-    "UP",
     # flake8-bugbear - catches likely bugs and design problems
     "B",
-    # flake8-simplify - suggests code simplifications
-    "SIM",
-    # flake8-comprehensions - improves list/dict/set comprehensions
-    "C4",
-    # flake8-pie - catches unnecessary code patterns
-    "PIE",
-    # flake8-return - improves return statement patterns
-    "RET",
-    # flake8-implicit-str-concat - catches accidental string concatenation
-    "ISC",
-    # flake8-quotes - enforces consistent quote usage
-    "Q",
-    # flake8-annotations - encourages type annotations for better code clarity
-    "ANN",
-    # flake8-async - catches async/await issues
-    "ASYNC",
-    # flake8-bandit - basic security issue detection
-    "S",
-    # flake8-boolean-trap - prevents confusing boolean function arguments
-    "FBT",
-    # flake8-unused-arguments - catches unused function arguments
-    "ARG",
-    # flake8-print - discourages print statements in production code
-    "T20",
-    # Ruff-specific rules for additional quality checks
-    "RUF",
 ]
 
-# Rules to ignore - these are either too strict for ML/research code or conflict with our needs
+# Rules to ignore - basic ignore list for ML/research code
 ignore = [
-    # Allow print statements - useful for debugging ML models and data exploration
-    "T201",
-    # Don't require docstrings for every function - can be overwhelming for research code
-    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107",
-    # Allow boolean positional arguments - common in ML libraries
-    "FBT001", "FBT002", "FBT003",
-    # Allow broad exception catching - sometimes necessary in data processing
-    "BLE001",
-    # Allow magic values - common in ML hyperparameters and data processing
-    "PLR2004",
+    # Allow line too long for data/ML code
+    "E501",
 ]
 
 # Per-file ignores - different rules for different types of files
-[tool.ruff.lint.per-file-ignores]
-# Test files can have additional flexibility
-"tests/**/*.py" = [
-    "D",      # Don't require docstrings in tests
-    "S101",   # Allow assert statements in tests
-    "ANN",    # Don't require type annotations in tests
-]
+[tool.ruff.per-file-ignores]
+# Allow unused imports in __init__.py files
+"**/__init__.py" = ["F401"]
 
-# Source directory layout
-"src/**/__init__.py" = ["F401", "F403"]
-# Jupyter notebooks have different conventions
-"*.ipynb" = [
-    "D",      # Don't require docstrings in notebooks
-    "T201",   # Allow print statements in notebooks
-    "F401",   # Allow unused imports in notebooks (for exploration)
-    "E402",   # Allow imports not at top of file in notebooks
-]
-# Data exploration scripts can be more flexible
-"data-science/exploratory/**/*.py" = [
-    "T201",   # Allow print statements for data exploration
-    "F401",   # Allow unused imports when exploring
-]
-# Configuration files
-"**/settings.py" = ["F401", "F403"]
-"**/config.py" = ["F401", "F403"]
-# Allow star imports in __init__.py files
-"**/__init__.py" = ["F401", "F403", "F405"]
-
-[tool.ruff.lint.isort]
+[tool.ruff.isort]
 # Import sorting configuration for clean, organized imports
 known-first-party = ["lumin_ai"]  # Your project's modules come first
 known-third-party = [
@@ -252,27 +185,7 @@ force-single-line = false  # Allow multiple imports per line when appropriate
 lines-after-imports = 2   # Two blank lines after imports for readability
 split-on-trailing-comma = true  # Split imports when there's a trailing comma
 
-[tool.ruff.lint.pydocstyle]
-# Docstring style - Google style is clean and widely used in ML projects
-convention = "google"
 
-[tool.ruff.lint.flake8-quotes]
-# Use double quotes consistently - matches Python community standards
-inline-quotes = "double"
-multiline-quotes = "double"
-docstring-quotes = "double"
-
-[tool.ruff.lint.flake8-annotations]
-# Type annotation settings - encouraging but not overwhelming
-mypy-init-return = true
-suppress-dummy-args = true
-suppress-none-returning = true
-
-[tool.ruff.format]
-# Code formatting rules that work well with the linting rules above
-quote-style = "double"           # Consistent with flake8-quotes setting
-indent-style = "space"           # Use spaces, not tabs
-line-ending = "lf"               # Use Unix-style line endings for consistency
 
 # =============================================================================
 # MYPY CONFIGURATION - Static type checking for better code reliability
