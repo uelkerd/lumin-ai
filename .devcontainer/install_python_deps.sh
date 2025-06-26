@@ -13,9 +13,9 @@ echo "--- Installing numpy... ---"
 grep "^numpy==" /tmp/requirements-ds.txt | $PIP_INSTALL_CMD -r /dev/stdin
 
 # Check if local wheels are available for torch and tensorflow
-if [ -d "/tmp/wheels" ] && [ "$(ls -A /tmp/wheels)" ]; then
+if [ -d "/tmp/wheels" ] && [ "$(find /tmp/wheels -name '*.whl' | wc -l)" -gt "0" ]; then
     echo "--- Found local wheels, installing torch and tensorflow from them... ---"
-    pip install /tmp/wheels/*.whl
+    find /tmp/wheels -name '*.whl' -exec pip install {} \;
 
     echo "--- Installing remaining packages from requirements-ds.txt ---"
     grep -v -E "^(numpy|tensorflow|torch)==" /tmp/requirements-ds.txt | $PIP_INSTALL_CMD -r /dev/stdin

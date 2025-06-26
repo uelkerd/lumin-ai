@@ -41,9 +41,11 @@ services:
       # Persistent Python package cache
       - type: volume
         source: lumin-python-packages
+        target: /home/lumin-dev/.cache/pip
       # Persistent node modules
       - type: volume
         source: lumin-node-modules
+        target: /workspace/node_modules
       # Persistent Jupyter notebooks data
       - type: volume
         source: lumin-jupyter-data
