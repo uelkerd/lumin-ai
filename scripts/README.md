@@ -9,11 +9,13 @@ This directory contains scripts for managing the LUMIN.AI project development wo
 Creates GitHub issues from JSON data and optionally adds them to a project board.
 
 **Usage:**
+
 ```bash
 python scripts/gh_issue_creator.py issues.json --token YOUR_GITHUB_TOKEN
 ```
 
 **Options:**
+
 - `--token`: GitHub personal access token (required)
 - `--owner`: Repository owner (default: "uelkerd")
 - `--repo`: Repository name (default: "lumin-ai")
@@ -27,6 +29,7 @@ python scripts/gh_issue_creator.py issues.json --token YOUR_GITHUB_TOKEN
 Parses Product Requirement Documents (PRDs) and converts them into structured JSON for GitHub issue creation.
 
 **Usage:**
+
 ```bash
 python scripts/prd_parser.py path/to/prd.md --output issues.json
 ```
@@ -36,11 +39,13 @@ python scripts/prd_parser.py path/to/prd.md --output issues.json
 Finds and closes GitHub issues that are no longer part of the MVP scope based on predefined criteria.
 
 **Usage:**
+
 ```bash
 python scripts/prune_backlog.py --token YOUR_GITHUB_TOKEN
 ```
 
 **Options:**
+
 - `--token`: GitHub personal access token (required)
 - `--owner`: Repository owner (default: "LUMIN-AI-DEV")
 - `--repo`: Repository name (default: "lumin-ai")
@@ -52,6 +57,7 @@ python scripts/prune_backlog.py --token YOUR_GITHUB_TOKEN
 Interactive script to guide you through creating a GitHub token with the correct permissions and test its validity.
 
 **Usage:**
+
 ```bash
 ./scripts/setup_github_token.sh
 ```
@@ -87,6 +93,7 @@ The GitHub API has rate limits. If you hit these limits, the scripts will show a
 ### Permission Issues
 
 Make sure your GitHub token has the necessary permissions:
+
 - `repo` scope for repository access
 - `project` scope for project board integration
 
