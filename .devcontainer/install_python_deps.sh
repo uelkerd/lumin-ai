@@ -27,5 +27,5 @@ else
 
     # Install the rest of the packages (which includes torch)
     echo "--- Installing remaining packages (including torch)... ---"
-    grep -v -E "^(numpy|tensorflow)==" /tmp/requirements-ds.txt | $PIP_INSTALL_CMD -r /dev/stdin
+grep -v -E "^(numpy|tensorflow)==" /tmp/requirements-ds.txt | $PIP_INSTALL_CMD -r /dev/stdin
 fi 
