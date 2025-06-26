@@ -10,7 +10,6 @@ import sys
 import time
 
 from .gh_issue_creator import GitHubIssueCreator
-from .github_client import GitHubClient
 
 # Setup logging
 logger = logging.getLogger(__name__)

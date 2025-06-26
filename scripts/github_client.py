@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-A centralized GitHub API client to handle REST and GraphQL requests.
-"""
+"""A centralized GitHub API client to handle REST and GraphQL requests."""
 
 import logging
 from typing import Any, Dict, Optional

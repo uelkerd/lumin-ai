@@ -112,7 +112,7 @@ class GitHubIssueCreator:
                 field_id = field["id"]
                 for option in field["options"]:
                     if option["name"] == "Backlog":
-                        logger.info(f"✅ Found Status field and Backlog option")
+                        logger.info("✅ Found Status field and Backlog option")
                         return field_id, option["id"]
 
         return None, None
@@ -139,7 +139,7 @@ class GitHubIssueCreator:
         result = self.graphql_query(mutation)
 
         if "data" not in result or "addProjectV2ItemById" not in result["data"]:
-            logger.error(f"Failed to add issue to project")
+            logger.error("Failed to add issue to project")
             return False
 
         item_id = result["data"]["addProjectV2ItemById"]["item"]["id"]
@@ -166,11 +166,10 @@ class GitHubIssueCreator:
             update_result = self.graphql_query(update_mutation)
 
             if "data" in update_result:
-                logger.info(f"   ✅ Added to Backlog")
+                logger.info("   ✅ Added to Backlog")
                 return True
-            else:
-                logger.warning(f"   ⚠️  Added to project but couldn't set to Backlog")
-                return True
+            logger.warning("   ⚠️  Added to project but couldn't set to Backlog")
+            return True
 
         return True
 
@@ -261,9 +260,8 @@ class GitHubIssueCreator:
                 self.add_issue_to_project(issue["node_id"])
 
             return True
-        else:
-            logger.error(f"❌ Failed to create issue: {issue_data['title']}")
-            return False
+        logger.error(f"❌ Failed to create issue: {issue_data['title']}")
+        return False
 
     def create_issues_batch(
         self, issues: List[Dict], delay: float = 1.0, project_name: Optional[str] = None
@@ -273,7 +271,7 @@ class GitHubIssueCreator:
 
         # Set up project board integration if requested
         if project_name:
-            logger.info(f"\n🔍 Setting up project board integration...")
+            logger.info("\n🔍 Setting up project board integration...")
             self.project_id = self.find_project(project_name)
 
             if self.project_id:
