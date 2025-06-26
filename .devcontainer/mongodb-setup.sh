@@ -273,16 +273,11 @@ print('🔄 Change streams configured for real-time governance analysis');
 # Create database statistics collection for monitoring
 mongosh governance_analysis --eval "
  // Create monitoring collection for database health
-db.createCollection('system_monitoring');
-
-// Create indexes for efficient queries as the collection grows
-db.system_monitoring.createIndex({ setup_date: 1 });
-db.system_monitoring.createIndex({ version: 1 });
-
-// Insert initial monitoring document
+ VERSION="${VERSION:-1.0.0}"
+  # Insert initial monitoring document
 db.system_monitoring.insertOne({
   setup_date: new Date(),
-  version: '1.0.0',
+  version: VERSION,
   collections: [
     'democracy_radar_responses',
     'governance_documents',
@@ -292,21 +287,6 @@ db.system_monitoring.insertOne({
     'user_interactions',
     'api_cache'
   ],
-  optimization_status: {
-    indexes_created: true,
-    views_created: true,
-    gridfs_configured: true,
-    change_streams_enabled: true
-  },
-  performance_targets: {
-    query_response_time_ms: 100,
-    aggregation_response_time_ms: 500,
-    concurrent_users: 50
-  }
-});
-
-print('📊 System monitoring configured');
-"
 
 # Set up data validation rules for data quality
 mongosh governance_analysis --eval "
