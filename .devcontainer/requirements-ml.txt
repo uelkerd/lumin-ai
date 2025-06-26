@@ -5,18 +5,49 @@
 # Machine Learning Core Dependencies - Minimal Stable Version
 # Only the most essential ML packages to minimize conflicts
 
+# 🤖 CORE ML PACKAGES - Compatible Versions
+tensorflow==2.13.0
+tensorboard==2.13.0
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+scikit-learn==1.3.0
+xgboost==1.7.6
+lightgbm==4.0.0
+
+# 🔄 TRANSFORMER MODELS & NLP
+transformers==4.32.1
+datasets==2.14.4
+evaluate==0.4.0
+accelerate==0.21.0
+sentence-transformers==2.2.2
+spacy==3.6.1
+
+# 📊 MLOPS & EXPERIMENT TRACKING
+mlflow==2.6.0
+wandb==0.15.8
+optuna==3.4.0
+
+# 🚀 MODEL SERVING
+fastapi==0.101.1
+uvicorn==0.23.2
+
+# 📈 SPECIALIZED LIBRARIES
+torch-geometric==2.4.0
+networkx==3.2.1
+pytorch-lightning==2.1.0
+torchmetrics==1.2.0
+
+# 🔧 DEPLOYMENT & OPTIMIZATION
+onnx==1.15.0
+onnxruntime==1.16.1
+tsfresh==0.20.1
+
 # Core numerical computing
 numpy==1.24.3
 
-# Core ML library
-scikit-learn==1.3.0
-
 # Statistical analysis
 scipy==1.11.2
-
-# Deep Learning (choose one to avoid conflicts)
-# tensorflow==2.13.0  # Commented out for now due to size
-torch==2.0.1
 
 # Basic visualization
 matplotlib==3.7.2
@@ -34,47 +65,47 @@ torchaudio==2.0.2     # Compatible with torch 2.0.1
 
 # Basic transformers (lighter version)
 tokenizers==0.14.1
-datasets==2.14.6
 
 # Basic NLP
 textblob==0.17.1
 langdetect==1.0.9
 
 # Essential monitoring (compatible with TensorFlow 2.13.0)
-# tensorboard==2.13.1  # Commented out - included with TensorFlow
+tensorboard==2.13.0
 
 # Advanced ML (uncomment if needed for project)
-# transformers==4.32.1
-# spacy==3.6.1
+transformers==4.32.1
+spacy==3.6.1
 
 # Core Deep Learning Framework
-# torchvision==0.16.0            # Computer vision utilities (useful for visualization)
-# torchaudio==2.1.0              # Audio processing (if governance data includes speeches)
-
-# Transformer Models for Governance Text Analysis
-# accelerate==0.24.1             # Distributed training and optimization
+torchvision==0.16.0            # Computer vision utilities (useful for visualization)
+torchaudio==2.1.0              # Audio processing (if governance data includes speeches)
 
 # Specialized NLP Libraries for Political Science
-# spacy==3.7.2                   # Advanced natural language processing
-# spacy-transformers==1.3.4     # SpaCy integration with transformer models
+spacy==3.7.2                   # Advanced natural language processing
+spacy-transformers==1.3.4     # SpaCy integration with transformer models
 
 # Graph Neural Networks for Voting Pattern Analysis
-# torch-geometric==2.4.0        # Graph neural network framework
-# networkx==3.2.1               # Graph creation and analysis for voting patterns
+torch-geometric==2.4.0        # Graph neural network framework
+networkx==3.2.1               # Graph creation and analysis for voting patterns
 
 # Model Training and Evaluation
-# pytorch-lightning==2.1.0      # Structured training framework
-# torchmetrics==1.2.0          # Comprehensive metrics for model evaluation
-# wandb==0.15.12                # Experiment tracking and visualization
+pytorch-lightning==2.1.0      # Structured training framework
+torchmetrics==1.2.0          # Comprehensive metrics for model evaluation
+wandb==0.15.8                # Experiment tracking and visualization
 
 # Advanced Optimization and Regularization
-# optuna==3.4.0                 # Hyperparameter optimization
-# transformers[torch]           # Additional PyTorch integrations
-# sentence-transformers==2.2.2  # Semantic similarity for governance text
+optuna==3.4.0                 # Hyperparameter optimization
+transformers[torch]           # Additional PyTorch integrations
+sentence-transformers==2.2.2  # Semantic similarity for governance text
 
 # Model Serving and Deployment
-# onnx==1.15.0                  # Model format for deployment optimization
-# onnxruntime==1.16.1          # Efficient model inference
+onnx==1.15.0                  # Model format for deployment optimization
+onnxruntime==1.16.1          # Efficient model inference
 
 # Time Series Analysis for Voting Patterns
-# tsfresh==0.20.1               # Time series feature extraction
+tsfresh==0.20.1               # Time series feature extraction
+
+# Model serving
+fastapi==0.101.1
+uvicorn==0.23.2
