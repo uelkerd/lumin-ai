@@ -38,6 +38,11 @@ services:
         source: ..
         target: /workspace
         consistency: cached
+      # Mount local wheels if they exist, for offline installation
+      - type: bind
+        source: ./.devcontainer/wheels
+        target: /tmp/wheels
+        consistency: cached
       # Persistent Python package cache
       - type: volume
         source: lumin-python-packages

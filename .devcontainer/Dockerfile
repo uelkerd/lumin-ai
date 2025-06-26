@@ -28,6 +28,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Install Python dependencies in stages to better handle conflicts
 COPY .devcontainer/requirements-dev.txt .devcontainer/requirements-ds.txt /tmp/
+COPY .devcontainer/install_python_deps.sh /tmp/install_python_deps.sh
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip wheel setuptools && \
     pip install --no-cache-dir jupyter
@@ -36,18 +37,18 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir -r /tmp/requirements-dev.txt
 
-# Install data science dependencies with conflict resolution
-# Install numpy first at the compatible version
+# Install data science dependencies using the smart script
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep "^numpy==" /tmp/requirements-ds.txt | pip install --no-cache-dir --retries 5 --timeout 300 --trusted-host files.pythonhosted.org -r /dev/stdin
+    chmod +x /tmp/install_python_deps.sh && \
+    /tmp/install_python_deps.sh
 
-# Install tensorflow separately since it's picky about numpy version
+# Install tensorflow and torch from local wheels to avoid network issues
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep "^tensorflow==" /tmp/requirements-ds.txt | pip install --no-cache-dir --retries 10 --timeout 600 --trusted-host files.pythonhosted.org -r /dev/stdin
+    pip install /tmp/wheels/*.whl
 
-# Install the rest of the data science packages
+# Install the rest of the data science packages, excluding what was in wheels
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir --retries 5 --timeout 300 -r /dev/stdin
+    grep -v -E "^(numpy|tensorflow|torch)==" /tmp/requirements-ds.txt | pip install --no-cache-dir --retries 5 --timeout 300 -r /dev/stdin
 
 # Final stage
 FROM python:${PYTHON_VERSION}-slim-bullseye

@@ -338,3 +338,4 @@ venv.bak/
 tmp/
 # Devcontainer environment variables
 .devcontainer/.env
+.devcontainer/wheels
