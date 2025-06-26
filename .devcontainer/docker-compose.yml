@@ -75,13 +75,10 @@ services:
       # MongoDB connection settings
       MONGODB_HOST: governance-db
       MONGODB_PORT: 27017
-      MONGODB_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGODB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
-      # Use these for MongoDB initialization script
-      MONGO_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGO_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGO_DB_NAME: ${MONGODB_DATABASE:-governance_analysis}
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
+      JUPYTER_PORT: 9000
 
     # Enable all capabilities required for development
     # including running Docker in Docker if socket is mounted
@@ -137,9 +134,11 @@ services:
 
     # Environment variables for MongoDB initialization
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME:-admin}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD:-adminpassword}
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
 
     # Health check for MongoDB
     healthcheck:

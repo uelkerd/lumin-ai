@@ -97,7 +97,7 @@ repos:
       - id: detect-secrets
         name: "Detect secrets"
         description: "Scans for accidentally committed secrets like API keys"
-        exclude: ".allowlist|package-lock.json|yarn.lock|.devcontainer/docker-compose.yml"
+        exclude: "\\.allowlist|package-lock\\.json|yarn\\.lock|\\.devcontainer/docker-compose\\.yml|\\.secrets\\.baseline"
         args: ['--baseline', '.secrets.baseline']
 
   # Repository 7: Prevent nested virtual environments

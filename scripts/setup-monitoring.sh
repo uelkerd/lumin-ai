@@ -29,17 +29,17 @@ log() {
 # Create monitoring directory structure
 setup_monitoring_directories() {
     log "INFO" "Setting up monitoring directory structure..."
-    
+
     mkdir -p "$MONITORING_DIR"/{dashboards,config,data,reports}
     mkdir -p "$LOG_DIR"/{monitoring,health,performance}
-    
+
     log "INFO" "Created monitoring directories"
 }
 
 # Create monitoring configuration files
 create_monitoring_config() {
     log "INFO" "Creating monitoring configuration files..."
-    
+
     # Main monitoring configuration
     cat > "$MONITORING_DIR/config/monitoring.json" << 'EOF'
 {
@@ -94,13 +94,13 @@ health_checks:
     containers:
       - "lumin-ai-dev"
       - "lumin-governance-db"
-    
+
   - name: "mongodb_connectivity"
     type: "mongodb"
     interval: 60
     timeout: 15
     connection_string: "mongodb://lumin:devpassword@governance-db:27017/governance_analysis"
-    
+
   - name: "development_environment"
     type: "command"
     interval: 300
@@ -109,7 +109,7 @@ health_checks:
       - "python3 --version"
       - "node --version"
       - "pip list --format=freeze | wc -l"
-    
+
   - name: "port_connectivity"
     type: "tcp_port"
     interval: 120
@@ -118,7 +118,7 @@ health_checks:
       - 3000
       - 8000
       - 9000
-    
+
   - name: "disk_usage"
     type: "disk_space"
     interval: 300
@@ -135,34 +135,34 @@ performance_monitoring:
   enabled: true
   collection_interval: 5
   retention_period: "7d"
-  
+
   metrics:
     - name: "cpu_usage"
       type: "percentage"
       warning_threshold: 70
       critical_threshold: 90
-      
+
     - name: "memory_usage"
       type: "percentage"
       warning_threshold: 80
       critical_threshold: 95
-      
+
     - name: "disk_io"
       type: "rate"
       warning_threshold: 100  # MB/s
       critical_threshold: 200
-      
+
     - name: "network_io"
       type: "rate"
       warning_threshold: 50   # MB/s
       critical_threshold: 100
-      
+
   alerts:
     enabled: true
     notification_methods:
       - "log"
       - "console"
-    
+
   exports:
     csv: true
     json: true
@@ -175,7 +175,7 @@ EOF
 # Create monitoring scripts
 create_monitoring_scripts() {
     log "INFO" "Creating monitoring scripts..."
-    
+
     # Quick health check script
     cat > "$SCRIPTS_DIR/quick-health-check.sh" << 'EOF'
 #!/bin/bash
@@ -226,7 +226,7 @@ echo "✅ Quick health check completed!"
 EOF
 
     chmod +x "$SCRIPTS_DIR/quick-health-check.sh"
-    
+
     # Monitoring daemon script
     cat > "$SCRIPTS_DIR/start-monitoring.sh" << 'EOF'
 #!/bin/bash
@@ -261,7 +261,7 @@ echo "🛑 Stop monitoring with: ./scripts/stop-monitoring.sh"
 EOF
 
     chmod +x "$SCRIPTS_DIR/start-monitoring.sh"
-    
+
     # Stop monitoring script
     cat > "$SCRIPTS_DIR/stop-monitoring.sh" << 'EOF'
 #!/bin/bash
@@ -295,14 +295,14 @@ echo "🔧 All monitoring services stopped"
 EOF
 
     chmod +x "$SCRIPTS_DIR/stop-monitoring.sh"
-    
+
     log "INFO" "Created monitoring scripts"
 }
 
 # Create monitoring dashboard
 create_monitoring_dashboard() {
     log "INFO" "Creating monitoring dashboard..."
-    
+
     # Simple HTML dashboard
     cat > "$MONITORING_DIR/dashboards/index.html" << 'EOF'
 <!DOCTYPE html>
@@ -383,7 +383,7 @@ create_monitoring_dashboard() {
             <h1>🚀 LUMIN.AI Container Monitoring</h1>
             <p>Real-time monitoring dashboard for development containers</p>
         </div>
-        
+
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-value status-healthy">✅</div>
@@ -402,22 +402,22 @@ create_monitoring_dashboard() {
                 <div class="metric-label">MongoDB Status</div>
             </div>
         </div>
-        
+
         <div style="text-align: center;">
             <button class="refresh-button" onclick="location.reload()">
                 🔄 Refresh Data
             </button>
         </div>
-        
+
         <div class="last-updated">
             Last updated: <span id="timestamp"></span>
         </div>
     </div>
-    
+
     <script>
         // Update timestamp
         document.getElementById('timestamp').textContent = new Date().toLocaleString();
-        
+
         // Auto-refresh every 30 seconds
         setTimeout(() => location.reload(), 30000);
     </script>
@@ -434,7 +434,7 @@ DASHBOARD_PATH=".monitoring/dashboards/index.html"
 
 if [ -f "$DASHBOARD_PATH" ]; then
     echo "📊 Opening LUMIN.AI monitoring dashboard..."
-    
+
     # Try to open in different systems
     if command -v xdg-open > /dev/null; then
         xdg-open "$DASHBOARD_PATH"
@@ -452,14 +452,14 @@ fi
 EOF
 
     chmod +x "$SCRIPTS_DIR/open-dashboard.sh"
-    
+
     log "INFO" "Created monitoring dashboard"
 }
 
 # Create monitoring cron jobs
 setup_monitoring_cron() {
     log "INFO" "Setting up monitoring cron jobs..."
-    
+
     # Create cron job configuration
     cat > "$MONITORING_DIR/config/cron-monitoring.txt" << 'EOF'
 # LUMIN.AI Container Monitoring Cron Jobs
@@ -485,7 +485,7 @@ EOF
 # Create documentation
 create_monitoring_docs() {
     log "INFO" "Creating monitoring documentation..."
-    
+
     cat > "$MONITORING_DIR/README.md" << 'EOF'
 # LUMIN.AI Container Monitoring
 
@@ -625,27 +625,27 @@ EOF
 # Main setup function
 main() {
     log "INFO" "Starting LUMIN.AI monitoring setup..."
-    
+
     # Create directory structure
     setup_monitoring_directories
-    
+
     # Create configuration files
     create_monitoring_config
-    
+
     # Create monitoring scripts
     create_monitoring_scripts
-    
+
     # Create dashboard
     create_monitoring_dashboard
-    
+
     # Setup cron jobs
     setup_monitoring_cron
-    
+
     # Create documentation
     create_monitoring_docs
-    
+
     log "INFO" "✅ Monitoring setup completed successfully!"
-    
+
     echo
     echo "🎉 LUMIN.AI Container Monitoring Setup Complete!"
     echo "================================================"
@@ -671,4 +671,4 @@ main() {
 }
 
 # Execute main function
-main "$@" 
+main "$@"
