@@ -336,19 +336,12 @@ db.runCommand({
 print('✅ Data validation rules applied for quality assurance');
 "
 
-echo "🎉 MongoDB setup completed successfully!"
-echo ""
-echo "Configuration summary:"
-echo "  ✅ Performance optimizations applied"
-echo "  ✅ Advanced indexes created for multimodal analysis"
-echo "  ✅ Dashboard optimization views configured"
-echo "  ✅ GridFS configured for large file storage"
-echo "  ✅ Change streams enabled for real-time updates"
-echo "  ✅ Data validation rules applied"
-echo "  ✅ System monitoring configured"
-echo ""
-echo "MongoDB is now optimized for democratic governance analysis!"
-echo "Ready for multimodal data: text, images, audio, video, and complex ML outputs"
+if [ ! -f /tmp/mongodb_initialized ]; then
+  # Your MongoDB setup script here
+  touch /tmp/mongodb_initialized
+else
+  echo "MongoDB already initialized, skipping setup"
+fi
 
 # --- Finalization ---
 # Create the flag file to indicate that initialization is complete
