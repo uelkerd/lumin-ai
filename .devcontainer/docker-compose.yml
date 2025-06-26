@@ -188,6 +188,7 @@ volumes:
       com.luminai.description: "Persistent Jupyter notebooks data"
   lumin-logs:
     name: lumin-ai-logs
+    external: false
     labels:
       com.luminai.description: "Application logs for LUMIN.AI"
 

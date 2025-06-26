@@ -39,15 +39,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Install data science dependencies with conflict resolution
 # Install numpy first at the compatible version
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep "^numpy==" /tmp/requirements-ds.txt | pip install --no-cache-dir -r /dev/stdin
+    grep "^numpy==" /tmp/requirements-ds.txt | pip install --no-cache-dir --retries 5 --timeout 300 --trusted-host files.pythonhosted.org -r /dev/stdin
 
 # Install tensorflow separately since it's picky about numpy version
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep "^tensorflow==" /tmp/requirements-ds.txt | pip install --no-cache-dir -r /dev/stdin
+    grep "^tensorflow==" /tmp/requirements-ds.txt | pip install --no-cache-dir --retries 10 --timeout 600 --trusted-host files.pythonhosted.org -r /dev/stdin
 
 # Install the rest of the data science packages
 RUN --mount=type=cache,target=/root/.cache/pip \
-    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir -r /dev/stdin
+    grep -v "^numpy==" /tmp/requirements-ds.txt | grep -v "^tensorflow==" | pip install --no-cache-dir --retries 5 --timeout 300 -r /dev/stdin
 
 # Final stage
 FROM python:${PYTHON_VERSION}-slim-bullseye
