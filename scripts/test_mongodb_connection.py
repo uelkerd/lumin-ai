@@ -4,17 +4,19 @@ MongoDB connection test script for LUMIN.AI development environment.
 Tests the connection to the MongoDB database and performs basic operations.
 """
 
+import logging
 import os
 import sys
-import logging
-from pymongo import MongoClient
 from datetime import datetime
+
+from pymongo import MongoClient
+
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stdout)]
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
 logger = logging.getLogger(__name__)
 
@@ -22,10 +24,12 @@ logger = logging.getLogger(__name__)
 def test_mongodb_connection():
     """Test connection to MongoDB and perform basic operations."""
     # Get connection details from environment or use defaults
-    mongo_host = os.environ.get('MONGODB_HOST', 'localhost')
-    mongo_port = int(os.environ.get('MONGODB_PORT', 27017))
-    mongo_username = os.environ.get('MONGODB_USERNAME', 'lumin')
-    mongo_password = os.environ.get('MONGODB_PASSWORD')
+    mongo_host = os.environ.get("MONGODB_HOST", "localhost")
+    mongo_port = int(os.environ.get("MONGODB_PORT", 27017))
+    mongo_username = os.environ.get("MONGODB_USERNAME", "lumin")
+    mongo_password = os.environ.get("MONGODB_PASSWORD")
+    mongo_database = os.environ.get("MONGODB_DATABASE", "governance_analysis")
+
     if not mongo_password:
         logger.error("Error: MONGODB_PASSWORD environment variable is not set.")
         return False
@@ -38,8 +42,7 @@ def test_mongodb_connection():
 
         # Check server info - this will raise an exception if connection fails
         server_info = client.server_info()
-        logger.info(
-            f"Connected to MongoDB version: {server_info.get('version')}")
+        logger.info(f"Connected to MongoDB version: {server_info.get('version')}")
 
         # Access database
         db = client[mongo_database]
@@ -52,7 +55,7 @@ def test_mongodb_connection():
         test_document = {
             "test_id": "mongodb_connection_test",
             "timestamp": datetime.now(),
-            "status": "success"
+            "status": "success",
         }
 
         result = collection.insert_one(test_document)
@@ -74,7 +77,7 @@ def test_mongodb_connection():
         return False
 
     finally:
-        if 'client' in locals():
+        if "client" in locals():
             client.close()
             logger.info("MongoDB connection closed")
 
