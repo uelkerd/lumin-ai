@@ -110,7 +110,9 @@ RUN pip install --user -r /tmp/requirements-ml.txt \
     && rm /tmp/requirements-*.txt
 
 # ===== JUPYTER CONFIGURATION =====
-RUN jupyter notebook --generate-config \
+# Set PATH to include user's local bin directory for jupyter commands
+ENV PATH="/home/${USERNAME}/.local/bin:${PATH}"
+RUN /home/${USERNAME}/.local/bin/jupyter notebook --generate-config \
     && echo "c.NotebookApp.token = ''" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
     && echo "c.NotebookApp.password = ''" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
     && echo "c.NotebookApp.open_browser = False" >> /home/${USERNAME}/.jupyter/jupyter_notebook_config.py \
@@ -120,10 +122,10 @@ RUN jupyter notebook --generate-config \
 
 # Install JupyterLab efficiently (minimal extensions)
 RUN pip install --user jupyterlab \
-    && jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build \
-    && jupyter lab build \
+    && /home/${USERNAME}/.local/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build \
+    && /home/${USERNAME}/.local/bin/jupyter lab build \
     # Clean up after build
-    && jupyter lab clean \
+    && /home/${USERNAME}/.local/bin/jupyter lab clean \
     && rm -rf /home/${USERNAME}/.cache/yarn
 
 # ===== SHELL CONFIGURATION =====
@@ -180,7 +182,7 @@ CMD ["bash"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import torch, pandas, numpy; print('Development environment ready')" || exit 1
+    CMD python -c "import pandas, numpy, sklearn; print('Development environment ready')" || exit 1
 
 # Add labels for container management
 LABEL org.lumin-ai.version="1.0" \
