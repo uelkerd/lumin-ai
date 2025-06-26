@@ -7,7 +7,12 @@ Adds existing GitHub issues to the LUMIN Project Tracker board.
 import argparse
 import sys
 import time
+import logging
 from .gh_issue_creator import GitHubIssueCreator
+from .github_client import GitHubClient
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -45,41 +50,51 @@ def main():
         default=1.0,
         help='Delay between API calls in seconds (default: 1.0)'
     )
+    parser.add_argument(
+        '--log-level',
+        default='INFO',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        help='Set the logging level (default: INFO)'
+    )
 
     args = parser.parse_args()
 
+    # Configure logging
+    logging.basicConfig(level=getattr(logging, args.log_level),
+                        format='%(asctime)s - %(levelname)s - %(message)s')
+
     creator = GitHubIssueCreator(args.token, args.owner, args.repo)
 
-    print(f"🔍 Finding project '{args.project}'...")
+    logger.info(f"🔍 Finding project '{args.project}'...")
     creator.project_id = creator.find_project(args.project)
     if not creator.project_id:
-        print(f"❌ Error: Project '{args.project}' not found. Please check the name and your token permissions.")
+        logger.critical(f"❌ Error: Project '{args.project}' not found. Please check the name and your token permissions.")
         sys.exit(1)
 
     creator.project_field_id, creator.backlog_option_id = creator.get_project_field_info(creator.project_id)
     if not creator.project_field_id or not creator.backlog_option_id:
-        print("⚠️  Warning: Could not find 'Status' field or 'Backlog' option. Issues will be added but not set to Backlog.")
+        logger.warning("⚠️  Warning: Could not find 'Status' field or 'Backlog' option. Issues will be added but not set to Backlog.")
 
     issues_to_add = creator.get_issues_to_sync(args.since_issue)
 
     if not issues_to_add:
-        print("✅ No issues found to sync. Everything is up to date.")
+        logger.info("✅ No issues found to sync. Everything is up to date.")
         return
 
-    print(f"\nFound {len(issues_to_add)} issues to add to project '{args.project}'.")
+    logger.info(f"\nFound {len(issues_to_add)} issues to add to project '{args.project}'.")
     confirm = input("Continue? (y/N): ")
     if confirm.lower() != 'y':
-        print("Aborted.")
+        logger.info("Aborted.")
         return
 
-    print("\n🚀 Syncing issues to project board...\n")
+    logger.info("\n🚀 Syncing issues to project board...\n")
     for i, issue in enumerate(issues_to_add, 1):
-        print(f"Processing {i}/{len(issues_to_add)}: Adding issue #{issue['number']}")
+        logger.info(f"Processing {i}/{len(issues_to_add)}: Adding issue #{issue['number']}")
         creator.add_issue_to_project(issue['node_id'])
         if i < len(issues_to_add):
             time.sleep(args.delay)
 
-    print("\n🎉 Sync complete!")
+    logger.info("\n🎉 Sync complete!")
 
 if __name__ == "__main__":
     main()

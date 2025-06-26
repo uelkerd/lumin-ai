@@ -2,15 +2,19 @@
 """
 LUMIN.AI PRD Parser
 This script parses markdown PRD files to generate a JSON file of issues
-for the gh-issue-creator.py script.
+for the gh_issue_creator.py script.
 """
 
 import os
 import json
 import re
+import logging
 from typing import List, Dict, Optional
 import argparse
 import sys
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 def parse_markdown_to_issues(file_path: str) -> List[Dict]:
     """
@@ -76,21 +80,31 @@ def main():
         default='issues.json',
         help='Path to the output JSON file (default: issues.json)'
     )
+    parser.add_argument(
+        '--log-level',
+        default='INFO',
+        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        help='Set the logging level (default: INFO)'
+    )
 
     args = parser.parse_args()
+
+    # Configure logging
+    logging.basicConfig(level=getattr(logging, args.log_level),
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
     all_issues = []
 
     if not os.path.isdir(args.prd_directory):
-        print(f"Error: Directory '{args.prd_directory}' not found.")
+        logger.critical(f"Error: Directory '{args.prd_directory}' not found.")
         sys.exit(1)
 
-    print(f"🔍 Parsing PRD files from '{args.prd_directory}'...")
+    logger.info(f"🔍 Parsing PRD files from '{args.prd_directory}'...")
 
     for filename in os.listdir(args.prd_directory):
         if filename.endswith(('_prd.md', 'PRD.md')):
             file_path = os.path.join(args.prd_directory, filename)
-            print(f"   - Processing {filename}")
+            logger.info(f"   - Processing {filename}")
             issues = parse_markdown_to_issues(file_path)
             all_issues.extend(issues)
 
@@ -98,13 +112,13 @@ def main():
         with open(args.output_file, 'w', encoding='utf-8') as f:
             json.dump(all_issues, f, indent=2)
     except IOError as e:
-        print(f"Error writing to output file '{args.output_file}': {e}")
+        logger.critical(f"Error writing to output file '{args.output_file}': {e}")
         sys.exit(1)
 
-    print(f"\n✅ Successfully parsed {len(all_issues)} issues.")
-    print(f"📝 Output written to '{args.output_file}'")
-    print("\nNext step: Run the issue creator script in dry-run mode:")
-    print(f"python scripts/gh_issue_creator.py {args.output_file} --token YOUR_TOKEN --dry-run")
+    logger.info(f"\n✅ Successfully parsed {len(all_issues)} issues.")
+    logger.info(f"📝 Output written to '{args.output_file}'")
+    logger.info("\nNext step: Run the issue creator script in dry-run mode:")
+    logger.info(f"python scripts/gh_issue_creator.py {args.output_file} --token YOUR_TOKEN --dry-run")
 
 
 if __name__ == "__main__":
