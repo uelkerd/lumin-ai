@@ -3,11 +3,13 @@
 A centralized GitHub API client to handle REST and GraphQL requests.
 """
 
-import requests
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+import requests
 
 logger = logging.getLogger(__name__)
+
 
 class GitHubClient:
     """A client for interacting with the GitHub REST and GraphQL APIs."""
@@ -20,7 +22,7 @@ class GitHubClient:
         self._graphql_url = "https://api.github.com/graphql"
         self._headers = {
             "Authorization": f"token {token}",
-            "Accept": "application/vnd.github.v3+json"
+            "Accept": "application/vnd.github.v3+json",
         }
 
     def post_graphql(self, query: str) -> Dict[str, Any]:
@@ -36,9 +38,7 @@ class GitHubClient:
         logger.debug(f"Executing GraphQL query:\n{query}")
         try:
             response = requests.post(
-                self._graphql_url,
-                json={'query': query},
-                headers=self._headers
+                self._graphql_url, json={"query": query}, headers=self._headers
             )
             response.raise_for_status()
             return response.json()

@@ -5,16 +5,18 @@ Automates creation of GitHub issues from parsed PRD requirements
 and adds them to the LUMIN Project Tracker board
 """
 
-import json
-import time
-import logging
-from typing import List, Dict, Optional, Tuple
 import argparse
+import json
+import logging
 import sys
+import time
+from typing import Dict, List, Optional, Tuple
+
 from .github_client import GitHubClient
 
 # Setup logging
 logger = logging.getLogger(__name__)
+
 
 class GitHubIssueCreator:
     def __init__(self, token: str, owner: str, repo: str):
@@ -34,7 +36,7 @@ class GitHubIssueCreator:
 
         milestones = {}
         for milestone in response:
-            milestones[milestone['title']] = milestone['number']
+            milestones[milestone["title"]] = milestone["number"]
 
         return milestones
 
@@ -59,15 +61,15 @@ class GitHubIssueCreator:
 
         result = self.graphql_query(query)
 
-        if 'data' not in result:
+        if "data" not in result:
             return None
 
-        projects = result['data']['repository']['projectsV2']['nodes']
+        projects = result["data"]["repository"]["projectsV2"]["nodes"]
 
         for project in projects:
-            if project and project['title'] == project_name:
+            if project and project["title"] == project_name:
                 logger.info(f"✅ Found project: {project['title']}")
-                return project['id']
+                return project["id"]
 
         return None
 
@@ -100,18 +102,18 @@ class GitHubIssueCreator:
 
         result = self.graphql_query(query)
 
-        if 'data' not in result:
+        if "data" not in result:
             return None, None
 
-        fields = result['data']['node']['fields']['nodes']
+        fields = result["data"]["node"]["fields"]["nodes"]
 
         for field in fields:
-            if field.get('name') == 'Status' and 'options' in field:
-                field_id = field['id']
-                for option in field['options']:
-                    if option['name'] == 'Backlog':
+            if field.get("name") == "Status" and "options" in field:
+                field_id = field["id"]
+                for option in field["options"]:
+                    if option["name"] == "Backlog":
                         logger.info(f"✅ Found Status field and Backlog option")
-                        return field_id, option['id']
+                        return field_id, option["id"]
 
         return None, None
 
@@ -136,11 +138,11 @@ class GitHubIssueCreator:
 
         result = self.graphql_query(mutation)
 
-        if 'data' not in result or 'addProjectV2ItemById' not in result['data']:
+        if "data" not in result or "addProjectV2ItemById" not in result["data"]:
             logger.error(f"Failed to add issue to project")
             return False
 
-        item_id = result['data']['addProjectV2ItemById']['item']['id']
+        item_id = result["data"]["addProjectV2ItemById"]["item"]["id"]
 
         # Then, set it to Backlog status
         if self.project_field_id and self.backlog_option_id:
@@ -163,7 +165,7 @@ class GitHubIssueCreator:
 
             update_result = self.graphql_query(update_mutation)
 
-            if 'data' in update_result:
+            if "data" in update_result:
                 logger.info(f"   ✅ Added to Backlog")
                 return True
             else:
@@ -205,18 +207,18 @@ class GitHubIssueCreator:
 
         result = self.graphql_query(query)
 
-        if 'data' not in result or 'repository' not in result['data']:
+        if "data" not in result or "repository" not in result["data"]:
             logger.error("Error fetching issues via GraphQL")
             return issues_to_sync
 
-        issues = result['data']['repository']['issues']['edges']
+        issues = result["data"]["repository"]["issues"]["edges"]
         for issue_edge in issues:
-            issue = issue_edge['node']
+            issue = issue_edge["node"]
             # Stop if we've gone past the start number
-            if issue['number'] < start_issue_num:
+            if issue["number"] < start_issue_num:
                 return issues_to_sync
             # Only add issues that haven't been assigned to the project
-            if not issue['projectItems']['edges']:
+            if not issue["projectItems"]["edges"]:
                 issues_to_sync.append(issue)
         return issues_to_sync
 
@@ -228,8 +230,8 @@ class GitHubIssueCreator:
         milestones = self.get_milestones()
         milestone_number = None
 
-        if 'milestone' in issue_data:
-            milestone_name = issue_data['milestone']
+        if "milestone" in issue_data:
+            milestone_name = issue_data["milestone"]
             if milestone_name in milestones:
                 milestone_number = milestones[milestone_name]
             else:
@@ -237,16 +239,16 @@ class GitHubIssueCreator:
 
         # Prepare issue payload
         payload = {
-            "title": issue_data['title'],
-            "body": issue_data['body'],
-            "labels": issue_data.get('labels', []),
+            "title": issue_data["title"],
+            "body": issue_data["body"],
+            "labels": issue_data.get("labels", []),
         }
 
         if milestone_number:
-            payload['milestone'] = milestone_number
+            payload["milestone"] = milestone_number
 
-        if 'assignees' in issue_data and issue_data['assignees']:
-            payload['assignees'] = issue_data['assignees']
+        if "assignees" in issue_data and issue_data["assignees"]:
+            payload["assignees"] = issue_data["assignees"]
 
         # Create the issue
         issue = self.client.post_rest("/issues", json_data=payload)
@@ -256,21 +258,18 @@ class GitHubIssueCreator:
 
             # Add to project board if requested
             if add_to_project and self.project_id:
-                self.add_issue_to_project(issue['node_id'])
+                self.add_issue_to_project(issue["node_id"])
 
             return True
         else:
             logger.error(f"❌ Failed to create issue: {issue_data['title']}")
             return False
 
-    def create_issues_batch(self, issues: List[Dict], delay: float = 1.0,
-                           project_name: Optional[str] = None) -> Dict:
+    def create_issues_batch(
+        self, issues: List[Dict], delay: float = 1.0, project_name: Optional[str] = None
+    ) -> Dict:
         """Create multiple issues with rate limiting and optional project board integration"""
-        results = {
-            'created': 0,
-            'failed': 0,
-            'total': len(issues)
-        }
+        results = {"created": 0, "failed": 0, "total": len(issues)}
 
         # Set up project board integration if requested
         if project_name:
@@ -278,11 +277,15 @@ class GitHubIssueCreator:
             self.project_id = self.find_project(project_name)
 
             if self.project_id:
-                self.project_field_id, self.backlog_option_id = self.get_project_field_info(self.project_id)
+                self.project_field_id, self.backlog_option_id = self.get_project_field_info(
+                    self.project_id
+                )
                 if not self.project_field_id:
                     logger.warning("⚠️  Warning: Could not find Status field in project")
             else:
-                logger.warning(f"⚠️  Warning: Project '{project_name}' not found. Issues will be created without project assignment.")
+                logger.warning(
+                    f"⚠️  Warning: Project '{project_name}' not found. Issues will be created without project assignment."
+                )
 
         logger.info(f"\n🚀 Creating {len(issues)} issues on GitHub...\n")
 
@@ -290,9 +293,9 @@ class GitHubIssueCreator:
             logger.info(f"Processing {i}/{len(issues)}: {issue['title']}")
 
             if self.create_issue(issue, add_to_project=bool(project_name)):
-                results['created'] += 1
+                results["created"] += 1
             else:
-                results['failed'] += 1
+                results["failed"] += 1
 
             # Rate limiting to avoid hitting API limits
             if i < len(issues):
@@ -300,78 +303,71 @@ class GitHubIssueCreator:
 
         return results
 
+
 def validate_issues_json(issues_data: List[Dict]) -> bool:
     """Validate the structure of issues JSON"""
-    required_fields = ['title', 'body']
+    required_fields = ["title", "body"]
 
     for i, issue in enumerate(issues_data):
         for field in required_fields:
             if field not in issue:
-                logger.error(f"Error: Issue {i+1} missing required field: {field}")
+                logger.error(f"Error: Issue {i + 1} missing required field: {field}")
                 return False
 
     return True
 
+
 def main():
     parser = argparse.ArgumentParser(
-        description='Create GitHub issues from LUMIN.AI PRD requirements with project board integration'
+        description="Create GitHub issues from LUMIN.AI PRD requirements with project board integration"
     )
+    parser.add_argument("json_file", help="Path to JSON file containing issues data")
     parser.add_argument(
-        'json_file',
-        help='Path to JSON file containing issues data'
-    )
-    parser.add_argument(
-        '--token',
+        "--token",
         required=True,
-        help='GitHub personal access token (needs repo and project scopes)'
+        help="GitHub personal access token (needs repo and project scopes)",
     )
     parser.add_argument(
-        '--owner',
-        default='uelkerd',
-        help='GitHub repository owner (default: uelkerd)'
+        "--owner", default="uelkerd", help="GitHub repository owner (default: uelkerd)"
     )
     parser.add_argument(
-        '--repo',
-        default='lumin-ai',
-        help='GitHub repository name (default: lumin-ai)'
+        "--repo", default="lumin-ai", help="GitHub repository name (default: lumin-ai)"
     )
     parser.add_argument(
-        '--project',
-        default='LUMIN Project Tracker',
-        help='Project board name (default: LUMIN Project Tracker)'
+        "--project",
+        default="LUMIN Project Tracker",
+        help="Project board name (default: LUMIN Project Tracker)",
     )
     parser.add_argument(
-        '--no-project',
-        action='store_true',
-        help='Skip adding issues to project board'
+        "--no-project", action="store_true", help="Skip adding issues to project board"
     )
     parser.add_argument(
-        '--delay',
+        "--delay",
         type=float,
         default=1.0,
-        help='Delay between issue creation in seconds (default: 1.0)'
+        help="Delay between issue creation in seconds (default: 1.0)",
     )
     parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Preview issues without creating them'
+        "--dry-run", action="store_true", help="Preview issues without creating them"
     )
     parser.add_argument(
-        '--log-level',
-        default='INFO',
-        choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        help='Set the logging level (default: INFO)'
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Set the logging level (default: INFO)",
     )
 
     args = parser.parse_args()
 
     # Configure logging
-    logging.basicConfig(level=getattr(logging, args.log_level),
-                        format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="%(asctime)s - %(levelname)s - %(message)s",
+    )
 
     # Load issues from JSON file
     try:
-        with open(args.json_file, 'r') as f:
+        with open(args.json_file, "r") as f:
             issues_data = json.load(f)
     except FileNotFoundError:
         logger.critical(f"Error: File '{args.json_file}' not found")
@@ -408,7 +404,7 @@ def main():
         print(f"   Issues will be added to project: {project_name}")
     confirm = input("Continue? (y/N): ")
 
-    if confirm.lower() != 'y':
+    if confirm.lower() != "y":
         logger.info("Aborted.")
         return
 
@@ -420,16 +416,17 @@ def main():
 ==================================================
 📈 SUMMARY
 ==================================================
-Total issues: {results['total']}
-✅ Created: {results['created']}
-❌ Failed: {results['failed']}
+Total issues: {results["total"]}
+✅ Created: {results["created"]}
+❌ Failed: {results["failed"]}
 """
     logger.info(summary)
 
-    if results['failed'] == 0:
+    if results["failed"] == 0:
         logger.info("\n🎉 All issues created successfully!")
     else:
         logger.warning(f"\n⚠️  {results['failed']} issues failed to create. Check the errors above.")
+
 
 if __name__ == "__main__":
     main()
