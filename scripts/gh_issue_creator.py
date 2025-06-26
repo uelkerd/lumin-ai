@@ -47,7 +47,7 @@ class GitHubIssueCreator:
         query = f"""
         {{
           repository(owner: "{self.owner}", name: "{self.repo}") {{
-            projectsV2(first: 100) {{
+            projectsV2(first: 100, after: $cursor) {{
               nodes {{
                 id
                 title
@@ -173,50 +173,51 @@ class GitHubIssueCreator:
         return True
 
     def get_issues_to_sync(self, start_issue_num: int) -> List[Dict]:
-        """Fetch all open issues since a given issue number that are not on a project board."""
+        """Fetch all open issues since a given issue number and check project assignments."""
         issues_to_sync = []
-        page = 1
-        per_page = 100
 
-        logger.info("Fetching open issues from repository that are not on a project board...")
+        logger.info("Fetching open issues and checking project assignments...")
 
-        while True:
-            params = {"state": "open", "sort": "created", "direction": "desc", "per_page": per_page, "page": page}
-            issues_page = self.client.get_rest("/issues", params=params)
-
-            if not issues_page:
-                break
-
-            should_stop = False
-            for issue in issues_page:
-                if issue['number'] < start_issue_num:
-                    should_stop = True
-                    break
-
-                # GraphQL query to check if the issue is in any project
-                query = f"""
-                {{
-                  node(id: "{issue['node_id']}") {{
-                    ... on Issue {{
-                      projectItems(first: 1) {{
-                        totalCount
+        query = f"""
+        query {{
+          repository(owner: "{self.owner}", name: "{self.repo}") {{
+            issues(first: 100, states: OPEN, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+              edges {{
+                node {{
+                  number
+                  title
+                  node_id
+                  projectItems(first: 1) {{
+                    edges {{
+                      node {{
+                        project {{
+                          id
+                        }}
                       }}
                     }}
                   }}
                 }}
-                """
-                result = self.graphql_query(query)
+              }}
+            }}
+          }}
+        }}
+        """
 
-                is_in_project = result.get('data', {}).get('node', {}).get('projectItems', {}).get('totalCount', 0) > 0
+        result = self.graphql_query(query)
 
-                if not is_in_project:
-                    issues_to_sync.append(issue)
+        if 'data' not in result or 'repository' not in result['data']:
+            logger.error("Error fetching issues via GraphQL")
+            return issues_to_sync
 
-            if should_stop:
-                break
-
-            page += 1
-
+        issues = result['data']['repository']['issues']['edges']
+        for issue_edge in issues:
+            issue = issue_edge['node']
+            # Stop if we've gone past the start number
+            if issue['number'] < start_issue_num:
+                return issues_to_sync
+            # Only add issues that haven't been assigned to the project
+            if not issue['projectItems']['edges']:
+                issues_to_sync.append(issue)
         return issues_to_sync
 
     def create_issue(self, issue_data: Dict, add_to_project: bool = True) -> bool:
