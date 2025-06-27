@@ -56,3 +56,40 @@ jupyter notebook
 
 ## Data
 We are using the Austria Democracy Radar dataset as specified in the PRD. Sample data is available in `data/examples/`, and the full dataset can be downloaded using the script in `data/scripts/download_data.py`.
+
+## Preprocessing Pipeline
+
+The preprocessing pipeline for governance text analysis is implemented in the `src/preprocessing` directory. It includes the following components:
+
+- **Text Cleaning**: Functions for text normalization, punctuation handling, and specialized governance text processing (`text_cleaning.py`).
+- **Tokenization**: Functions for text tokenization, including specialized methods for handling domain-specific governance terms (`tokenization.py`).
+- **Feature Extraction**: Functions for transforming text into numerical features, including BoW, TF-IDF, and word embeddings (`feature_extraction.py`).
+- **Data Augmentation**: Functions for augmenting text data to improve model generalization, particularly for governance text (`data_augmentation.py`).
+
+A demonstration of the complete preprocessing pipeline is available in the `notebooks/03-preprocessing-pipeline.ipynb` notebook.
+
+### Using the Pipeline
+
+To use the preprocessing pipeline:
+
+1. Install required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Import the preprocessing modules:
+   ```python
+   from src.preprocessing import text_cleaning, tokenization, feature_extraction, data_augmentation
+   from src.utils import config
+   ```
+
+3. Use the complete pipeline function:
+   ```python
+   from src.preprocessing.pipeline import preprocess_governance_text
+
+   # For training
+   pipeline_results = preprocess_governance_text(texts, labels, mode='train')
+
+   # For inference
+   pipeline_results = preprocess_governance_text(texts, mode='predict')
+   ```
