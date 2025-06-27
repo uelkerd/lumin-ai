@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-Script to delete all closed issues from a GitHub repository.
+Script to mark all closed issues as deleted in a GitHub repository.
 This helps when reorganizing issues or when closed issues become redundant.
+
+Note: GitHub does not allow true deletion of issues through the API.
+This script marks issues as deleted by updating their titles and bodies.
 
 Usage:
   python delete_closed_issues.py --token GITHUB_TOKEN [--owner OWNER] [--repo REPO] [--dry-run]
@@ -17,7 +20,7 @@ import requests
 
 def setup_argparser():
     parser = argparse.ArgumentParser(
-        description="Delete all closed issues from a GitHub repository"
+        description="Mark all closed issues as deleted in a GitHub repository"
     )
     parser.add_argument("--token", required=True, help="GitHub personal access token")
     parser.add_argument(
@@ -29,7 +32,7 @@ def setup_argparser():
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Preview issues to be deleted without deleting them",
+        help="Preview issues to be marked as deleted without modifying them",
     )
     parser.add_argument(
         "--page-size",
@@ -96,13 +99,13 @@ def get_closed_issues(token, owner, repo, page_size):
     return closed_issues
 
 
-def delete_issues(token, owner, repo, issues, dry_run=False):
-    """Delete all specified issues"""
+def mark_issues_as_deleted(token, owner, repo, issues, dry_run=False):
+    """Mark all specified issues as deleted by updating their titles and bodies"""
     if dry_run:
-        log_message("DRY RUN: The following issues would be deleted:")
+        log_message("DRY RUN: The following issues would be marked as deleted:")
         for issue in issues:
             log_message(f"  #{issue['number']}: {issue['title']}")
-        log_message(f"DRY RUN: Would delete {len(issues)} issues.")
+        log_message(f"DRY RUN: Would mark {len(issues)} issues as deleted.")
         return
 
     headers = {
@@ -110,19 +113,27 @@ def delete_issues(token, owner, repo, issues, dry_run=False):
         "Accept": "application/vnd.github.v3+json",
     }
 
-    log_message(f"Preparing to delete {len(issues)} closed issues...")
+    log_message(f"Preparing to mark {len(issues)} closed issues as deleted...")
+    log_message(
+        "NOTE: GitHub does not allow complete deletion of issues through the API."
+    )
+    log_message(
+        "      Issues will be marked as deleted by updating their titles and locking them."
+    )
 
     for idx, issue in enumerate(issues):
         issue_number = issue["number"]
-        log_message(f"Deleting issue #{issue_number}: {issue['title']}...")
+        # Skip if already marked as deleted
+        if issue["title"].startswith("[DELETED]"):
+            log_message(f"Skipping issue #{issue_number} - already marked as deleted")
+            continue
 
-        # GitHub doesn't provide a direct API to delete issues
-        # Instead, we use the GraphQL API to delete an issue
-        # Or we can also try to use the REST API to patch the issue with a closed state
-        url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}"
+        log_message(f"Marking issue #{issue_number} as deleted: {issue['title']}...")
 
         # First try to lock the issue to prevent further comments
-        lock_url = f"{url}/lock"
+        lock_url = (
+            f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/lock"
+        )
         lock_response = requests.put(
             lock_url, headers=headers, json={"lock_reason": "resolved"}
         )
@@ -134,6 +145,7 @@ def delete_issues(token, owner, repo, issues, dry_run=False):
             )
 
         # Now patch the issue to update its state and title to indicate deletion
+        url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}"
         update_data = {
             "state": "closed",
             "title": f"[DELETED] {issue['title']}",
@@ -171,21 +183,28 @@ def main():
     dry_run = args.dry_run
     page_size = args.page_size
 
-    log_message(f"Starting issue deletion process for {owner}/{repo}")
+    log_message(f"Starting issue cleanup process for {owner}/{repo}")
+    log_message(
+        "NOTE: GitHub doesn't allow complete deletion of issues through their API."
+    )
+    log_message(
+        "      This script will mark issues as deleted by updating their titles and locking them."
+    )
+
     if dry_run:
-        log_message("Running in DRY RUN mode - no issues will be deleted")
+        log_message("Running in DRY RUN mode - no issues will be modified")
 
     # Get all closed issues
     closed_issues = get_closed_issues(token, owner, repo, page_size)
     log_message(f"Found {len(closed_issues)} closed issues")
 
-    # Delete the issues
+    # Mark the issues as deleted
     if closed_issues:
-        delete_issues(token, owner, repo, closed_issues, dry_run)
+        mark_issues_as_deleted(token, owner, repo, closed_issues, dry_run)
     else:
-        log_message("No closed issues to delete.")
+        log_message("No closed issues to mark as deleted.")
 
-    log_message("Issue deletion process completed.")
+    log_message("Issue cleanup process completed.")
 
 
 if __name__ == "__main__":
