@@ -19,7 +19,6 @@ import os
 import sys
 from typing import Dict, List, Set
 
-
 try:
     from dotenv import load_dotenv  # type: ignore
 
@@ -30,7 +29,6 @@ except ModuleNotFoundError:
 from scripts.create_labels import _CANONICAL_LABELS
 from scripts.github_client import GitHubClient
 
-
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -39,12 +37,9 @@ logger = logging.getLogger(__name__)
 _TRACK_LABELS: Set[str] = {
     lbl
     for lbl in _CANONICAL_LABELS
-    if lbl
-    in {"deep-learning", "data-science", "web-development", "ux-design", "project"}
+    if lbl in {"deep-learning", "data-science", "web-development", "ux-design", "project"}
 }
-_PRIORITY_LABELS: Set[str] = {
-    lbl for lbl in _CANONICAL_LABELS if lbl.startswith("priority/")
-}
+_PRIORITY_LABELS: Set[str] = {lbl for lbl in _CANONICAL_LABELS if lbl.startswith("priority/")}
 
 # Map non-canonical labels to canonical ones
 _LABEL_MAPPING = {
@@ -71,9 +66,7 @@ def _gather_all_issues(client: GitHubClient) -> List[Dict]:
     per_page = 100
     all_issues: List[Dict] = []
     while True:
-        batch = (
-            client.get_rest(f"/issues?state=all&per_page={per_page}&page={page}") or []
-        )
+        batch = client.get_rest(f"/issues?state=all&per_page={per_page}&page={page}") or []
         if not batch:
             break
         all_issues.extend(batch)
@@ -84,9 +77,7 @@ def _gather_all_issues(client: GitHubClient) -> List[Dict]:
     return all_issues
 
 
-def update_issue_labels(
-    client: GitHubClient, issue: Dict, dry_run: bool = False
-) -> None:
+def update_issue_labels(client: GitHubClient, issue: Dict, dry_run: bool = False) -> None:
     """Update a single issue's labels to comply with taxonomy requirements."""
     issue_num = issue["number"]
     issue_title = issue["title"]
@@ -100,9 +91,7 @@ def update_issue_labels(
             # Replace with canonical equivalent
             new_labels.remove(label)
             new_labels.add(_LABEL_MAPPING[label])
-            logger.info(
-                f"Issue #{issue_num}: Replacing '{label}' with '{_LABEL_MAPPING[label]}'"
-            )
+            logger.info(f"Issue #{issue_num}: Replacing '{label}' with '{_LABEL_MAPPING[label]}'")
 
     # Check for track labels
     track_labels = new_labels & _TRACK_LABELS
@@ -110,18 +99,14 @@ def update_issue_labels(
         # Try to infer from title or add default
         # For simplicity, we'll just add the default track label
         new_labels.add(DEFAULT_TRACK_LABEL)
-        logger.info(
-            f"Issue #{issue_num}: Adding default track label '{DEFAULT_TRACK_LABEL}'"
-        )
+        logger.info(f"Issue #{issue_num}: Adding default track label '{DEFAULT_TRACK_LABEL}'")
 
     # Check for priority labels
     priority_labels = new_labels & _PRIORITY_LABELS
     if len(priority_labels) == 0:
         # No priority label, add default
         new_labels.add(DEFAULT_PRIORITY_LABEL)
-        logger.info(
-            f"Issue #{issue_num}: Adding default priority label '{DEFAULT_PRIORITY_LABEL}'"
-        )
+        logger.info(f"Issue #{issue_num}: Adding default priority label '{DEFAULT_PRIORITY_LABEL}'")
     elif len(priority_labels) > 1:
         # Too many priority labels, keep the highest one
         # priority/highest sorts first alphabetically
@@ -129,9 +114,7 @@ def update_issue_labels(
         for label in priority_labels:
             if label != highest_priority:
                 new_labels.remove(label)
-        logger.info(
-            f"Issue #{issue_num}: Keeping highest priority label '{highest_priority}'"
-        )
+        logger.info(f"Issue #{issue_num}: Keeping highest priority label '{highest_priority}'")
 
     # Convert to list of strings (expected by GitHub API)
     new_labels_list = list(new_labels)
@@ -142,9 +125,7 @@ def update_issue_labels(
             logger.info(f"Updating labels for issue #{issue_num}: '{issue_title}'")
             client.patch_rest(f"/issues/{issue_num}", {"labels": list(new_labels_list)})
         else:
-            logger.info(
-                f"[DRY RUN] Would update labels for issue #{issue_num}: '{issue_title}'"
-            )
+            logger.info(f"[DRY RUN] Would update labels for issue #{issue_num}: '{issue_title}'")
             logger.info(f"  From: {sorted(list(current_labels))}")
             logger.info(f"  To:   {sorted(new_labels_list)}")
     else:

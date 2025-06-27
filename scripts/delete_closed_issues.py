@@ -23,12 +23,8 @@ def setup_argparser():
         description="Mark all closed issues as deleted in a GitHub repository"
     )
     parser.add_argument("--token", required=True, help="GitHub personal access token")
-    parser.add_argument(
-        "--owner", default="uelkerd", help="Repository owner (default: uelkerd)"
-    )
-    parser.add_argument(
-        "--repo", default="lumin-ai", help="Repository name (default: lumin-ai)"
-    )
+    parser.add_argument("--owner", default="uelkerd", help="Repository owner (default: uelkerd)")
+    parser.add_argument("--repo", default="lumin-ai", help="Repository name (default: lumin-ai)")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -114,12 +110,8 @@ def mark_issues_as_deleted(token, owner, repo, issues, dry_run=False):
     }
 
     log_message(f"Preparing to mark {len(issues)} closed issues as deleted...")
-    log_message(
-        "NOTE: GitHub does not allow complete deletion of issues through the API."
-    )
-    log_message(
-        "      Issues will be marked as deleted by updating their titles and locking them."
-    )
+    log_message("NOTE: GitHub does not allow complete deletion of issues through the API.")
+    log_message("      Issues will be marked as deleted by updating their titles and locking them.")
 
     for idx, issue in enumerate(issues):
         issue_number = issue["number"]
@@ -131,12 +123,8 @@ def mark_issues_as_deleted(token, owner, repo, issues, dry_run=False):
         log_message(f"Marking issue #{issue_number} as deleted: {issue['title']}...")
 
         # First try to lock the issue to prevent further comments
-        lock_url = (
-            f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/lock"
-        )
-        lock_response = requests.put(
-            lock_url, headers=headers, json={"lock_reason": "resolved"}
-        )
+        lock_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/lock"
+        lock_response = requests.put(lock_url, headers=headers, json={"lock_reason": "resolved"})
 
         if lock_response.status_code != 204:
             log_message(
@@ -165,9 +153,7 @@ def mark_issues_as_deleted(token, owner, repo, issues, dry_run=False):
 
         # Rate limit protection
         if idx > 0 and idx % 10 == 0:
-            log_message(
-                f"Processed {idx}/{len(issues)} issues. Pausing to respect rate limits..."
-            )
+            log_message(f"Processed {idx}/{len(issues)} issues. Pausing to respect rate limits...")
             time.sleep(2)
         else:
             time.sleep(0.5)
@@ -184,9 +170,7 @@ def main():
     page_size = args.page_size
 
     log_message(f"Starting issue cleanup process for {owner}/{repo}")
-    log_message(
-        "NOTE: GitHub doesn't allow complete deletion of issues through their API."
-    )
+    log_message("NOTE: GitHub doesn't allow complete deletion of issues through their API.")
     log_message(
         "      This script will mark issues as deleted by updating their titles and locking them."
     )

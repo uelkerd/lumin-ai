@@ -14,7 +14,6 @@ import sys
 from dataclasses import dataclass
 from typing import List, Optional
 
-
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -71,9 +70,7 @@ class ProjectSetupValidator:
                     name="GitHub CLI Authentication",
                     status=False,
                     message="❌ GitHub CLI is not authenticated",
-                    fix_instructions=(
-                        "Run: gh auth login --with-token < <(echo $GITHUB_TOKEN)"
-                    ),
+                    fix_instructions=("Run: gh auth login --with-token < <(echo $GITHUB_TOKEN)"),
                 )
         except FileNotFoundError:
             return ValidationResult(
@@ -297,10 +294,7 @@ class ProjectSetupValidator:
 
                 if expected_type == "NUMBER" and data_type == "NUMBER":
                     is_type_match = True
-                elif (
-                    expected_type == "SINGLE_SELECT"
-                    and type_name == "ProjectV2SingleSelectField"
-                ):
+                elif expected_type == "SINGLE_SELECT" and type_name == "ProjectV2SingleSelectField":
                     is_type_match = True
 
                 if not is_type_match:
@@ -432,8 +426,7 @@ class ProjectSetupValidator:
                 )
 
             labels = [
-                node["name"].lower()
-                for node in result["data"]["repository"]["labels"]["nodes"]
+                node["name"].lower() for node in result["data"]["repository"]["labels"]["nodes"]
             ]
             required_labels = [
                 "project",
@@ -511,15 +504,11 @@ class ProjectSetupValidator:
         logger.info("\n" + "=" * 60)
 
         if all_passed:
-            logger.info(
-                "🎉 ALL VALIDATIONS PASSED! Project is ready for timeline automation."
-            )
+            logger.info("🎉 ALL VALIDATIONS PASSED! Project is ready for timeline automation.")
             return True
         else:
             logger.info(f"⚠️  {len(critical_failures)} CRITICAL ISSUES FOUND")
-            logger.info(
-                "Please fix the issues above before running timeline automation."
-            )
+            logger.info("Please fix the issues above before running timeline automation.")
             return False
 
     def generate_setup_script(self, project_name: str) -> str:
@@ -542,9 +531,7 @@ class ProjectSetupValidator:
                 script_lines.append(f"{validation.fix_instructions}")
                 script_lines.append("")
 
-        script_lines.extend(
-            ["echo '✅ Setup complete! Run validation again to verify.'", ""]
-        )
+        script_lines.extend(["echo '✅ Setup complete! Run validation again to verify.'", ""])
 
         return "\n".join(script_lines)
 
