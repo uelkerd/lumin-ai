@@ -202,5 +202,3 @@ volumes:
 networks:
   lumin-network:
     driver: bridge
-    name: lumin-ai-network
-    external: true

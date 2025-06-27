@@ -20,9 +20,11 @@ LUMIN.AI leverages machine learning to enhance democratic transparency by analyz
 Our MVP-first approach ensures meaningful deliverables while building towards advanced AI-powered policy insights.
 
 ### 🎯 Mission
+
 Transform complex governance data into actionable insights that strengthen democratic participation and transparency.
 
 ### 🗝️ Key Features
+
 - **Sentiment Analysis**: Neural networks analyzing public perception of governance
 - **Trust Correlation**: Statistical analysis linking transparency to public trust
 - **Interactive Dashboard**: Real-time visualization of democracy metrics
@@ -31,24 +33,28 @@ Transform complex governance data into actionable insights that strengthen democ
 ## 📊 Track Contributions
 
 ### 🧠 Deep Learning
+
 - Sentiment analysis on governance texts (85%+ accuracy target)
 - Participation prediction models
 - Text classification for governance themes
 - Advanced transformer models (enhanced phase)
 
 ### 📈 Data Science
+
 - Statistical analysis of 10,000+ survey responses
 - Transparency-trust correlation studies
 - Network analysis of governance relationships
 - Cross-protocol governance comparisons
 
 ### 💻 Web Development
+
 - React-based interactive dashboard
 - API integration with governance data sources
 - Real-time data visualization
 - Mobile-responsive design
 
 ### 🎨 UX Design
+
 - User research with citizens and policymakers
 - Intuitive data visualization interfaces
 - Accessibility-first design approach
@@ -57,6 +63,7 @@ Transform complex governance data into actionable insights that strengthen democ
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.9+
 - Node.js 16+
 - Git
@@ -67,11 +74,13 @@ Transform complex governance data into actionable insights that strengthen democ
 For security reasons, sensitive configuration should be managed through environment variables:
 
 1. Copy the example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Update the `.env` file with your specific configuration:
+
    ```bash
    # MongoDB Configuration
    MONGODB_USERNAME=your_username
@@ -86,17 +95,20 @@ For security reasons, sensitive configuration should be managed through environm
 ### Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/uelkerd/lumin-ai.git
    cd lumin-ai
    ```
 
 2. Open in VS Code:
+
    ```bash
    code .
    ```
 
 3. When prompted, reopen in container or use Command Palette:
+
    - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
    - Type "Dev Containers: Reopen in Container"
    - Select the option and wait for the container to build
@@ -119,12 +131,14 @@ For security reasons, sensitive configuration should be managed through environm
 ## 🗓️ Development Timeline
 
 ### MVP Phase (Weeks 1-6)
+
 - ✅ Basic sentiment analysis implementation
 - ✅ Core statistical analysis
 - ✅ Functional dashboard prototype
 - ✅ Initial user research
 
 ### Enhanced Phase (Weeks 7-10)
+
 - 🚧 Advanced transformer models
 - 🚧 Real-time blockchain integration
 - 🚧 Policy recommendation engine
@@ -140,6 +154,7 @@ For security reasons, sensitive configuration should be managed through environm
 ## 🧪 Testing
 
 Run all tests:
+
 ```bash
 # Python tests
 pytest
@@ -151,11 +166,13 @@ npm test
 ## 🚢 Deployment
 
 ### Using Docker:
+
 ```bash
 docker-compose up -d
 ```
 
 ### Manual deployment:
+
 See [deployment guide](deployment/README.md) for detailed instructions.
 
 ## 📈 Performance Metrics
@@ -167,9 +184,10 @@ See [deployment guide](deployment/README.md) for detailed instructions.
 
 ## 🤝 Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Please read [CONTRIBUTING.md](.github/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ### Commit Message Convention
+
 - `feat:` New features
 - `fix:` Bug fixes
 - `docs:` Documentation changes
@@ -181,11 +199,13 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## 📚 Resources
 
 ### External Links
+
 - [Austria Democracy Radar Data](https://data.aussda.at/dataset.xhtml?persistentId=doi:10.11587/GCSLIN)
 - [Project Presentation](docs/project-pitch.pdf)
 - [Figma Prototypes](ux-design/prototypes/figma-links.md)
 
 ### Research Foundation
+
 - Master's thesis: "Towards Inclusive Governance: Blockchain in Citizen Representation"
 - Austria case study showing +15% trust increase with transparency initiatives
 
@@ -246,13 +266,16 @@ The development container is configured with the following persistent volumes:
 
 1. **Avoid Nested Virtual Environments**:
    The container already provides a Python environment. To prevent accidentally nesting virtual environments, source the protection script:
+
    ```bash
    source prevent_nested_venv.sh
    ```
+
    This will prevent any attempt to activate a second virtual environment while one is already active.
 
 2. **BuildKit Optimization**:
    Ensure Docker BuildKit is enabled for optimal build performance:
+
    ```bash
    export DOCKER_BUILDKIT=1
    export COMPOSE_DOCKER_CLI_BUILD=1
@@ -260,6 +283,7 @@ The development container is configured with the following persistent volumes:
 
 3. **Non-Interactive Builds**:
    Use the provided build script for consistent builds:
+
    ```bash
    .devcontainer/build.sh
    ```
@@ -270,11 +294,13 @@ The development container is configured with the following persistent volumes:
 #### Troubleshooting
 
 **MongoDB Connection Issues**:
+
 - Check if the MongoDB container is running: `docker ps | grep governance-db`
 - Verify the environment variables in `.devcontainer/docker-compose.yml`
 - Try connecting manually: `mongosh mongodb://lumin:<your_password>@governance-db:27017/governance_analysis`
 
 **Container Build Failures**:
+
 - Check Docker logs: `docker logs lumin-ai-dev`
 - Ensure BuildKit is enabled: `echo $DOCKER_BUILDKIT`
 - Try rebuilding with `--no-cache`: `.devcontainer/build.sh --no-cache`
