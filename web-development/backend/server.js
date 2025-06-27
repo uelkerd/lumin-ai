@@ -1,7 +1,9 @@
 const express = require("express");
 const axios = require("axios"); // Import axios
 const app = express();
-app.use(express.json()); // For parsing application/json
+const cors = require('cors');
+app.use(cors());
+app.use(express.json());
 const port = 3001; // Or another port as needed
 
 // Mock Data based on refined API specifications
