@@ -1,70 +1,89 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:3001/api/v1';
+const API_BASE_URL = "http://localhost:3001/api/v1";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
-export const getTrustMetrics = async (params?: { demographic?: string; wave?: string }) => {
+export const getTrustMetrics = async (params?: {
+  demographic?: string;
+  wave?: string;
+}) => {
   try {
-    const response = await api.get('/data-science/trust-metrics', { params });
+    const response = await api.get("/data-science/trust-metrics", { params });
     return response.data;
   } catch (error) {
-    console.error('Error fetching trust metrics:', error);
+    console.error("Error fetching trust metrics:", error);
     throw error; // Re-throw the error for handling in components
   }
 };
 
-export const getDemographics = async (params: { demographic: string; wave?: string }) => {
+export const getDemographics = async (params: {
+  demographic: string;
+  wave?: string;
+}) => {
   try {
-    const response = await api.get('/data-science/demographics', { params });
+    const response = await api.get("/data-science/demographics", { params });
     return response.data;
   } catch (error) {
-    console.error('Error fetching demographics:', error);
+    console.error("Error fetching demographics:", error);
     throw error;
   }
 };
 
-export const getCorrelations = async (params?: { wave?: string; demographic?: string }) => {
+export const getCorrelations = async (params?: {
+  wave?: string;
+  demographic?: string;
+}) => {
   try {
-    const response = await api.get('/data-science/correlations', { params });
+    const response = await api.get("/data-science/correlations", { params });
     return response.data;
   } catch (error) {
-    console.error('Error fetching correlations:', error);
+    console.error("Error fetching correlations:", error);
     throw error;
   }
 };
 
 export const analyzeSentiment = async (text: string) => {
   try {
-    const response = await api.post('/deep-learning/sentiment-analysis', { text });
+    const response = await api.post("/deep-learning/sentiment-analysis", {
+      text,
+    });
     return response.data;
   } catch (error) {
-    console.error('Error analyzing sentiment:', error);
+    console.error("Error analyzing sentiment:", error);
     throw error;
   }
 };
 
 export const batchAnalyzeSentiment = async (texts: string[]) => {
   try {
-    const response = await api.post('/deep-learning/batch-sentiment-analysis', texts);
+    const response = await api.post(
+      "/deep-learning/batch-sentiment-analysis",
+      texts,
+    );
     return response.data;
   } catch (error) {
-    console.error('Error batch analyzing sentiment:', error);
+    console.error("Error batch analyzing sentiment:", error);
     throw error;
   }
 };
 
-export const getSentimentTrends = async (params?: { theme?: string; timeframe?: string }) => {
+export const getSentimentTrends = async (params?: {
+  theme?: string;
+  timeframe?: string;
+}) => {
   try {
-    const response = await api.get('/deep-learning/sentiment-trends', { params });
+    const response = await api.get("/deep-learning/sentiment-trends", {
+      params,
+    });
     return response.data;
   } catch (error) {
-    console.error('Error fetching sentiment trends:', error);
+    console.error("Error fetching sentiment trends:", error);
     throw error;
   }
 };
