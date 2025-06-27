@@ -30,11 +30,13 @@ A comprehensive script to clean up Docker resources and prevent build conflicts 
 ### What it does
 
 **Default mode** (LUMIN.AI only):
+
 - Stops and removes all containers with "lumin-ai" in the name
 - Removes all volumes with "lumin-ai" in the name
 - Removes all images with "lumin-ai" prefix
 
 **Full cleanup mode** (--full flag):
+
 - All of the above, plus:
 - Prunes all unused containers
 - Prunes all unused volumes
@@ -58,9 +60,11 @@ A comprehensive script to clean up Docker resources and prevent build conflicts 
 ## Other Scripts
 
 ### `dev_env_check.sh`
+
 Checks the development environment setup and dependencies.
 
 ### `test_mongodb_connection.py`
+
 Tests MongoDB connection for development and testing environments.
 
 ## Contributing
@@ -71,4 +75,4 @@ When adding new maintenance scripts:
 2. Add comprehensive help text with `--help` flag
 3. Use colored output for better UX
 4. Include safety confirmations for destructive operations
-5. Update this README with documentation 
+5. Update this README with documentation
