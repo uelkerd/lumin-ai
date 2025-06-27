@@ -83,8 +83,11 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({ data }) => 
         xAxis.call(d3.axisBottom(xScale).tickFormat(d3.format('d')));
         yAxis.call(d3.axisLeft(yScale));
 
-        // Update line path
-        path.attr('d', line as any); // D3 line generator expects data array
+        // Update line path with new scales
+        const updatedLine = d3.line<[number, number]>()
+          .x(d => xScale(d[0]))
+          .y(d => yScale(d[1]));
+        path.attr('d', updatedLine(data) as any); // D3 line generator expects data array
       });
 
     svg.call(zoom as any); // Apply zoom behavior to the SVG
