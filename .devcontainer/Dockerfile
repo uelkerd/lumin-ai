@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 📦 INSTALL SYSTEM DEPENDENCIES (WITH SUDO!)
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -o Acquire::Retries=3 && apt-get install -y --no-install-recommends \
     # Core system tools
     sudo \
     curl \
