@@ -66,7 +66,7 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 # 🎨 CONFIGURE ZSH WITH USEFUL SETTINGS
 RUN echo 'export ZSH="$HOME/.oh-my-zsh"' > ~/.zshrc && \
-    echo 'ZSH_THEME="robbyrussell"' >> ~/.zshrc && \
+    echo 'ZSH_THEME="rkj"' >> ~/.zshrc && \
     echo 'plugins=(git python npm docker vscode pip)' >> ~/.zshrc && \
     echo 'source $ZSH/oh-my-zsh.sh' >> ~/.zshrc && \
     # Add useful aliases
