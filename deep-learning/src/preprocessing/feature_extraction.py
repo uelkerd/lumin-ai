@@ -13,7 +13,6 @@ import numpy as np
 from gensim.models import Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
-
 # Load spaCy model (commented out - uncomment and run with appropriate model)
 # try:
 #     nlp = spacy.load("en_core_web_sm")
@@ -214,9 +213,7 @@ def create_document_embeddings(
     return doc_embeddings
 
 
-def extract_political_entities(
-    documents: List[str], nlp=None
-) -> List[List[Dict[str, str]]]:
+def extract_political_entities(documents: List[str], nlp=None) -> List[List[Dict[str, str]]]:
     """
     Extract political entities from documents using spaCy NER.
 

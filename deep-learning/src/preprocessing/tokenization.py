@@ -11,7 +11,6 @@ from typing import Callable, List, Optional, Set
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 
-
 # Download required NLTK resources
 try:
     nltk.data.find("tokenizers/punkt")
@@ -89,9 +88,7 @@ def tokenize_text(text: str, method: str = "word") -> List[str]:
         raise ValueError("Method must be 'word' or 'sentence'")
 
 
-def preserve_governance_phrases(
-    text: str, phrases: List[str] = GOVERNANCE_PHRASES
-) -> str:
+def preserve_governance_phrases(text: str, phrases: List[str] = GOVERNANCE_PHRASES) -> str:
     """
     Preserve governance-specific phrases by replacing spaces with underscores.
 
@@ -144,9 +141,7 @@ def custom_governance_tokenizer(
 
     # Restore preserved phrases (replace underscores with spaces)
     if preserve_phrases:
-        tokens = [
-            token.replace("_", " ") if "_" in token else token for token in tokens
-        ]
+        tokens = [token.replace("_", " ") if "_" in token else token for token in tokens]
 
     return tokens
 
@@ -208,9 +203,7 @@ def tokenize_and_filter(
     tokens = custom_governance_tokenizer(text, **kwargs)
 
     # Filter by length
-    tokens = [
-        token for token in tokens if min_token_length <= len(token) <= max_token_length
-    ]
+    tokens = [token for token in tokens if min_token_length <= len(token) <= max_token_length]
 
     # Filter stopwords if provided
     if stopwords:

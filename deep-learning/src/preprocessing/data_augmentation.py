@@ -12,7 +12,6 @@ from typing import Callable, Dict, List, Optional, Union
 import nltk
 from nltk.corpus import wordnet
 
-
 # Download required NLTK resources
 try:
     nltk.data.find("corpora/wordnet")
@@ -322,9 +321,7 @@ def create_augmented_examples(
     """
     if not augmentation_methods:
         augmentation_methods = [
-            lambda w: synonym_replacement(
-                w, n=max(1, len(w) // 10), protect_words=protect_words
-            ),
+            lambda w: synonym_replacement(w, n=max(1, len(w) // 10), protect_words=protect_words),
             lambda w: random_swap(w, n=max(1, len(w) // 10)),
             lambda w: random_deletion(w, p=0.1, protect_words=protect_words),
             lambda w: random_insertion(w, n=max(1, len(w) // 10)),
@@ -353,9 +350,7 @@ def create_augmented_examples(
     return augmented_examples
 
 
-def augment_dataset(
-    texts: List[str], n_examples_per_text: int = 1, **kwargs
-) -> List[str]:
+def augment_dataset(texts: List[str], n_examples_per_text: int = 1, **kwargs) -> List[str]:
     """
     Augment a dataset by creating new examples from each text.
 

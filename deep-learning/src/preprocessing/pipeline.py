@@ -41,9 +41,7 @@ def preprocess_governance_text(
 
     # Step 2: Tokenization
     print("Step 2: Governance-specific tokenization...")
-    tokenized_texts = [
-        tokenization.custom_governance_tokenizer(text) for text in cleaned_texts
-    ]
+    tokenized_texts = [tokenization.custom_governance_tokenizer(text) for text in cleaned_texts]
     results["tokenized_texts"] = tokenized_texts
     results["pipeline_steps"].append("tokenization")
 
@@ -90,9 +88,7 @@ def preprocess_governance_text(
     if mode == "train" and labels is not None:
         print("Step 5: Dataset balancing and augmentation...")
         try:
-            augmented_texts, augmented_labels = data_augmentation.balance_dataset(
-                texts, labels
-            )
+            augmented_texts, augmented_labels = data_augmentation.balance_dataset(texts, labels)
             results["augmented_texts"] = augmented_texts
             results["augmented_labels"] = augmented_labels
             results["pipeline_steps"].append("data_augmentation")
@@ -103,9 +99,7 @@ def preprocess_governance_text(
     return results
 
 
-def save_pipeline_components(
-    results: Dict[str, Any], output_dir: Union[str, Path]
-) -> None:
+def save_pipeline_components(results: Dict[str, Any], output_dir: Union[str, Path]) -> None:
     """
     Save preprocessing pipeline components.
 
@@ -173,9 +167,7 @@ def load_pipeline_components(input_dir: Union[str, Path]) -> Dict[str, Any]:
         try:
             from gensim.models import Word2Vec
 
-            results["word2vec_model"] = Word2Vec.load(
-                str(input_dir / "word2vec_model.w2v")
-            )
+            results["word2vec_model"] = Word2Vec.load(str(input_dir / "word2vec_model.w2v"))
         except FileNotFoundError:
             print("Word2Vec model not found.")
         except Exception as e:
@@ -185,9 +177,7 @@ def load_pipeline_components(input_dir: Union[str, Path]) -> Dict[str, Any]:
     return results
 
 
-def preprocess_for_inference(
-    text: str, loaded_components: Dict[str, Any]
-) -> Dict[str, Any]:
+def preprocess_for_inference(text: str, loaded_components: Dict[str, Any]) -> Dict[str, Any]:
     """
     Apply preprocessing pipeline to new text using saved components.
 
@@ -222,9 +212,7 @@ def preprocess_for_inference(
 
         # Create document embedding
         word_vectors = {word: w2v_model.wv[word] for word in w2v_model.wv.index_to_key}
-        doc_embedding = feature_extraction.document_embedding_average(
-            tokens, word_vectors
-        )
+        doc_embedding = feature_extraction.document_embedding_average(tokens, word_vectors)
 
         if len(doc_embedding) > 0:
             features["word2vec"] = doc_embedding

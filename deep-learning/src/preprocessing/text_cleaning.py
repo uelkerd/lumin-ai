@@ -10,7 +10,6 @@ import string
 import unicodedata
 from typing import Dict, List, Optional, Set
 
-
 # Common contractions mapping
 CONTRACTIONS = {
     "aren't": "are not",
@@ -117,9 +116,7 @@ def normalize_unicode(text: str) -> str:
     return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("utf-8")
 
 
-def expand_contractions(
-    text: str, contractions_dict: Dict[str, str] = CONTRACTIONS
-) -> str:
+def expand_contractions(text: str, contractions_dict: Dict[str, str] = CONTRACTIONS) -> str:
     """
     Expand contractions in text.
 
