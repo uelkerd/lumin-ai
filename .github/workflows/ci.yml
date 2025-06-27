@@ -1,0 +1,48 @@
+name: Devcontainer CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Full Devcontainer Image
+        run: |
+          docker build -f .devcontainer/Dockerfile -t lumin-ai-full-devcontainer .
+
+      - name: Build Lite Devcontainer Image
+        run: |
+          docker build -f .devcontainer/Dockerfile.lite -t lumin-ai-lite-devcontainer .
+
+      - name: Run Pytest
+        run: |
+          # Run pytest in the full devcontainer
+          docker run --rm lumin-ai-full-devcontainer /bin/bash -c "pip install -r requirements.txt && pip install -r requirements-ds.txt && pytest"
+
+      - name: Run Node Tests
+        run: |
+          # Run Node tests in the full devcontainer
+          docker run --rm lumin-ai-full-devcontainer /bin/bash -c "cd web && npm install && npm test"
+
+      - name: Run Python Linting (flake8)
+        run: |
+          # Run flake8 in the full devcontainer
+          docker run --rm lumin-ai-full-devcontainer /bin/bash -c "pip install flake8 && flake8 src"
+
+      - name: Run JavaScript/TypeScript Linting (ESLint)
+        run: |
+          # Run ESLint in the full devcontainer
+          docker run --rm lumin-ai-full-devcontainer /bin/bash -c "cd web && npm install && npx eslint ." 
