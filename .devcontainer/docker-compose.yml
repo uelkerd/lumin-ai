@@ -199,29 +199,29 @@ services:
           cpus: '1.0'
           memory: 1G
 
-# Persistent volumes - marked as external since they already exist
+# Volumes managed by Compose
 volumes:
   governance-data:
     name: lumin-ai-governance-data
-    external: true
+    external: false
   governance-logs:
     name: lumin-ai-governance-logs
-    external: true
+    external: false
   lumin-python-packages:
     name: lumin-ai-python-packages
-    external: true
+    external: false
   lumin-python-packages-lite:
     name: lumin-ai-python-packages-lite
     external: false
   lumin-node-modules:
     name: lumin-ai-node-modules
-    external: true
+    external: false
   lumin-jupyter-data:
     name: lumin-ai-jupyter-data
-    external: true
+    external: false
   lumin-logs:
     name: lumin-ai-logs
-    external: true
+    external: false
 
 # Network for container communication
 networks:
