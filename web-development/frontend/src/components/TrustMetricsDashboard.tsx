@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getTrustMetrics } from '../../src/api';
-import TrustTimeSeriesChart from './TrustTimeSeriesChart';
+import React, { useEffect, useState } from "react";
+import { getTrustMetrics } from "../../src/api";
+import TrustTimeSeriesChart from "./TrustTimeSeriesChart";
 
 interface TrustMetricsData {
   wave: number;
@@ -11,7 +11,9 @@ interface TrustMetricsData {
 }
 
 const TrustMetricsDashboard: React.FC = () => {
-  const [trustMetrics, setTrustMetrics] = useState<TrustMetricsData[] | null>(null);
+  const [trustMetrics, setTrustMetrics] = useState<TrustMetricsData[] | null>(
+    null,
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +24,7 @@ const TrustMetricsDashboard: React.FC = () => {
         const data = await getTrustMetrics();
         setTrustMetrics(data);
       } catch (err) {
-        setError('Failed to fetch trust metrics data.');
+        setError("Failed to fetch trust metrics data.");
         console.error(err);
       } finally {
         setLoading(false);
