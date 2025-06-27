@@ -146,8 +146,8 @@ services:
         source: lumin-logs
         target: /workspace/.logs
     ports:
-      - "3001:3000"
-      - "8001:8000"
+      - "3002:3000"
+      - "8002:8000"
     networks:
       - lumin-network
     deploy:
@@ -160,37 +160,15 @@ services:
   governance-db:
     image: mongo:6.0
     restart: unless-stopped
-
-    # Store data outside container for persistence
     volumes:
-      - type: volume
-        source: governance-data
-        target: /data/db
-      # Separate volume for MongoDB logs
-      - type: volume
-        source: governance-logs
-        target: /var/log/mongodb
-      # Configuration and initialization
-      - type: bind
-        source: ./init-mongodb.js
-        target: /docker-entrypoint-initdb.d/init-mongodb.js
-        read_only: true
-
-    # Environment variables for MongoDB initialization
-    environment:
-      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME:-admin}
-      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD:-adminpassword}
-      MONGODB_USERNAME: lumin
-      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
-      MONGODB_DATABASE: governance_analysis
-
-    # Health check for MongoDB
+      - governance-db-data:/data/db
+      - governance-db-config:/data/configdb
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--quiet"]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
-      start_period: 180s
+      start_period: 30s
 
     # Configure network
     networks:
@@ -205,9 +183,9 @@ services:
 
 # Volumes managed by Compose
 volumes:
-  governance-data:
+  governance-db-data:
     external: false
-  governance-logs:
+  governance-db-config:
     external: false
   lumin-python-packages:
     external: false
@@ -225,3 +203,4 @@ networks:
   lumin-network:
     driver: bridge
     name: lumin-ai-network
+    external: true

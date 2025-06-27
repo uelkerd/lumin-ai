@@ -41,6 +41,14 @@ RUN apt-get update -o Acquire::Retries=3 && apt-get install -y --no-install-reco
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+# 🍃 INSTALL MONGODB CLIENT TOOLS (MONGOSH)
+RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg && \
+    echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-7.0.list && \
+    apt-get update && \
+    apt-get install -y mongodb-mongosh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # 🔐 CREATE USER WITH PROPER SUDO ACCESS
 RUN useradd -m -s /bin/zsh lumin-dev && \
     echo "lumin-dev:lumin-dev" | chpasswd && \
