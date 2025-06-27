@@ -21,7 +21,6 @@ import os
 import sys
 from typing import Dict, List, Set
 
-
 try:
     from dotenv import load_dotenv  # type: ignore
 
@@ -32,7 +31,6 @@ except ModuleNotFoundError:
 from scripts.create_labels import _CANONICAL_LABELS
 from scripts.github_client import GitHubClient
 
-
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -41,12 +39,9 @@ logger = logging.getLogger(__name__)
 _TRACK_LABELS: Set[str] = {
     lbl
     for lbl in _CANONICAL_LABELS
-    if lbl
-    in {"deep-learning", "data-science", "web-development", "ux-design", "project"}
+    if lbl in {"deep-learning", "data-science", "web-development", "ux-design", "project"}
 }
-_PRIORITY_LABELS: Set[str] = {
-    lbl for lbl in _CANONICAL_LABELS if lbl.startswith("priority/")
-}
+_PRIORITY_LABELS: Set[str] = {lbl for lbl in _CANONICAL_LABELS if lbl.startswith("priority/")}
 
 
 # ---------------------------------------------------------------------------
@@ -60,9 +55,7 @@ def _gather_all_issues(client: GitHubClient) -> List[Dict]:
     per_page = 100
     all_issues: List[Dict] = []
     while True:
-        batch = (
-            client.get_rest(f"/issues?state=all&per_page={per_page}&page={page}") or []
-        )
+        batch = client.get_rest(f"/issues?state=all&per_page={per_page}&page={page}") or []
         if not batch:
             break
         all_issues.extend(batch)
@@ -93,8 +86,7 @@ def validate_issues(issues: List[Dict]) -> bool:
         track_matches = labels & _TRACK_LABELS
         if not track_matches:
             logger.error(
-                "Issue #%s ('%s') is missing a track label "
-                "(deep-learning/data-science/…)",
+                "Issue #%s ('%s') is missing a track label (deep-learning/data-science/…)",
                 issue["number"],
                 issue["title"],
             )

@@ -15,7 +15,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
-
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -320,9 +319,7 @@ class CIIntegration:
 
         for check in checks:
             status_icon = "✅" if check.status else "❌"
-            logger.info(
-                f"{status_icon} {check.name} ({check.duration:.2f}s): {check.message}"
-            )
+            logger.info(f"{status_icon} {check.name} ({check.duration:.2f}s): {check.message}")
 
             if not check.status:
                 all_passed = False
@@ -360,9 +357,7 @@ class CIIntegration:
                 "total_checks": len(self.checks),
                 "passed_checks": len([c for c in self.checks if c.status]),
                 "failed_checks": len([c for c in self.checks if not c.status]),
-                "critical_failures": len(
-                    [c for c in self.checks if not c.status and c.critical]
-                ),
+                "critical_failures": len([c for c in self.checks if not c.status and c.critical]),
                 "overall_status": all(c.status for c in self.checks if c.critical),
             },
         }
@@ -379,18 +374,14 @@ class CIIntegration:
 
         return report_str
 
-    def create_github_status(
-        self, sha: str, context: str = "ci/lumin-automation"
-    ) -> bool:
+    def create_github_status(self, sha: str, context: str = "ci/lumin-automation") -> bool:
         """Create a commit status on GitHub"""
         try:
             # Determine status
             overall_status = all(c.status for c in self.checks if c.critical)
             state = "success" if overall_status else "failure"
             description = (
-                "All CI checks passed"
-                if overall_status
-                else "Some critical CI checks failed"
+                "All CI checks passed" if overall_status else "Some critical CI checks failed"
             )
 
             # NOTE: We are NOT using GitHubClient here to avoid circular deps
@@ -423,9 +414,7 @@ class CIIntegration:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="CI integration for LUMIN.AI project automation"
-    )
+    parser = argparse.ArgumentParser(description="CI integration for LUMIN.AI project automation")
     parser.add_argument("--token", required=True, help="GitHub personal access token")
     parser.add_argument(
         "--owner", default="uelkerd", help="GitHub repository owner (default: uelkerd)"
@@ -439,9 +428,7 @@ def main():
         help="Project board name (default: LUMIN Project Tracker)",
     )
     parser.add_argument("--report-file", help="Save detailed report to file")
-    parser.add_argument(
-        "--github-status", help="Create GitHub status check for commit SHA"
-    )
+    parser.add_argument("--github-status", help="Create GitHub status check for commit SHA")
     parser.add_argument(
         "--log-level",
         default="INFO",
