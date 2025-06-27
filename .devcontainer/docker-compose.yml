@@ -111,6 +111,42 @@ services:
       governance-db:
         condition: service_healthy
 
+  # Lite development environment (no heavy ML/DS libs)
+  lumin-lite-environment:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.lite
+      args:
+        PYTHON_VERSION: "3.11"
+        NODE_VERSION: "20"
+        USERNAME: "lumin-dev"
+    container_name: lumin-ai-lite
+    command: sleep infinity
+    volumes:
+      - type: bind
+        source: ..
+        target: /workspace
+        consistency: cached
+      - type: volume
+        source: lumin-python-packages-lite # Use a separate volume for lite packages
+        target: /home/lumin-dev/.cache/pip
+      - type: volume
+        source: lumin-node-modules
+        target: /workspace/node_modules
+      - type: volume
+        source: lumin-logs
+        target: /workspace/.logs
+    ports:
+      - "3001:3000"
+      - "8001:8000"
+    networks:
+      - lumin-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2G
+
   # MongoDB service for data storage
   governance-db:
     image: mongo:6.0
@@ -174,6 +210,9 @@ volumes:
   lumin-python-packages:
     name: lumin-ai-python-packages
     external: true
+  lumin-python-packages-lite:
+    name: lumin-ai-python-packages-lite
+    external: false
   lumin-node-modules:
     name: lumin-ai-node-modules
     external: true

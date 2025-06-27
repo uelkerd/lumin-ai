@@ -1,0 +1,56 @@
+# LUMIN.AI Lite Development Environment - No ML/DS
+# syntax=docker/dockerfile:1.4
+
+# 1. --- Base with build tools ---
+FROM python:3.11-slim-bullseye AS base
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. --- Python dependency builder ---
+FROM base AS python-deps
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+COPY .devcontainer/requirements-lite.txt /tmp/requirements-lite.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip wheel && \
+    pip install -r /tmp/requirements-lite.txt
+
+# 3. --- Final lightweight image ---
+FROM python:3.11-slim-bullseye
+ARG NODE_VERSION=20
+ARG USERNAME=lumin-dev
+ARG USER_UID=1000
+ARG USER_GID=1000
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH:/home/${USERNAME}/.local/bin"
+
+# Install minimal system dependencies
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    zsh \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Create and configure user
+RUN groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m -s /bin/zsh $USERNAME && \
+    mkdir -p /home/$USERNAME/.vscode-server /workspace && \
+    chown -R $USERNAME:$USERNAME /home/$USERNAME /workspace
+
+# Copy Python venv from builder stage
+COPY --from=python-deps /opt/venv /opt/venv
+
+# Switch to non-root user
+USER $USERNAME
+WORKDIR /workspace
+
+CMD ["zsh"] 

@@ -1,0 +1,10 @@
+# Minimal requirements for Lumin AI lite container
+fastapi
+uvicorn
+jupyter
+notebook
+jupyterlab
+pydantic
+requests
+pytest
+# Add any other core, non-ML dependencies here 
