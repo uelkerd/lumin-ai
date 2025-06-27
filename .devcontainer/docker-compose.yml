@@ -75,13 +75,10 @@ services:
       # MongoDB connection settings
       MONGODB_HOST: governance-db
       MONGODB_PORT: 27017
-      MONGODB_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGODB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
-      # Use these for MongoDB initialization script
-      MONGO_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGO_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGO_DB_NAME: ${MONGODB_DATABASE:-governance_analysis}
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
+      JUPYTER_PORT: 9000
 
     # Enable all capabilities required for development
     # including running Docker in Docker if socket is mounted
@@ -137,9 +134,11 @@ services:
 
     # Environment variables for MongoDB initialization
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-lumin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-devpassword}
-      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-governance_analysis}
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_INITDB_ROOT_USERNAME:-admin}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_INITDB_ROOT_PASSWORD:-adminpassword}
+      MONGODB_USERNAME: lumin
+      MONGODB_PASSWORD: devpassword # pragma: allowlist secret
+      MONGODB_DATABASE: governance_analysis
 
     # Health check for MongoDB
     healthcheck:
@@ -164,33 +163,26 @@ services:
           cpus: '1.0'
           memory: 1G
 
-# Persistent volumes with labels for better identification
+# Persistent volumes - marked as external since they already exist
 volumes:
   governance-data:
     name: lumin-ai-governance-data
-    labels:
-      com.luminai.description: "MongoDB data storage for LUMIN.AI governance analysis"
+    external: true
   governance-logs:
     name: lumin-ai-governance-logs
-    labels:
-      com.luminai.description: "MongoDB logs for LUMIN.AI governance analysis"
+    external: true
   lumin-python-packages:
     name: lumin-ai-python-packages
-    labels:
-      com.luminai.description: "Python package cache for faster builds"
+    external: true
   lumin-node-modules:
     name: lumin-ai-node-modules
-    labels:
-      com.luminai.description: "Node.js modules for faster builds"
+    external: true
   lumin-jupyter-data:
     name: lumin-ai-jupyter-data
-    labels:
-      com.luminai.description: "Persistent Jupyter notebooks data"
+    external: true
   lumin-logs:
     name: lumin-ai-logs
-    external: false
-    labels:
-      com.luminai.description: "Application logs for LUMIN.AI"
+    external: true
 
 # Network for container communication
 networks:
