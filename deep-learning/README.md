@@ -29,11 +29,11 @@ We are following the roadmap outlined in `docs/architecture/DeepLearn--ROADMAP.m
 - [x] Development environment configuration
 - [x] Initial data exploration
 - [ ] Team formation and role assignments
-- [ ] Basic sentiment analysis tutorial completion
+- [x] Basic sentiment analysis tutorial completion
 
 ### Week 2-6: MVP Development
-- [ ] Data preprocessing pipeline
-- [ ] Baseline sentiment classifier
+- [🔄] Data preprocessing pipeline
+- [🔄] Baseline sentiment classifier
 - [ ] Neural network implementation
 - [ ] API development
 - [ ] Integration with other tracks
