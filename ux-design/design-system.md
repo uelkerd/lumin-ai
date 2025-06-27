@@ -10,11 +10,11 @@ The color palette utilizes dark shades of purple, blue, and black to create a so
 
 - **Primary Gradient:** A smooth transition from deep black (#0A0A0A) to a rich dark blue (#1A237E) and finally to a deep, velvety purple (#4A148C).
 - **Accent Colors:**
-    - A vibrant electric blue (#29B6F6) for calls to action and key highlights.
-    - A subtle silver-grey (#B0BEC5) for secondary text and inactive elements.
+  - A vibrant electric blue (#29B6F6) for calls to action and key highlights.
+  - A subtle silver-grey (#B0BEC5) for secondary text and inactive elements.
 - **Neutral Colors:**
-    - Pure Black (#000000) for backgrounds and deep shadows.
-    - Off-White (#F5F5F5) for text on dark backgrounds and subtle dividers.
+  - Pure Black (#000000) for backgrounds and deep shadows.
+  - Off-White (#F5F5F5) for text on dark backgrounds and subtle dividers.
 
 ## Typography
 
@@ -23,11 +23,11 @@ We will use a modern, sans-serif typeface that is highly legible on screens. The
 - **Primary Font:** [Choose a suitable modern sans-serif font, e.g., 'Roboto', 'Montserrat', 'Inter']
 - **Font Weights:** Use a range of weights (e.g., Light, Regular, Medium, Bold) to create visual hierarchy.
 - **Sizing Scale:** Establish a consistent typographic scale for headings, subheadings, body text, and captions.
-    - H1: [Size]
-    - H2: [Size]
-    - H3: [Size]
-    - Body: [Size]
-    - Caption: [Size]
+  - H1: [Size]
+  - H2: [Size]
+  - H3: [Size]
+  - Body: [Size]
+  - Caption: [Size]
 
 ## Standardized Components
 

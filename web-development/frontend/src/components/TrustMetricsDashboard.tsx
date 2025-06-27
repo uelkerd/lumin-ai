@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getTrustMetrics } from '../../src/api';
-import TrustTimeSeriesChart from './TrustTimeSeriesChart';
+import React, { useEffect, useState } from "react";
+import { getTrustMetrics } from "../../src/api";
+import TrustTimeSeriesChart from "./TrustTimeSeriesChart";
 
 interface TrustMetricsData {
   wave: number;
@@ -12,7 +12,9 @@ interface TrustMetricsData {
 }
 
 const TrustMetricsDashboard: React.FC = () => {
-  const [trustMetrics, setTrustMetrics] = useState<TrustMetricsData[] | null>(null);
+  const [trustMetrics, setTrustMetrics] = useState<TrustMetricsData[] | null>(
+    null,
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,19 +23,23 @@ const TrustMetricsDashboard: React.FC = () => {
       try {
         setLoading(true);
         // Fetch data for different demographic segments
-        const allData = await getTrustMetrics({ demographic: 'all' });
-        const age1825Data = await getTrustMetrics({ demographic: 'age: 18-25' });
-        const age2640Data = await getTrustMetrics({ demographic: 'age: 26-40' });
+        const allData = await getTrustMetrics({ demographic: "all" });
+        const age1825Data = await getTrustMetrics({
+          demographic: "age: 18-25",
+        });
+        const age2640Data = await getTrustMetrics({
+          demographic: "age: 26-40",
+        });
 
         // Combine and add a 'series' property
         const combinedData = [
-          ...allData.map(d => ({ ...d, series: 'All' })),
-          ...age1825Data.map(d => ({ ...d, series: 'Age: 18-25' })),
-          ...age2640Data.map(d => ({ ...d, series: 'Age: 26-40' })),
+          ...allData.map((d) => ({ ...d, series: "All" })),
+          ...age1825Data.map((d) => ({ ...d, series: "Age: 18-25" })),
+          ...age2640Data.map((d) => ({ ...d, series: "Age: 26-40" })),
         ];
         setTrustMetrics(combinedData);
       } catch (err) {
-        setError('Failed to fetch trust metrics data.');
+        setError("Failed to fetch trust metrics data.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -54,7 +60,9 @@ const TrustMetricsDashboard: React.FC = () => {
   return (
     <div>
       <h2>Trust Metrics Dashboard</h2>
-      {trustMetrics && trustMetrics.length > 0 ? ( <TrustTimeSeriesChart data={trustMetrics} /> ) : (
+      {trustMetrics && trustMetrics.length > 0 ? (
+        <TrustTimeSeriesChart data={trustMetrics} />
+      ) : (
         <p>No trust metrics data available.</p>
       )}
     </div>
