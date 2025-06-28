@@ -37,7 +37,7 @@ def run_git_command(args: Sequence[str]) -> Optional[str]:
             check=True,
             capture_output=True,
             text=True,
-            shell=False  # Avoid shell=True for security
+            shell=False,  # Avoid shell=True for security
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
@@ -64,8 +64,7 @@ def check_gitattributes() -> bool:
     print("✅ .gitattributes file exists and contains LFS tracking patterns")
 
     # Count tracked extensions
-    tracked_extensions = [line.split()[0]
-                          for line in content.splitlines() if "filter=lfs" in line]
+    tracked_extensions = [line.split()[0] for line in content.splitlines() if "filter=lfs" in line]
     print(f"   Found {len(tracked_extensions)} tracked file patterns")
     return True
 
@@ -119,7 +118,7 @@ def check_sample_file() -> bool:
     lfs_files_output = run_git_command(["lfs", "ls-files"])
     if not lfs_files_output or str(sample_file) not in lfs_files_output:
         print(f"❌ Sample file {sample_file} is not tracked by Git LFS!")
-        print('   Run \'git lfs track "*.csv"\' and re-add the file')
+        print("   Run 'git lfs track \"*.csv\"' and re-add the file")
         return False
 
     print(f"✅ Sample file {sample_file} is properly tracked by Git LFS")
@@ -130,8 +129,12 @@ def main() -> int:
     """Run all checks and report status."""
     print("🔍 Verifying Git LFS setup for LUMIN.AI project...\n")
 
-    checks = [check_git_lfs_installed, check_gitattributes,
-              check_lfs_files, check_sample_file]
+    checks = [
+        check_git_lfs_installed,
+        check_gitattributes,
+        check_lfs_files,
+        check_sample_file,
+    ]
 
     all_passed = all(check() for check in checks)
 

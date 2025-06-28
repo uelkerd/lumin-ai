@@ -8,9 +8,14 @@ const LoadingSpinner = () => (
 );
 
 const ErrorMessage = ({ error }) => (
-  <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg" role="alert">
+  <div
+    className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg"
+    role="alert"
+  >
     <p className="font-bold">Error loading document</p>
     <p>{error}</p>
-    <p className="mt-2 text-sm">Please check the file name and path in your GitHub repository.</p>
+    <p className="mt-2 text-sm">
+      Please check the file name and path in your GitHub repository.
+    </p>
   </div>
 );
