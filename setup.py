@@ -14,11 +14,9 @@ with open(os.path.join("src", "lumin_ai", "__init__.py"), encoding="utf-8") as f
     version = version_match.group(1)
 
 extras = {
-    "ml": [
-        "torch>=1.12.0",
-        "tensorflow>=2.9.0",
-        "transformers>=4.20.0",
-    ],
+    "torch": ["torch>=1.12.0"],
+    "tensorflow": ["tensorflow>=2.9.0"],
+    "transformers": ["transformers>=4.20.0"],
     "data": [
         "pandas>=1.3.0",
         "numpy>=1.21.0",
@@ -42,13 +40,16 @@ extras = {
         "pytest==7.4.0",
         "pytest-cov==4.1.0",
     ],
-    "dev": [
-        "ruff==0.4.4",
-    ],
 }
 
+# Create a combined 'ml' extra for convenience
+extras["ml"] = extras["torch"] + extras["tensorflow"] + extras["transformers"]
+
+# Create an 'all' extra that includes all optional dependencies
 extras["all"] = extras["ml"] + extras["data"] + extras["nlp"] + extras["jupyter"]
-extras["dev"] = extras["all"] + extras["test"] + extras["dev"]
+
+# Create a 'dev' extra that includes all dependencies for development
+extras["dev"] = extras["all"] + extras["test"] + ["ruff==0.4.4"]
 
 setup(
     name="lumin-ai",
