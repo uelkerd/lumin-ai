@@ -1,9 +1,25 @@
-modules = ["bash", "python-3.8", "web", "nodejs-20", "python-3.10", "python-3.12", "python-base-3.13", "docker"]
-run = "node index.js"
+modules = ["bash", "python-3.8", "web", "nodejs-20", "python-3.9"]
+run = "npm run start"
 
 [nix]
 channel = "stable-24_05"
 packages = ["cairo", "ffmpeg-full", "freetype", "ghostscript", "glibcLocales", "gobject-introspection", "gtk3", "libxcrypt", "pkg-config", "qhull", "tcl", "tk", "xsimd"]
 
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["sh", "-c", "npm run start"]
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[workflows]
+runButton = "Frontend Dev Server"
+
+[[workflows.workflow]]
+name = "Frontend Dev Server"
+author = 44364836
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd web-development/frontend && npm start"
