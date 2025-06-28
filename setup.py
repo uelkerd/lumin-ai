@@ -5,7 +5,6 @@ import re
 
 from setuptools import find_packages, setup
 
-
 # Read version from __init__.py
 with open(os.path.join("src", "lumin_ai", "__init__.py"), encoding="utf-8") as f:
     content = f.read()
