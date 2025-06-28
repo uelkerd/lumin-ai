@@ -23,13 +23,15 @@ setup(
     author="LUMIN.AI Team",
     author_email="team@lumin-ai.org",
     install_requires=[
-        "transformers>=4.20.0",
         "pandas>=1.5.0",
         "numpy>=1.21.0",
     ],
     extras_require={
-        "torch": ["torch>=1.12.0"],
-        "tensorflow": ["tensorflow>=2.9.0"],
+        "ml": [
+            "torch>=1.12.0",
+            "tensorflow>=2.9.0",
+            "transformers>=4.20.0",
+        ],
         "test": [
             "pytest==7.4.0",
             "pytest-cov==4.1.0",
@@ -38,8 +40,7 @@ setup(
             "ruff==0.4.4",
         ],
         "all": [
-            "torch>=1.12.0",
-            "tensorflow>=2.9.0",
+            "lumin-ai[ml]",
         ],
     },
     python_requires=">=3.8",
