@@ -146,7 +146,7 @@ const DocsHub = ({ isSidebarOpen, setIsSidebarOpen, docFileMapping }) => {
       } catch (e) {
         console.error("Error parsing markdown:", e);
         // Use generic error message instead of exposing specific error details
-        setError(`Error rendering content. Please try again later.`);
+        setError("Error rendering content. Please try again later.");
         return { __html: "<p>Error rendering markdown content</p>" };
       }
     }
