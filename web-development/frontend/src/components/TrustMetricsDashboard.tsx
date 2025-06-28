@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getTrustMetrics } from "../api";
+import { getTrustMetrics } from "../../src/api";
 import TrustTimeSeriesChart from "./TrustTimeSeriesChart";
 import { TrustMetricsData } from "../types";
 
@@ -12,12 +12,26 @@ const TrustMetricsDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchTrustMetrics = async () => {
+      const demographicSegments = ["all", "age: 18-25", "age: 26-40"];
       try {
-        const data = await getTrustMetrics();
-        setTrustMetrics(data);
+        setLoading(true);
+        // Fetch data for different demographic segments in parallel
+        const promises = demographicSegments.map((demographic) =>
+          getTrustMetrics({ demographic }),
+        );
+        const results = await Promise.all(promises);
+
+        // Combine and add a 'series' property
+        const combinedData = results.flatMap((data, index) =>
+          data.map((d) => ({ ...d, series: demographicSegments[index] })),
+        );
+
+        setTrustMetrics(combinedData);
       } catch (err) {
         setError("Failed to fetch trust metrics data.");
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -36,10 +50,7 @@ const TrustMetricsDashboard: React.FC = () => {
     <div>
       <h2>Trust Metrics Dashboard</h2>
       {trustMetrics && trustMetrics.length > 0 ? (
-        <div>
-          <TrustTimeSeriesChart data={trustMetrics} />
-          <pre>{JSON.stringify(trustMetrics, null, 2)}</pre>
-        </div>
+        <TrustTimeSeriesChart data={trustMetrics} />
       ) : (
         <p>No trust metrics data available.</p>
       )}
