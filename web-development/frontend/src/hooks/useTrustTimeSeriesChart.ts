@@ -60,7 +60,9 @@ export const useTrustTimeSeriesChart = (
       .x((d) => xScale(d.year))
       .y((d) => yScale(d.trust_score));
 
-    const seriesNames = Array.from(new Set(data.map((d) => d.series || "default")));
+    const seriesNames = Array.from(
+      new Set(data.map((d) => d.series || "default")),
+    );
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(seriesNames);
 
     const dataBySeries = Array.from(
@@ -93,7 +95,8 @@ export const useTrustTimeSeriesChart = (
 
       // Area path
       enteringSeriesGroups.append("path").attr("class", "area");
-      seriesGroups.merge(enteringSeriesGroups)
+      seriesGroups
+        .merge(enteringSeriesGroups)
         .select(".area")
         .datum(function (d: any) {
           return d.value.map((v: any) => ({
@@ -109,14 +112,15 @@ export const useTrustTimeSeriesChart = (
         .attr("opacity", 0.3)
         .attr("d", area as any)
         .style("display", function (d: any) {
-           const parentNode = this.parentNode as Element;
-           const seriesKey = (d3.select(parentNode).datum() as any).key;
-           return visibilityState[seriesKey] ? null : "none";
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return visibilityState[seriesKey] ? null : "none";
         });
 
       // Line path
       enteringSeriesGroups.append("path").attr("class", "line");
-      seriesGroups.merge(enteringSeriesGroups)
+      seriesGroups
+        .merge(enteringSeriesGroups)
         .select(".line")
         .datum(function (d: any) {
           return d.value.map((v: any) => ({
@@ -126,26 +130,30 @@ export const useTrustTimeSeriesChart = (
         })
         .attr("fill", "none")
         .attr("stroke", function (d: any) {
-            const parentNode = this.parentNode as Element;
-            const seriesKey = (d3.select(parentNode).datum() as any).key;
-            return colorScale(seriesKey) as string;
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return colorScale(seriesKey) as string;
         })
         .attr("stroke-width", 1.5)
         .attr("d", line as any)
         .style("display", function (d: any) {
-            const parentNode = this.parentNode as Element;
-            const seriesKey = (d3.select(parentNode).datum() as any).key;
-            return visibilityState[seriesKey] ? null : "none";
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return visibilityState[seriesKey] ? null : "none";
         });
 
       // Data points
-      const dataPoints = seriesGroups.merge(enteringSeriesGroups)
+      const dataPoints = seriesGroups
+        .merge(enteringSeriesGroups)
         .selectAll(".data-point")
-        .data(function (d: any) { return d.value; });
+        .data(function (d: any) {
+          return d.value;
+        });
 
       dataPoints.exit().remove();
 
-      dataPoints.enter()
+      dataPoints
+        .enter()
         .append("circle")
         .attr("class", "data-point")
         .attr("r", 5)
@@ -155,10 +163,10 @@ export const useTrustTimeSeriesChart = (
             const tooltip = d3.select(tooltipRef.current);
             tooltip.style("display", "block");
             tooltip.html(
-                `Series: ${d.series}<br/>` +
+              `Series: ${d.series}<br/>` +
                 `Year: ${d.year}<br/>` +
                 `Trust Score: ${d.trust_score.toFixed(2)}<br/>` +
-                `CI: [${d.confidence_interval[0].toFixed(2)}, ${d.confidence_interval[1].toFixed(2)}]`
+                `CI: [${d.confidence_interval[0].toFixed(2)}, ${d.confidence_interval[1].toFixed(2)}]`,
             );
           }
         })
@@ -177,7 +185,9 @@ export const useTrustTimeSeriesChart = (
         .attr("cx", (d: any) => xScale(d.year))
         .attr("cy", (d: any) => yScale(d.trust_score))
         .attr("fill", (d: any) => colorScale(d.series) as string)
-        .style("display", (d: any) => (visibilityState[d.series] ? null : "none"));
+        .style("display", (d: any) =>
+          visibilityState[d.series] ? null : "none",
+        );
     };
 
     drawChart(d3.zoomIdentity);
@@ -212,14 +222,17 @@ export const useTrustTimeSeriesChart = (
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([1, 10])
-      .translateExtent([[0, 0], [width, height]])
+      .translateExtent([
+        [0, 0],
+        [width, height],
+      ])
       .on("zoom", (event) => {
         const { transform } = event; // Destructure transform
         drawChart(transform);
       });
-    
+
     // Remove previous zoom listener before attaching a new one
     svg.on(".zoom", null);
     svg.call(zoom);
   }, [data, svgRef, tooltipRef, legendRef]);
-}; 
+};

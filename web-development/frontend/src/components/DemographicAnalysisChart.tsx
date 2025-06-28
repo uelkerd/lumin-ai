@@ -65,9 +65,14 @@ const DemographicAnalysisChart: React.FC = () => {
 
     // Filter out empty or duplicate demographic_segment values
     const filteredData = data
-      .filter((d) => d.demographic_segment && d.demographic_segment.trim() !== "")
-      .filter((d, i, arr) =>
-        arr.findIndex((item) => item.demographic_segment === d.demographic_segment) === i
+      .filter(
+        (d) => d.demographic_segment && d.demographic_segment.trim() !== "",
+      )
+      .filter(
+        (d, i, arr) =>
+          arr.findIndex(
+            (item) => item.demographic_segment === d.demographic_segment,
+          ) === i,
       );
 
     x.domain(filteredData.map((d) => d.demographic_segment));
