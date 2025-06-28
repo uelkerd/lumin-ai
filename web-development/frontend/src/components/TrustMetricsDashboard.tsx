@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getTrustMetrics } from "../api";
 import TrustTimeSeriesChart from "./TrustTimeSeriesChart";
-
-interface TrustMetricsData {
-  wave: number;
-  year: number;
-  trust_score: number;
-  confidence_interval: [number, number];
-  demographic_segment: string;
-}
+import { TrustMetricsData } from "../types";
 
 const TrustMetricsDashboard: React.FC = () => {
   const [trustMetrics, setTrustMetrics] = useState<TrustMetricsData[] | null>(
