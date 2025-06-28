@@ -1,4 +1,5 @@
 import axios from "axios";
+import { TrustMetricsData } from "./types";
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:3001/api/v1";
@@ -13,7 +14,7 @@ const api = axios.create({
 export const getTrustMetrics = async (params?: {
   demographic?: string;
   wave?: string;
-}) => {
+}): Promise<TrustMetricsData[]> => {
   try {
     const response = await api.get("/data-science/trust-metrics", { params });
     return response.data;
