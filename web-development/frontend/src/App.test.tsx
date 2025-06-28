@@ -23,9 +23,7 @@ test("renders TrustMetricsDashboard after fetching data", async () => {
 
   // Wait for the dashboard to be rendered
   await waitFor(() => {
-    expect(
-      screen.getByText(/Trust Metrics Dashboard/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Trust Metrics Dashboard/i)).toBeInTheDocument();
   });
 
   // Ensure the loading text is gone
