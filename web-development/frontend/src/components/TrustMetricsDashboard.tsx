@@ -13,14 +13,11 @@ const TrustMetricsDashboard: React.FC = () => {
   useEffect(() => {
     const fetchTrustMetrics = async () => {
       try {
-        setLoading(true);
         const data = await getTrustMetrics();
         setTrustMetrics(data);
       } catch (err) {
         setError("Failed to fetch trust metrics data.");
         console.error(err);
-      } finally {
-        setLoading(false);
       }
     };
 
