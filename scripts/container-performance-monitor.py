@@ -17,7 +17,7 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -98,9 +98,7 @@ class ContainerPerformanceMonitor:
     def run_docker_command(self, cmd: List[str]) -> Optional[str]:
         """Execute Docker command and return output."""
         try:
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, check=True, timeout=30
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=30)
             return result.stdout.strip()
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Docker command failed: {' '.join(cmd)}, Error: {e}")
@@ -237,9 +235,7 @@ class ContainerPerformanceMonitor:
         except Exception:
             return 0
 
-    def check_performance_thresholds(
-        self, metrics: ContainerMetrics
-    ) -> List[PerformanceAlert]:
+    def check_performance_thresholds(self, metrics: ContainerMetrics) -> List[PerformanceAlert]:
         """Check metrics against performance thresholds and generate alerts."""
         alerts = []
 
@@ -306,9 +302,7 @@ class ContainerPerformanceMonitor:
         os.system("clear" if os.name == "posix" else "cls")
 
         print("╔" + "═" * 98 + "╗")
-        print(
-            "║" + " " * 30 + "LUMIN.AI Container Performance Monitor" + " " * 30 + "║"
-        )
+        print("║" + " " * 30 + "LUMIN.AI Container Performance Monitor" + " " * 30 + "║")
         print("╠" + "═" * 98 + "╣")
 
         if not metrics:
@@ -324,9 +318,7 @@ class ContainerPerformanceMonitor:
 
         for metric in metrics:
             uptime_str = self._format_uptime(metric.uptime_seconds)
-            memory_str = (
-                f"{metric.memory_usage_mb:.0f}MB ({metric.memory_percent:.1f}%)"
-            )
+            memory_str = f"{metric.memory_usage_mb:.0f}MB ({metric.memory_percent:.1f}%)"
             network_str = f"↓{metric.network_rx_mb:.1f}MB ↑{metric.network_tx_mb:.1f}MB"
 
             # Color code CPU based on usage
@@ -369,9 +361,7 @@ class ContainerPerformanceMonitor:
         csv_file = self.log_dir / filename
 
         with open(csv_file, "w", newline="") as csvfile:
-            writer = csv.DictWriter(
-                csvfile, fieldnames=asdict(self.metrics_history[0]).keys()
-            )
+            writer = csv.DictWriter(csvfile, fieldnames=asdict(self.metrics_history[0]).keys())
             writer.writeheader()
 
             for metrics in self.metrics_history:
@@ -388,9 +378,7 @@ class ContainerPerformanceMonitor:
         json_file = self.log_dir / filename
 
         with open(json_file, "w") as jsonfile:
-            json.dump(
-                [asdict(alert) for alert in self.alerts_history], jsonfile, indent=2
-            )
+            json.dump([asdict(alert) for alert in self.alerts_history], jsonfile, indent=2)
 
         self.logger.info(f"Alerts exported to {json_file}")
 
@@ -403,9 +391,7 @@ class ContainerPerformanceMonitor:
         container_stats = {}
 
         for container in self.containers:
-            container_metrics = [
-                m for m in self.metrics_history if m.container_name == container
-            ]
+            container_metrics = [m for m in self.metrics_history if m.container_name == container]
 
             if not container_metrics:
                 continue
@@ -441,9 +427,7 @@ class ContainerPerformanceMonitor:
             "container_statistics": container_stats,
         }
 
-    def monitor(
-        self, duration: int = 300, interval: int = 5, export_csv: bool = False
-    ) -> None:
+    def monitor(self, duration: int = 300, interval: int = 5, export_csv: bool = False) -> None:
         """Run performance monitoring for specified duration."""
         self.logger.info(
             f"Starting performance monitoring for {duration} seconds (interval: {interval}s)"
@@ -466,9 +450,7 @@ class ContainerPerformanceMonitor:
                         alerts = self.check_performance_thresholds(metrics)
                         for alert in alerts:
                             self.alerts_history.append(alert)
-                            self.logger.warning(
-                                f"ALERT: {alert.container_name} - {alert.message}"
-                            )
+                            self.logger.warning(f"ALERT: {alert.container_name} - {alert.message}")
 
                 # Display real-time metrics
                 self.display_real_time_metrics(current_metrics)
@@ -481,8 +463,7 @@ class ContainerPerformanceMonitor:
         # Generate final report
         report = self.generate_performance_report()
         report_file = (
-            self.log_dir
-            / f"performance-report-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+            self.log_dir / f"performance-report-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
         )
 
         with open(report_file, "w") as f:
@@ -506,9 +487,7 @@ class ContainerPerformanceMonitor:
 
 def main():
     """Main entry point for the performance monitor."""
-    parser = argparse.ArgumentParser(
-        description="LUMIN.AI Container Performance Monitor"
-    )
+    parser = argparse.ArgumentParser(description="LUMIN.AI Container Performance Monitor")
     parser.add_argument(
         "--duration",
         type=int,
@@ -521,9 +500,7 @@ def main():
         default=5,
         help="Monitoring interval in seconds (default: 5)",
     )
-    parser.add_argument(
-        "--export-csv", action="store_true", help="Export metrics to CSV files"
-    )
+    parser.add_argument("--export-csv", action="store_true", help="Export metrics to CSV files")
     parser.add_argument(
         "--containers",
         nargs="+",

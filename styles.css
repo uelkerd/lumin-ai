@@ -1,146 +1,150 @@
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
+  font-family: "Inter", sans-serif;
+  background-color: #f3f4f6;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+  background: #888;
+  border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
 }
 
 /* Markdown content styling */
 .markdown-content h1 {
-    font-size: 2.25rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.5rem;
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
 }
 
 .markdown-content h2 {
-    font-size: 1.875rem;
-    font-weight: bold;
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
 }
 
 .markdown-content h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .markdown-content h4 {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .markdown-content p {
-    margin-bottom: 1rem;
-    line-height: 1.7;
-    color: #374151;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: #374151;
 }
 
-.markdown-content ul, .markdown-content ol {
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-    list-style-type: disc;
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
 }
 
 .markdown-content li {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .markdown-content a {
-    color: #4f46e5;
-    text-decoration: underline;
+  color: #4f46e5;
+  text-decoration: underline;
 }
 
 .markdown-content strong {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .markdown-content blockquote {
-    border-left: 4px solid #d1d5db;
-    padding-left: 1rem;
-    margin-left: 0;
-    margin-right: 0;
-    font-style: italic;
-    color: #4b5563;
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+  color: #4b5563;
 }
 
 .markdown-content pre {
-    background-color: #1f2937;
-    color: #f9fafb;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin-bottom: 1rem;
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1rem;
 }
 
 .markdown-content code {
-    font-family: monospace;
-    background-color: #f3f4f6;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
+  font-family: monospace;
+  background-color: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
 }
 
 .markdown-content pre code {
-    background-color: transparent;
-    padding: 0;
+  background-color: transparent;
+  padding: 0;
 }
 
 .markdown-content hr {
-    border-top: 1px solid #d1d5db;
-    margin: 2rem 0;
+  border-top: 1px solid #d1d5db;
+  margin: 2rem 0;
 }
 
 .markdown-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
 }
 
-.markdown-content th, .markdown-content td {
-    border: 1px solid #d1d5db;
-    padding: 0.75rem;
-    text-align: left;
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  text-align: left;
 }
 
 .markdown-content th {
-    background-color: #f9fafb;
-    font-weight: bold;
+  background-color: #f9fafb;
+  font-weight: bold;
 }
 
 .markdown-content img {
-    max-width: 100%;
-    height: auto;
-    margin: 1rem 0;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
 }
 
 .loading-spinner {
-    border-top-color: #4f46e5;
-    animation: spinner 0.6s linear infinite;
+  border-top-color: #4f46e5;
+  animation: spinner 0.6s linear infinite;
 }
 
 @keyframes spinner {
-    to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
