@@ -160,22 +160,19 @@ app.post("/api/v1/deep-learning/sentiment-analysis", async (req, res) => {
   }
 });
 
-app.post(
-  "/api/v1/deep-learning/batch-sentiment-analysis",
-  async (req, res) => {
-    try {
-      // In a real scenario, you would use req.body (array of texts)
-      const data = await batchAnalyzeSentimentMock();
-      res.json(data);
-    } catch (error) {
-      console.error(
-        "Error in /api/v1/deep-learning/batch-sentiment-analysis:",
-        error
-      );
-      res.status(500).json({ error: "Internal server error" });
-    }
+app.post("/api/v1/deep-learning/batch-sentiment-analysis", async (req, res) => {
+  try {
+    // In a real scenario, you would use req.body (array of texts)
+    const data = await batchAnalyzeSentimentMock();
+    res.json(data);
+  } catch (error) {
+    console.error(
+      "Error in /api/v1/deep-learning/batch-sentiment-analysis:",
+      error,
+    );
+    res.status(500).json({ error: "Internal server error" });
   }
-);
+});
 
 app.get("/api/v1/deep-learning/sentiment-trends", async (req, res) => {
   try {
