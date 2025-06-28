@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
-const port = 3001; // Or another port as needed
+const port = process.env.PORT || 3001; // Or another port as needed
 
 // Mock Data based on refined API specifications
 const mockTrustMetrics = [
