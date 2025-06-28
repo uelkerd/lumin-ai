@@ -65,7 +65,7 @@ export const batchAnalyzeSentiment = async (texts: string[]) => {
   try {
     const response = await api.post(
       "/deep-learning/batch-sentiment-analysis",
-      texts,
+      { texts },
     );
     return response.data;
   } catch (error) {
