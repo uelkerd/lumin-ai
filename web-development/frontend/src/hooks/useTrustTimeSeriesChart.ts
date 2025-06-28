@@ -158,7 +158,7 @@ export const useTrustTimeSeriesChart = (
       dataPoints.exit().remove();
 
       dataPoints
-        .enter()
+        .on("mouseover", function (event, d: TrustDataPoint) {
         .append("circle")
         .attr("class", "data-point")
         .attr("r", 5)
