@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getTrustMetrics } from "../../src/api";
+import { getTrustMetrics } from "../api";
 import TrustTimeSeriesChart from "./TrustTimeSeriesChart";
 
 interface TrustMetricsData {
@@ -46,7 +46,10 @@ const TrustMetricsDashboard: React.FC = () => {
     <div>
       <h2>Trust Metrics Dashboard</h2>
       {trustMetrics && trustMetrics.length > 0 ? (
-        <pre>{JSON.stringify(trustMetrics, null, 2)}</pre>
+        <div>
+          <TrustTimeSeriesChart data={trustMetrics} />
+          <pre>{JSON.stringify(trustMetrics, null, 2)}</pre>
+        </div>
       ) : (
         <p>No trust metrics data available.</p>
       )}
