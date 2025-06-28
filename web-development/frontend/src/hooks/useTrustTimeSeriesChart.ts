@@ -2,6 +2,11 @@ import { useEffect } from "react";
 import * as d3 from "d3";
 import { TrustDataPoint } from "../types";
 
+interface SeriesData {
+  key: string;
+  value: TrustDataPoint[];
+}
+
 export const useTrustTimeSeriesChart = (
   svgRef: React.RefObject<SVGSVGElement>,
   tooltipRef: React.RefObject<HTMLDivElement>,
@@ -82,7 +87,7 @@ export const useTrustTimeSeriesChart = (
 
       const seriesGroups = g
         .selectAll(".series-group")
-        .data(dataBySeries, function (d: any) {
+        .data(dataBySeries, function (d: SeriesData) {
           return d.key;
         });
 
@@ -98,22 +103,22 @@ export const useTrustTimeSeriesChart = (
       seriesGroups
         .merge(enteringSeriesGroups)
         .select(".area")
-        .datum(function (d: any) {
-          return d.value.map((v: any) => ({
+        .datum(function (d: SeriesData) {
+          return d.value.map((v) => ({
             year: v.year,
             ci: v.confidence_interval,
           }));
         })
-        .attr("fill", function (d: any) {
+        .attr("fill", function () {
           const parentNode = this.parentNode as Element;
-          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
           return colorScale(seriesKey) as string;
         })
         .attr("opacity", 0.3)
         .attr("d", area as any)
-        .style("display", function (d: any) {
+        .style("display", function () {
           const parentNode = this.parentNode as Element;
-          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
           return visibilityState[seriesKey] ? null : "none";
         });
 
@@ -122,23 +127,23 @@ export const useTrustTimeSeriesChart = (
       seriesGroups
         .merge(enteringSeriesGroups)
         .select(".line")
-        .datum(function (d: any) {
-          return d.value.map((v: any) => ({
+        .datum(function (d: SeriesData) {
+          return d.value.map((v) => ({
             year: v.year,
             trust_score: v.trust_score,
           }));
         })
         .attr("fill", "none")
-        .attr("stroke", function (d: any) {
+        .attr("stroke", function () {
           const parentNode = this.parentNode as Element;
-          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
           return colorScale(seriesKey) as string;
         })
         .attr("stroke-width", 1.5)
         .attr("d", line as any)
-        .style("display", function (d: any) {
+        .style("display", function () {
           const parentNode = this.parentNode as Element;
-          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
           return visibilityState[seriesKey] ? null : "none";
         });
 
@@ -146,7 +151,7 @@ export const useTrustTimeSeriesChart = (
       const dataPoints = seriesGroups
         .merge(enteringSeriesGroups)
         .selectAll(".data-point")
-        .data(function (d: any) {
+        .data(function (d: SeriesData) {
           return d.value;
         });
 
@@ -158,7 +163,7 @@ export const useTrustTimeSeriesChart = (
         .attr("class", "data-point")
         .attr("r", 5)
         .attr("cursor", "pointer")
-        .on("mouseover", function (event, d: any) {
+        .on("mouseover", function (event, d: TrustDataPoint) {
           if (tooltipRef.current) {
             const tooltip = d3.select(tooltipRef.current);
             tooltip.style("display", "block");
@@ -182,10 +187,10 @@ export const useTrustTimeSeriesChart = (
           }
         })
         .merge(dataPoints)
-        .attr("cx", (d: any) => xScale(d.year))
-        .attr("cy", (d: any) => yScale(d.trust_score))
-        .attr("fill", (d: any) => colorScale(d.series) as string)
-        .style("display", (d: any) =>
+        .attr("cx", (d: TrustDataPoint) => xScale(d.year))
+        .attr("cy", (d: TrustDataPoint) => yScale(d.trust_score))
+        .attr("fill", (d: TrustDataPoint) => colorScale(d.series) as string)
+        .style("display", (d: TrustDataPoint) =>
           visibilityState[d.series] ? null : "none",
         );
     };
@@ -205,19 +210,19 @@ export const useTrustTimeSeriesChart = (
       .style("align-items", "center")
       .style("margin-bottom", "5px")
       .style("cursor", "pointer")
-      .on("click", (event, seriesName) => {
+      .on("click", (event, seriesName: string) => {
         visibilityState[seriesName] = !visibilityState[seriesName];
-        drawChart(d3.zoomTransform(svg.node() as any));
+        drawChart(d3.zoomTransform(svg.node() as SVGSVGElement));
       });
 
     legendItems
       .append("div")
       .style("width", "20px")
       .style("height", "20px")
-      .style("background-color", (d) => colorScale(d) as string)
+      .style("background-color", (d: string) => colorScale(d) as string)
       .style("margin-right", "5px");
 
-    legendItems.append("span").text((d) => d);
+    legendItems.append("span").text((d: string) => d);
 
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
