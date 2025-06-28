@@ -63,8 +63,15 @@ const DemographicAnalysisChart: React.FC = () => {
 
     const y = d3.scaleLinear().range([height, 0]);
 
-    x.domain(data.map((d) => d.demographic_segment));
-    y.domain([0, d3.max(data, (d) => d.trust_score) || 1]); // Ensure y-domain starts at 0
+    // Filter out empty or duplicate demographic_segment values
+    const filteredData = data
+      .filter((d) => d.demographic_segment && d.demographic_segment.trim() !== "")
+      .filter((d, i, arr) =>
+        arr.findIndex((item) => item.demographic_segment === d.demographic_segment) === i
+      );
+
+    x.domain(filteredData.map((d) => d.demographic_segment));
+    y.domain([0, d3.max(filteredData, (d) => d.trust_score) || 1]); // Ensure y-domain starts at 0
 
     // Add X axis
     g.append("g")
@@ -79,7 +86,7 @@ const DemographicAnalysisChart: React.FC = () => {
 
     // Add bars
     g.selectAll(".bar")
-      .data(data)
+      .data(filteredData)
       .enter()
       .append("rect")
       .attr("class", "bar")

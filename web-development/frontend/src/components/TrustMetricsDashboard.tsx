@@ -14,14 +14,12 @@ const TrustMetricsDashboard: React.FC = () => {
     const fetchTrustMetrics = async () => {
       try {
         setLoading(true);
-        // Fetch data for different demographic segments
-        const allData = await getTrustMetrics({ demographic: "all" });
-        const age1825Data = await getTrustMetrics({
-          demographic: "age: 18-25",
-        });
-        const age2640Data = await getTrustMetrics({
-          demographic: "age: 26-40",
-        });
+        // Fetch data for different demographic segments in parallel
+        const [allData, age1825Data, age2640Data] = await Promise.all([
+          getTrustMetrics({ demographic: "all" }),
+          getTrustMetrics({ demographic: "age: 18-25" }),
+          getTrustMetrics({ demographic: "age: 26-40" }),
+        ]);
 
         // Combine and add a 'series' property
         const combinedData = [
@@ -33,6 +31,8 @@ const TrustMetricsDashboard: React.FC = () => {
       } catch (err) {
         setError("Failed to fetch trust metrics data.");
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
