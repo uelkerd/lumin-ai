@@ -24,12 +24,18 @@ export const getTrustMetrics = async (params?: {
   }
 };
 
-export const getDemographics = async (params: {
-  demographic: string;
-  wave?: string;
-}) => {
+export const getDemographics = async (
+  params: {
+    demographic: string;
+    wave?: string;
+  },
+  options: { signal?: AbortSignal } = {},
+) => {
   try {
-    const response = await api.get("/data-science/demographics", { params });
+    const response = await api.get("/data-science/demographics", {
+      params,
+      signal: options.signal,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching demographics:", error);
