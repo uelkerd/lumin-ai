@@ -125,7 +125,7 @@ app.get(
   asyncHandler(async (req, res) => {
     const data = await getTrustMetricsMock();
     res.json(data);
-  })
+  }),
 );
 
 app.get(
@@ -133,7 +133,7 @@ app.get(
   asyncHandler(async (req, res) => {
     const data = await getDemographicsMock();
     res.json(data);
-  })
+  }),
 );
 
 app.get(
@@ -141,7 +141,7 @@ app.get(
   asyncHandler(async (req, res) => {
     const data = await getCorrelationsMock();
     res.json(data);
-  })
+  }),
 );
 
 app.post(
@@ -149,7 +149,7 @@ app.post(
   asyncHandler(async (req, res) => {
     const data = await analyzeSentimentMock();
     res.json(data);
-  })
+  }),
 );
 
 app.post(
@@ -157,7 +157,7 @@ app.post(
   asyncHandler(async (req, res) => {
     const data = await batchAnalyzeSentimentMock();
     res.json(data);
-  })
+  }),
 );
 
 app.get(
@@ -165,7 +165,7 @@ app.get(
   asyncHandler(async (req, res) => {
     const data = await getSentimentTrendsMock();
     res.json(data);
-  })
+  }),
 );
 
 // Error handling middleware should be last
