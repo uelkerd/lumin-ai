@@ -137,19 +137,28 @@ const TrustMetricsDashboard: React.FC = () => {
 
   const QuickStats: React.FC = () => (
     <div className="glass-card p-lg mb-xl">
-      <h3 className="text-xl font-semibold mb-md gradient-text">Quick Statistics</h3>
+      <h3 className="text-xl font-semibold mb-md gradient-text">Platform Overview</h3>
       <div className="grid grid-cols-3 gap-lg">
-        <div className="text-center">
+        <div className="text-center fade-in">
           <div className="text-2xl font-bold text-blue-electric">156</div>
           <div className="text-sm text-silver-grey">Data Sources</div>
+          <div className="text-xs" style={{ color: 'rgba(0, 0, 0, 0.5)', marginTop: '0.25rem' }}>
+            Democracy Radar, EU Barometer, Civic Pulse
+          </div>
         </div>
-        <div className="text-center">
+        <div className="text-center fade-in" style={{ animationDelay: '0.1s' }}>
           <div className="text-2xl font-bold text-blue-electric">24/7</div>
-          <div className="text-sm text-silver-grey">Monitoring</div>
+          <div className="text-sm text-silver-grey">Real-time Monitoring</div>
+          <div className="text-xs" style={{ color: 'rgba(0, 0, 0, 0.5)', marginTop: '0.25rem' }}>
+            Continuous governance tracking
+          </div>
         </div>
-        <div className="text-center">
+        <div className="text-center fade-in" style={{ animationDelay: '0.2s' }}>
           <div className="text-2xl font-bold text-blue-electric">99.2%</div>
-          <div className="text-sm text-silver-grey">Accuracy</div>
+          <div className="text-sm text-silver-grey">ML Model Accuracy</div>
+          <div className="text-xs" style={{ color: 'rgba(0, 0, 0, 0.5)', marginTop: '0.25rem' }}>
+            Validated on 50K+ samples
+          </div>
         </div>
       </div>
     </div>
@@ -175,9 +184,53 @@ const TrustMetricsDashboard: React.FC = () => {
           <h2 className="text-3xl font-bold gradient-text mb-md">
             Democratic Governance Insights
           </h2>
-          <p className="text-lg" style={{ color: 'var(--color-silver-grey)' }}>
+          <p className="text-lg mb-lg" style={{ color: 'rgba(0, 0, 0, 0.7)' }}>
             Real-time analysis of trust, transparency, and civic engagement metrics
           </p>
+          <div className="flex justify-center gap-md">
+            <button 
+              className="glass-card p-md"
+              style={{ 
+                border: 'none',
+                background: 'rgba(102, 126, 234, 0.2)',
+                color: 'rgba(0, 0, 0, 0.8)',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 300ms ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(102, 126, 234, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(102, 126, 234, 0.2)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              📊 Explore Analytics
+            </button>
+            <button 
+              className="glass-card p-md"
+              style={{ 
+                border: 'none',
+                background: 'rgba(118, 75, 162, 0.2)',
+                color: 'rgba(0, 0, 0, 0.8)',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 300ms ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(118, 75, 162, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(118, 75, 162, 0.2)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              📈 View Reports
+            </button>
+          </div>
         </div>
 
         {/* Quick Stats */}
