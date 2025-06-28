@@ -61,12 +61,14 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
       .x((d) => xScale(d.year))
       .y((d) => yScale(d.trust_score));
 
-    const seriesNames = Array.from(new Set(data.map((d) => d.series || "default")));
+    const seriesNames = Array.from(
+      new Set(data.map((d) => d.series || "default")),
+    );
     const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(seriesNames);
 
     const dataBySeries = Array.from(
       d3.group(data, (d) => d.series || "default"),
-      ([key, value]) => ({ key, value })
+      ([key, value]) => ({ key, value }),
     );
 
     const visibilityState: { [key: string]: boolean } = {};
@@ -109,11 +111,10 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
         .attr("opacity", 0.3)
         .attr("d", area as any)
         .style("display", function (d: any) {
-           const parentNode = this.parentNode as Element;
-           const seriesKey = (d3.select(parentNode).datum() as any).key;
-           return visibilityState[seriesKey] ? null : "none";
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return visibilityState[seriesKey] ? null : "none";
         });
-
 
       enteringSeriesGroups.append("path").attr("class", "line");
       seriesGroups
@@ -126,19 +127,24 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
         })
         .attr("fill", "none")
         .attr("stroke", function (d: any) {
-            const parentNode = this.parentNode as Element;
-            const seriesKey = (d3.select(parentNode).datum() as any).key;
-            return colorScale(seriesKey) as string;
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return colorScale(seriesKey) as string;
         })
         .attr("stroke-width", 1.5)
         .attr("d", line as any)
         .style("display", function (d: any) {
-            const parentNode = this.parentNode as Element;
-            const seriesKey = (d3.select(parentNode).datum() as any).key;
-            return visibilityState[seriesKey] ? null : "none";
+          const parentNode = this.parentNode as Element;
+          const seriesKey = (d3.select(parentNode).datum() as any).key;
+          return visibilityState[seriesKey] ? null : "none";
         });
 
-      enteringSeriesGroups.selectAll(".data-point").data(function (d: any) { return d.value; }).enter()
+      enteringSeriesGroups
+        .selectAll(".data-point")
+        .data(function (d: any) {
+          return d.value;
+        })
+        .enter()
         .append("circle")
         .attr("class", "data-point")
         .attr("r", 5)
@@ -149,10 +155,10 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
             const tooltip = d3.select(tooltipRef.current);
             tooltip.style("display", "block");
             tooltip.html(
-                `Series: ${d.series}<br/>` +
+              `Series: ${d.series}<br/>` +
                 `Year: ${d.year}<br/>` +
                 `Trust Score: ${d.trust_score.toFixed(2)}<br/>` +
-                `CI: [${d.confidence_interval[0].toFixed(2)}, ${d.confidence_interval[1].toFixed(2)}]`
+                `CI: [${d.confidence_interval[0].toFixed(2)}, ${d.confidence_interval[1].toFixed(2)}]`,
             );
           }
         })
@@ -171,7 +177,9 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
       g.selectAll(".data-point")
         .attr("cx", (d: any) => xScale(d.year))
         .attr("cy", (d: any) => yScale(d.trust_score))
-        .style("display", (d: any) => (visibilityState[d.series] ? null : "none"));
+        .style("display", (d: any) =>
+          visibilityState[d.series] ? null : "none",
+        );
     };
 
     drawChart(d3.zoomIdentity);
@@ -206,7 +214,10 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
     const zoom = d3
       .zoom<SVGSVGElement, unknown>()
       .scaleExtent([1, 10])
-      .translateExtent([[0, 0], [width, height]])
+      .translateExtent([
+        [0, 0],
+        [width, height],
+      ])
       .on("zoom", (event) => {
         const { transform } = event; // Destructure transform
         drawChart(transform);
