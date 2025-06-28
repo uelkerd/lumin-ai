@@ -248,7 +248,7 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({
         [width, height],
       ]) // Restrict pan to the chart area
       .on("zoom", (event) => {
-        const {transform} = event;
+        const { transform } = event;
         drawChart(transform); // Redraw chart with new transform
       });
 
