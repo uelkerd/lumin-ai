@@ -112,7 +112,7 @@ const DemographicAnalysisChart: React.FC = () => {
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("x", (d) => x(d.demographic_segment)!)
+        .attr("x", (d) => x(d.demographic_segment) ?? 0)
         .attr("y", (d) => y(d.trust_score))
         .attr("width", x.bandwidth())
         .attr("height", (d) => adjustedHeight - y(d.trust_score))
