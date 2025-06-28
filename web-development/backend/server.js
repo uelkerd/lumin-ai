@@ -120,35 +120,71 @@ app.get("/api/data", (req, res) => {
 
 // API endpoints using mock data
 app.get("/api/v1/data-science/trust-metrics", async (req, res) => {
-  const data = await getTrustMetricsMock();
-  res.json(data);
+  try {
+    const data = await getTrustMetricsMock();
+    res.json(data);
+  } catch (error) {
+    console.error("Error in /api/v1/data-science/trust-metrics:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.get("/api/v1/data-science/demographics", async (req, res) => {
-  const data = await getDemographicsMock();
-  res.json(data);
+  try {
+    const data = await getDemographicsMock();
+    res.json(data);
+  } catch (error) {
+    console.error("Error in /api/v1/data-science/demographics:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.get("/api/v1/data-science/correlations", async (req, res) => {
-  const data = await getCorrelationsMock();
-  res.json(data);
+  try {
+    const data = await getCorrelationsMock();
+    res.json(data);
+  } catch (error) {
+    console.error("Error in /api/v1/data-science/correlations:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post("/api/v1/deep-learning/sentiment-analysis", async (req, res) => {
-  // In a real scenario, you would use req.body.text
-  const data = await analyzeSentimentMock();
-  res.json(data);
+  try {
+    // In a real scenario, you would use req.body.text
+    const data = await analyzeSentimentMock();
+    res.json(data);
+  } catch (error) {
+    console.error("Error in /api/v1/deep-learning/sentiment-analysis:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
-app.post("/api/v1/deep-learning/batch-sentiment-analysis", async (req, res) => {
-  // In a real scenario, you would use req.body (array of texts)
-  const data = await batchAnalyzeSentimentMock();
-  res.json(data);
-});
+app.post(
+  "/api/v1/deep-learning/batch-sentiment-analysis",
+  async (req, res) => {
+    try {
+      // In a real scenario, you would use req.body (array of texts)
+      const data = await batchAnalyzeSentimentMock();
+      res.json(data);
+    } catch (error) {
+      console.error(
+        "Error in /api/v1/deep-learning/batch-sentiment-analysis:",
+        error
+      );
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
 app.get("/api/v1/deep-learning/sentiment-trends", async (req, res) => {
-  const data = await getSentimentTrendsMock();
-  res.json(data);
+  try {
+    const data = await getSentimentTrendsMock();
+    res.json(data);
+  } catch (error) {
+    console.error("Error in /api/v1/deep-learning/sentiment-trends:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(port, () => {
