@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getDemographics } from "../../src/api";
 import * as d3 from "d3";
 
@@ -104,11 +104,11 @@ const DemographicAnalysisChart: React.FC = () => {
       .attr("fill", "steelblue"); // You can add more sophisticated coloring later
   }, [data, selectedCategory]); // Redraw chart when data or selectedCategory changes
 
-  const handleCategoryChange = (
+  const handleCategoryChange = useCallback((
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSelectedCategory(event.target.value);
-  };
+  }, []);
 
   return (
     <div>
