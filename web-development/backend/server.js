@@ -113,18 +113,9 @@ const batchAnalyzeSentimentMock = () =>
   simulateApiCall(mockBatchSentimentResponse);
 const getSentimentTrendsMock = () => simulateApiCall(mockSentimentTrends);
 
-// Basic GET endpoint - modified
-app.get("/api/data", (req, res) => {
-  res.json({ message: "Backend MVP is running." });
-});
-
 // Basic GET endpoint
 app.get("/api/data", (req, res) => {
-  // This will be replaced later with calls to the Data Science and Deep Learning APIs
-  const mockData = {
-    message: "Hello from the backend MVP!",
-  };
-  res.json(mockData);
+  res.json({ message: "Backend MVP is running." });
 });
 
 // API endpoints using mock data
