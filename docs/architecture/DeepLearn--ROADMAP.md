@@ -6,7 +6,7 @@ The Deep Learning track focuses on developing neural networks for governance ana
 
 ### Technical Foundation
 - **Primary Focus**: Sentiment analysis of governance discussions and policy documents
-- **Core Technologies**: Python, TensorFlow/PyTorch, scikit-learn, NLTK, Transformers
+- **Core Technologies**: Python, PyTorch, scikit-learn, NLTK, Transformers
 - **Data Sources**: Austria Democracy Radar Wave surveys, governance proposal texts, voting discussion corpora
 - **Output**: Trained models accessible via API for other tracks
 
@@ -61,7 +61,7 @@ The Deep Learning track focuses on developing neural networks for governance ana
 - API endpoint design for model serving
 
 **Key Activities**:
-- Implement feedforward neural network using TensorFlow/Keras
+- Implement feedforward neural network using PyTorch
 - Experiment with different architectures (varying hidden layers, activation functions)
 - Compare performance against baseline traditional ML models
 - Design REST API structure for model deployment

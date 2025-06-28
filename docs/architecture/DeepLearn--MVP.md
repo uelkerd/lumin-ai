@@ -14,7 +14,7 @@ The Deep Learning track MVP represents the core functionality that will be deliv
 **Technical Specifications**:
 - Input: Raw text from governance documents, policy proposals, or democratic discourse
 - Output: Sentiment classification (positive, negative, neutral) with confidence scores
-- Architecture: Feedforward neural network or simple LSTM implemented in TensorFlow/Keras
+- Architecture: Feedforward neural network or simple LSTM implemented in PyTorch
 - Training Data: Austria Democracy Radar Wave survey responses and governance text corpus
 - Performance Target: Minimum 80% accuracy on test set of governance texts
 

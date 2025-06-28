@@ -15,7 +15,6 @@ with open(os.path.join("src", "lumin_ai", "__init__.py"), encoding="utf-8") as f
 
 extras = {
     "torch": ["torch>=1.12.0"],
-    "tensorflow": ["tensorflow>=2.9.0"],
     "transformers": ["transformers>=4.20.0"],
     "data": [
         "pandas>=1.3.0",
@@ -43,7 +42,7 @@ extras = {
 }
 
 # Create a combined 'ml' extra for convenience
-extras["ml"] = extras["torch"] + extras["tensorflow"] + extras["transformers"]
+extras["ml"] = extras["torch"] + extras["transformers"]
 
 # Create an 'all' extra that includes all optional dependencies
 extras["all"] = extras["ml"] + extras["data"] + extras["nlp"] + extras["jupyter"]

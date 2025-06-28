@@ -19,7 +19,7 @@ LUMIN.AI represents an ambitious interdisciplinary project combining Deep Learni
 **Project-Wide Objectives**: Establish robust foundation across all tracks with clear integration protocols and collaborative workflows
 
 #### Deep Learning Track Focus
-- Development environment setup (Python, TensorFlow/PyTorch, data science stack)
+- Development environment setup (Python, PyTorch, data science stack)
 - Austria Democracy Radar dataset download and initial exploration
 - Basic sentiment analysis tutorial completion and team formation
 - Integration planning with Data Science track for labeled dataset exchange

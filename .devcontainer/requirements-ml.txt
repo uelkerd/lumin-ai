@@ -70,8 +70,9 @@ tokenizers==0.14.1
 textblob==0.17.1
 langdetect==1.0.9
 
-# Essential monitoring (compatible with TensorFlow 2.13.0)
-tensorboard==2.13.0
+# Essential monitoring (compatible with PyTorch)
+# Note: TensorBoard can be installed separately if needed for PyTorch
+# pip install tensorboard
 
 # Advanced ML (uncomment if needed for project)
 transformers==4.50.0

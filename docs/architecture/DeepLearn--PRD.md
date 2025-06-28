@@ -305,7 +305,7 @@ This document outlines the functional and non-functional requirements for the De
 
 ### Technical Constraints
 - **Programming Language**: Python required for neural network implementation and data science integration
-- **Framework Compatibility**: Must integrate with TensorFlow or PyTorch for neural network development
+- **Framework Compatibility**: Must integrate with PyTorch for neural network development
 - **Deployment Environment**: System must operate within TechLabs infrastructure constraints
 - **Data Processing**: Limited to Austria Democracy Radar dataset and related governance texts
 
@@ -318,7 +318,7 @@ This document outlines the functional and non-functional requirements for the De
 - **Data Availability**: Austria Democracy Radar dataset remains accessible throughout project
 - **Team Expertise**: Team members will develop necessary neural network and API development skills
 - **Integration Cooperation**: Other tracks will provide necessary integration specifications and support
-- **Technology Stability**: Core technologies (Python, TensorFlow/PyTorch, Flask/FastAPI) remain stable
+- **Technology Stability**: Core technologies (Python, PyTorch, Flask/FastAPI) remain stable
 
 ---
 
