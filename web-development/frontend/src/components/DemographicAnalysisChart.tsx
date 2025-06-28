@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { getDemographics } from "../../src/api";
 import * as d3 from "d3";
 
@@ -15,8 +15,9 @@ const DemographicAnalysisChart: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const svgRef = React.useRef<SVGSVGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const margin = { top: 20, right: 30, bottom: 40, left: 90 };
+  const margin = { top: 20, right: 30, bottom: 80, left: 90 };
   const [selectedCategory, setSelectedCategory] = useState<string>("age");
 
   const demographicCategories = [
@@ -63,15 +64,6 @@ const DemographicAnalysisChart: React.FC = () => {
     if (!data || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        drawChart(width, height);
-      }
-    });
-
-    resizeObserver.observe(svgRef.current);
 
     const drawChart = (width: number, height: number) => {
       const adjustedWidth = width - margin.left - margin.right;
@@ -126,6 +118,17 @@ const DemographicAnalysisChart: React.FC = () => {
         .attr("height", (d) => adjustedHeight - y(d.trust_score))
         .attr("fill", "steelblue");
     };
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        drawChart(width, height);
+      }
+    });
+
+    if (svgRef.current) {
+      resizeObserver.observe(svgRef.current);
+    }
 
     return () => {
       resizeObserver.disconnect();
