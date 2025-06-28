@@ -9,31 +9,31 @@ matplotlib==3.7.1
 seaborn==0.12.2
 
 # Machine Learning
-scikit-learn==1.2.2
+scikit-learn==1.5.0
 statsmodels==0.14.0
 
 # NLP
-nltk==3.8.1
+nltk==3.9
 
 # Deep Learning - installed separately to avoid conflicts
-torch==2.0.1
+torch==2.7.1
 
 # Jupyter
 jupyter==1.0.0
-jupyterlab==3.6.3
+jupyterlab==3.6.8
 notebook==7.4.3
 ipywidgets==8.0.4
 
 # Optional packages - uncomment if needed
 spacy==3.5.2
 textblob==0.17.1
-transformers==4.30.2
+transformers==4.50.0
 fastapi==0.95.2
 uvicorn==0.22.0
-requests==2.31.0
+requests==2.32.4
 python-dotenv==1.0.0
-tqdm==4.65.0
-pymongo==4.5.0
+tqdm==4.66.3
+pymongo==4.6.3
 boto3==1.28.57
 s3fs==2023.9.2
 # Removed tensorboard as it's included with TensorFlow
