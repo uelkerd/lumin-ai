@@ -1,12 +1,11 @@
 const express = require("express");
-const axios = require("axios"); // Import axios
 const app = express();
 const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const asyncHandler = require("./utils/asyncHandler");
 app.use(cors());
 app.use(express.json());
-const port = process.env.PORT || 3001; // Or another port as needed
+const PORT = process.env.PORT || 3001;
 
 // Mock Data based on refined API specifications
 const mockTrustMetrics = [
@@ -172,6 +171,6 @@ app.get(
 // Error handling middleware should be last
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Backend MVP listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Backend MVP listening at http://localhost:${PORT}`);
 });

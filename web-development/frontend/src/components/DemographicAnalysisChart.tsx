@@ -28,81 +28,109 @@ const DemographicAnalysisChart: React.FC = () => {
   ];
 
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const demographicData = await getDemographics({
-          demographic: selectedCategory,
-        });
+        const demographicData = await getDemographics(
+          {
+            demographic: selectedCategory,
+          },
+          { signal },
+        );
         setData(demographicData);
-      } catch (err) {
-        setError("Failed to fetch demographic data.");
-        console.error("Error fetching demographic data:", err);
+      } catch (err: any) {
+        if (err.name !== "CanceledError") {
+          setError("Failed to fetch demographic data.");
+          console.error("Error fetching demographic data:", err);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
+
+    return () => {
+      controller.abort();
+    };
   }, [selectedCategory]);
 
   useEffect(() => {
     if (!data || !svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    const width = svgRef.current.clientWidth - margin.left - margin.right;
-    const height = svgRef.current.clientHeight - margin.top - margin.bottom;
 
-    // Clear previous chart elements
-    svg.selectAll("*").remove();
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        drawChart(width, height);
+      }
+    });
 
-    const g = svg
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+    resizeObserver.observe(svgRef.current);
 
-    const x = d3.scaleBand().range([0, width]).padding(0.1);
+    const drawChart = (width: number, height: number) => {
+      const adjustedWidth = width - margin.left - margin.right;
+      const adjustedHeight = height - margin.top - margin.bottom;
 
-    const y = d3.scaleLinear().range([height, 0]);
+      // Clear previous chart elements
+      svg.selectAll("*").remove();
 
-    // Filter out empty or duplicate demographic_segment values
-    const filteredData = data
-      .filter(
-        (d) => d.demographic_segment && d.demographic_segment.trim() !== "",
-      )
-      .filter(
-        (d, i, arr) =>
-          arr.findIndex(
-            (item) => item.demographic_segment === d.demographic_segment,
-          ) === i,
-      );
+      const g = svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    x.domain(filteredData.map((d) => d.demographic_segment));
-    y.domain([0, d3.max(filteredData, (d) => d.trust_score) || 1]); // Ensure y-domain starts at 0
+      const x = d3.scaleBand().range([0, adjustedWidth]).padding(0.1);
 
-    // Add X axis
-    g.append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end");
+      const y = d3.scaleLinear().range([adjustedHeight, 0]);
 
-    // Add Y axis
-    g.append("g").call(d3.axisLeft(y));
+      // Filter out empty or duplicate demographic_segment values
+      const filteredData = data
+        .filter(
+          (d) => d.demographic_segment && d.demographic_segment.trim() !== "",
+        )
+        .filter(
+          (d, i, arr) =>
+            arr.findIndex(
+              (item) => item.demographic_segment === d.demographic_segment,
+            ) === i,
+        );
 
-    // Add bars
-    g.selectAll(".bar")
-      .data(filteredData)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", (d) => x(d.demographic_segment)!)
-      .attr("y", (d) => y(d.trust_score))
-      .attr("width", x.bandwidth())
-      .attr("height", (d) => height - y(d.trust_score))
-      .attr("fill", "steelblue"); // You can add more sophisticated coloring later
-  }, [data, selectedCategory]); // Redraw chart when data or selectedCategory changes
+      x.domain(filteredData.map((d) => d.demographic_segment));
+      y.domain([0, d3.max(filteredData, (d) => d.trust_score) || 1]); // Ensure y-domain starts at 0
+
+      // Add X axis
+      g.append("g")
+        .attr("transform", `translate(0,${adjustedHeight})`)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+      // Add Y axis
+      g.append("g").call(d3.axisLeft(y));
+
+      // Add bars
+      g.selectAll(".bar")
+        .data(filteredData)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", (d) => x(d.demographic_segment)!)
+        .attr("y", (d) => y(d.trust_score))
+        .attr("width", x.bandwidth())
+        .attr("height", (d) => adjustedHeight - y(d.trust_score))
+        .attr("fill", "steelblue");
+    };
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [data, selectedCategory, margin]);
 
   const handleCategoryChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -128,7 +156,10 @@ const DemographicAnalysisChart: React.FC = () => {
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       {data && (
         <div>
-          <svg ref={svgRef} width="600" height="400" /> {/* Add SVG element */}
+          <svg
+            ref={svgRef}
+            style={{ width: "100%", height: "400px" }}
+          />
         </div>
       )}
     </div>
