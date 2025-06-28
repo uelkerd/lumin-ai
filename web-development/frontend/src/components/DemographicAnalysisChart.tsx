@@ -1,166 +1,231 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { getDemographics } from "../../src/api";
-import * as d3 from "d3";
+
+import React, { useState, useEffect } from 'react';
 
 interface DemographicData {
-  demographic_category: string;
-  demographic_segment: string;
-  trust_score: number;
-  statistical_significance: string;
-  confidence_interval: [number, number];
+  category: string;
+  young: number;
+  middleAge: number;
+  senior: number;
+  male: number;
+  female: number;
+  urban: number;
+  rural: number;
 }
 
 const DemographicAnalysisChart: React.FC = () => {
-  const [data, setData] = useState<DemographicData[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const svgRef = React.useRef<SVGSVGElement | null>(null);
-
-  const margin = { top: 20, right: 30, bottom: 80, left: 90 };
-  const [selectedCategory, setSelectedCategory] = useState<string>("age");
-
-  const demographicCategories = [
-    "age",
-    "education",
-    "income",
-    "regional",
-    "political-affiliation",
-  ];
+  const [data, setData] = useState<DemographicData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeView, setActiveView] = useState<'age' | 'gender' | 'location'>('age');
 
   useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const demographicData = await getDemographics(
-          {
-            demographic: selectedCategory,
-          },
-          { signal },
-        );
-        setData(demographicData);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name !== "CanceledError") {
-          setError("Failed to fetch demographic data.");
-          console.error("Error fetching demographic data:", err);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const mockData: DemographicData[] = [
+        {
+          category: 'Trust in Government',
+          young: 5.8, middleAge: 6.5, senior: 7.2,
+          male: 6.3, female: 6.8,
+          urban: 6.1, rural: 6.9
+        },
+        {
+          category: 'Transparency Rating',
+          young: 6.9, middleAge: 7.5, senior: 8.1,
+          male: 7.2, female: 7.8,
+          urban: 7.6, rural: 7.4
+        },
+        {
+          category: 'Civic Participation',
+          young: 5.2, middleAge: 6.8, senior: 7.9,
+          male: 6.1, female: 6.7,
+          urban: 6.5, rural: 6.2
+        },
+        {
+          category: 'Accountability Score',
+          young: 6.1, middleAge: 7.2, senior: 7.8,
+          male: 6.9, female: 7.4,
+          urban: 7.2, rural: 7.0
         }
-      } finally {
-        setLoading(false);
-      }
+      ];
+      
+      setData(mockData);
+      setIsLoading(false);
     };
 
     fetchData();
+  }, []);
 
-    return () => {
-      controller.abort();
-    };
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    if (!data || !svgRef.current) return;
-
-    const svg = d3.select(svgRef.current);
-
-    const drawChart = (width: number, height: number) => {
-      const adjustedWidth = width - margin.left - margin.right;
-      const adjustedHeight = height - margin.top - margin.bottom;
-
-      // Clear previous chart elements
-      svg.selectAll("*").remove();
-
-      const g = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-      const x = d3.scaleBand().range([0, adjustedWidth]).padding(0.1);
-
-      const y = d3.scaleLinear().range([adjustedHeight, 0]);
-
-      // Filter out empty or duplicate demographic_segment values
-      const filteredData = data
-        .filter(
-          (d) => d.demographic_segment && d.demographic_segment.trim() !== "",
-        )
-        .filter(
-          (d, i, arr) =>
-            arr.findIndex(
-              (item) => item.demographic_segment === d.demographic_segment,
-            ) === i,
-        );
-
-      x.domain(filteredData.map((d) => d.demographic_segment));
-      y.domain([0, d3.max(filteredData, (d) => d.trust_score) || 1]); // Ensure y-domain starts at 0
-
-      // Add X axis
-      g.append("g")
-        .attr("transform", `translate(0,${adjustedHeight})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-
-      // Add Y axis
-      g.append("g").call(d3.axisLeft(y));
-
-      // Add bars
-      g.selectAll(".bar")
-        .data(filteredData)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("x", (d) => x(d.demographic_segment) ?? 0)
-        .attr("y", (d) => y(d.trust_score))
-        .attr("width", x.bandwidth())
-        .attr("height", (d) => adjustedHeight - y(d.trust_score))
-        .attr("fill", "steelblue");
-    };
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        drawChart(width, height);
-      }
-    });
-
-    if (svgRef.current) {
-      resizeObserver.observe(svgRef.current);
+  const getViewData = (item: DemographicData) => {
+    switch (activeView) {
+      case 'age':
+        return [
+          { label: '18-35', value: item.young, color: '#29B6F6' },
+          { label: '36-55', value: item.middleAge, color: '#10B981' },
+          { label: '55+', value: item.senior, color: '#F59E0B' }
+        ];
+      case 'gender':
+        return [
+          { label: 'Male', value: item.male, color: '#29B6F6' },
+          { label: 'Female', value: item.female, color: '#EF4444' }
+        ];
+      case 'location':
+        return [
+          { label: 'Urban', value: item.urban, color: '#29B6F6' },
+          { label: 'Rural', value: item.rural, color: '#10B981' }
+        ];
+      default:
+        return [];
     }
+  };
 
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [data, selectedCategory, margin]);
-
-  const handleCategoryChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedCategory(event.target.value);
-    },
-    [],
+  const ViewToggle: React.FC = () => (
+    <div className="flex gap-sm mb-lg justify-center">
+      {[
+        { key: 'age', label: 'Age Groups', icon: '👥' },
+        { key: 'gender', label: 'Gender', icon: '⚧' },
+        { key: 'location', label: 'Location', icon: '🏘️' }
+      ].map((view) => (
+        <button
+          key={view.key}
+          onClick={() => setActiveView(view.key as any)}
+          className={`btn ${activeView === view.key ? 'btn-primary' : 'btn-secondary'}`}
+        >
+          <span>{view.icon}</span>
+          {view.label}
+        </button>
+      ))}
+    </div>
   );
 
-  return (
-    <div>
-      <h2>Demographic Analysis</h2>
-      <div style={{ marginBottom: "10px" }}>
-        Select Demographic Category:
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-          {demographicCategories.map((category) => (
-            <option key={category} value={category}>
-              {category.charAt(0).toUpperCase() + category.slice(1)}
-            </option>
+  const BarChart: React.FC<{ item: DemographicData; index: number }> = ({ item, index }) => {
+    const viewData = getViewData(item);
+    const maxValue = Math.max(...viewData.map(d => d.value));
+    
+    return (
+      <div className="card">
+        <h4 className="text-lg font-semibold mb-md gradient-text">{item.category}</h4>
+        <div className="space-y-md">
+          {viewData.map((segment, segmentIndex) => (
+            <div key={segment.label} className="space-y-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium" style={{ color: segment.color }}>
+                  {segment.label}
+                </span>
+                <span className="text-sm font-bold">
+                  {segment.value.toFixed(1)}
+                </span>
+              </div>
+              <div className="relative h-6 bg-gray-700 rounded-full overflow-hidden">
+                <div 
+                  className="absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out"
+                  style={{
+                    backgroundColor: segment.color,
+                    width: `${(segment.value / 10) * 100}%`,
+                    animationDelay: `${(index * 200) + (segmentIndex * 100)}ms`
+                  }}
+                />
+                <div 
+                  className="absolute top-0 left-0 h-full rounded-full opacity-30"
+                  style={{
+                    backgroundColor: segment.color,
+                    width: `${(segment.value / maxValue) * 100}%`,
+                    animationDelay: `${(index * 200) + (segmentIndex * 100)}ms`
+                  }}
+                />
+              </div>
+            </div>
           ))}
-        </select>
-      </div>
-      {loading && <p>Loading demographic data...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-      {data && (
-        <div>
-          <svg ref={svgRef} style={{ width: "100%", height: "400px" }} />
         </div>
-      )}
+        
+        {/* Quick insights */}
+        <div className="mt-md p-sm rounded-md" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <div className="text-xs text-silver-grey">
+            {(() => {
+              const highest = viewData.reduce((max, current) => 
+                current.value > max.value ? current : max
+              );
+              const gap = Math.max(...viewData.map(d => d.value)) - Math.min(...viewData.map(d => d.value));
+              return `Highest: ${highest.label} (${highest.value.toFixed(1)}) • Gap: ${gap.toFixed(1)}`;
+            })()}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <div className="loading-text">Loading demographic analysis...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <ViewToggle />
+      
+      <div className="grid grid-cols-2 gap-lg mb-lg">
+        {data.map((item, index) => (
+          <BarChart key={item.category} item={item} index={index} />
+        ))}
+      </div>
+
+      {/* Summary Statistics */}
+      <div className="glass-card p-lg">
+        <h4 className="text-lg font-semibold mb-md gradient-text">Key Insights</h4>
+        <div className="grid grid-cols-1 gap-md text-sm">
+          {activeView === 'age' && (
+            <>
+              <div className="flex justify-between">
+                <span>Most Trusting Age Group:</span>
+                <span className="font-medium">Seniors (55+)</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Highest Participation:</span>
+                <span className="font-medium">Seniors (7.9)</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Largest Trust Gap:</span>
+                <span className="font-medium">Civic Participation (2.7 points)</span>
+              </div>
+            </>
+          )}
+          {activeView === 'gender' && (
+            <>
+              <div className="flex justify-between">
+                <span>Higher Trust:</span>
+                <span className="font-medium">Female respondents</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Transparency Rating:</span>
+                <span className="font-medium">Female +0.6 points higher</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Participation Gap:</span>
+                <span className="font-medium">Female +0.6 points</span>
+              </div>
+            </>
+          )}
+          {activeView === 'location' && (
+            <>
+              <div className="flex justify-between">
+                <span>Higher Overall Trust:</span>
+                <span className="font-medium">Rural areas</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Transparency:</span>
+                <span className="font-medium">Urban +0.2 points</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Participation:</span>
+                <span className="font-medium">Urban +0.3 points</span>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
