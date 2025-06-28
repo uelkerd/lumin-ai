@@ -113,20 +113,17 @@ export const useTrustTimeSeriesChart = (
         enteringSeriesGroups.append("path").attr("class", "area");
         seriesGroups
           .merge(enteringSeriesGroups)
-          .select(".area")
-          .datum(function (d: SeriesData) {
-            return d.value.map((v) => ({
-              year: v.year,
-              ci: v.confidence_interval,
-            }));
-          })
+          .select<SVGPathElement>(".area")
+          .datum((d: SeriesData) =>
+            d.value.map((v) => ({ year: v.year, ci: v.confidence_interval })),
+          )
           .attr("fill", function () {
             const parentNode = this.parentNode as Element;
             const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
             return colorScale(seriesKey) as string;
           })
           .attr("opacity", 0.3)
-          .attr("d", area as any)
+          .attr("d", area)
           .style("display", function () {
             const parentNode = this.parentNode as Element;
             const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;
@@ -137,13 +134,10 @@ export const useTrustTimeSeriesChart = (
         enteringSeriesGroups.append("path").attr("class", "line");
         seriesGroups
           .merge(enteringSeriesGroups)
-          .select(".line")
-          .datum(function (d: SeriesData) {
-            return d.value.map((v) => ({
-              year: v.year,
-              trust_score: v.trust_score,
-            }));
-          })
+          .select<SVGPathElement>(".line")
+          .datum((d: SeriesData) =>
+            d.value.map((v) => ({ year: v.year, trust_score: v.trust_score })),
+          )
           .attr("fill", "none")
           .attr("stroke", function () {
             const parentNode = this.parentNode as Element;
@@ -151,7 +145,7 @@ export const useTrustTimeSeriesChart = (
             return colorScale(seriesKey) as string;
           })
           .attr("stroke-width", 1.5)
-          .attr("d", line as any)
+          .attr("d", line)
           .style("display", function () {
             const parentNode = this.parentNode as Element;
             const seriesKey = (d3.select(parentNode).datum() as SeriesData).key;

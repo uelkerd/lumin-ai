@@ -42,8 +42,8 @@ const DemographicAnalysisChart: React.FC = () => {
           { signal },
         );
         setData(demographicData);
-      } catch (err: any) {
-        if (err.name !== "CanceledError") {
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== "CanceledError") {
           setError("Failed to fetch demographic data.");
           console.error("Error fetching demographic data:", err);
         }
