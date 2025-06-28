@@ -104,11 +104,12 @@ const DemographicAnalysisChart: React.FC = () => {
       .attr("fill", "steelblue"); // You can add more sophisticated coloring later
   }, [data, selectedCategory]); // Redraw chart when data or selectedCategory changes
 
-  const handleCategoryChange = useCallback((
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    setSelectedCategory(event.target.value);
-  }, []);
+  const handleCategoryChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedCategory(event.target.value);
+    },
+    [],
+  );
 
   return (
     <div>
