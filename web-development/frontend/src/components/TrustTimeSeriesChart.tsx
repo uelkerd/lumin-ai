@@ -98,10 +98,10 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({
           .line<TrustDataPoint>()
           .x((d) => xScale(d.year))
           .y((d) => yScale(d.trust_score));
-        path.attr("d", updatedLine(data) as any);
+        path.attr("d", updatedLine(data));
       });
 
-    svg.call(zoom as any); // Apply zoom behavior to the SVG
+    svg.call(zoom); // Apply zoom behavior to the SVG
   }, [data]); // Redraw chart when data changes
 
   return <svg ref={svgRef} />;
