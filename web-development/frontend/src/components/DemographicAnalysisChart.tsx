@@ -113,8 +113,7 @@ const DemographicAnalysisChart: React.FC = () => {
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       {data && (
         <div>
-          <svg ref={svgRef} width="600" height="400" />{" "}
-          {/* Add SVG element */}
+          <svg ref={svgRef} width="600" height="400" /> {/* Add SVG element */}
         </div>
       )}
     </div>
