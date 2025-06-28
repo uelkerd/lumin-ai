@@ -15,7 +15,6 @@ const DemographicAnalysisChart: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const svgRef = React.useRef<SVGSVGElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const margin = { top: 20, right: 30, bottom: 80, left: 90 };
   const [selectedCategory, setSelectedCategory] = useState<string>("age");
