@@ -20,9 +20,11 @@ LUMIN.AI leverages machine learning to enhance democratic transparency by analyz
 Our MVP-first approach ensures meaningful deliverables while building towards advanced AI-powered policy insights.
 
 ### 🎯 Mission
+
 Transform complex governance data into actionable insights that strengthen democratic participation and transparency.
 
 ### 🗝️ Key Features
+
 - **Sentiment Analysis**: Neural networks analyzing public perception of governance
 - **Trust Correlation**: Statistical analysis linking transparency to public trust
 - **Interactive Dashboard**: Real-time visualization of democracy metrics
@@ -31,24 +33,28 @@ Transform complex governance data into actionable insights that strengthen democ
 ## 📊 Track Contributions
 
 ### 🧠 Deep Learning
+
 - Sentiment analysis on governance texts (85%+ accuracy target)
 - Participation prediction models
 - Text classification for governance themes
 - Advanced transformer models (enhanced phase)
 
 ### 📈 Data Science
+
 - Statistical analysis of 10,000+ survey responses
 - Transparency-trust correlation studies
 - Network analysis of governance relationships
 - Cross-protocol governance comparisons
 
 ### 💻 Web Development
+
 - React-based interactive dashboard
 - API integration with governance data sources
 - Real-time data visualization
 - Mobile-responsive design
 
 ### 🎨 UX Design
+
 - User research with citizens and policymakers
 - Intuitive data visualization interfaces
 - Accessibility-first design approach
@@ -57,6 +63,7 @@ Transform complex governance data into actionable insights that strengthen democ
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.9+
 - Node.js 16+
 - Git
@@ -66,6 +73,7 @@ Transform complex governance data into actionable insights that strengthen democ
 ### Environment Configuration
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/yourusername/lumin-ai.git
 cd lumin-ai
@@ -76,11 +84,13 @@ git lfs pull     # Pull any LFS objects
 For security reasons, sensitive configuration should be managed through environment variables:
 
 1. Copy the example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Update the `.env` file with your specific configuration:
+
    ```bash
    # MongoDB Configuration
    MONGODB_USERNAME=your_username
@@ -95,17 +105,20 @@ For security reasons, sensitive configuration should be managed through environm
 ### Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/uelkerd/lumin-ai.git
    cd lumin-ai
    ```
 
 2. Open in VS Code:
+
    ```bash
    code .
    ```
 
 3. When prompted, reopen in container or use Command Palette:
+
    - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
    - Type "Dev Containers: Reopen in Container"
    - Select the option and wait for the container to build
@@ -115,6 +128,62 @@ For security reasons, sensitive configuration should be managed through environm
    - Set up MongoDB with proper indexes
    - Configure pre-commit hooks
    - Start all necessary services
+
+## 📦 Installation
+
+This project uses a modular dependency structure to allow for a lightweight installation. You can install the core dependencies and then add optional extras as needed.
+
+### Core Installation
+
+For a minimal installation, which includes the core application logic without data science or machine learning libraries, run:
+
+```bash
+pip install .
+```
+
+### Optional Dependencies
+
+You can install optional dependency groups based on your needs.
+
+- **Data Science**: For data manipulation, analysis, and visualization.
+
+  ```bash
+  pip install .[data]
+  ```
+
+- **Natural Language Processing**: For NLP tasks.
+
+  ```bash
+  pip install .[nlp]
+  ```
+
+- **Jupyter Environment**: For running Jupyter notebooks.
+
+  ```bash
+  pip install .[jupyter]
+  ```
+
+- **Machine Learning**: For machine learning tasks. This project uses PyTorch.
+  ```bash
+  pip install .[ml]
+  ```
+  The `ml` extra includes `torch` and `transformers`.
+
+### All-in-One Installation
+
+To install all optional dependencies at once, use the `all` extra:
+
+```bash
+pip install .[all]
+```
+
+### Development Setup
+
+For developers who need to run tests and use linting tools, the `dev` extra installs everything from `all` plus development-specific packages:
+
+```bash
+pip install .[dev]
+```
 
 ## 📁 Project Structure
 
@@ -130,14 +199,16 @@ For security reasons, sensitive configuration should be managed through environm
 This project uses Git Large File Storage (LFS) to manage large files like datasets, models, and media assets. Git LFS replaces large files with text pointers in Git, while storing the file contents on a remote server.
 
 ### Tracked File Types
-- Data files (*.csv, *.json, *.parquet, etc.)
-- Model files (*.pkl, *.h5, *.pt, etc.)
+
+- Data files (_.csv, _.json, \*.parquet, etc.)
+- Model files (_.pkl, _.h5, \*.pt, etc.)
 - Media files (images, audio, video)
-- Documents (*.pdf, *.pptx, etc.)
+- Documents (_.pdf, _.pptx, etc.)
 
 ### Working with Git LFS
 
 **Adding new large files:**
+
 ```bash
 # Files with tracked extensions are automatically handled by Git LFS
 git add path/to/large/file.h5
@@ -146,11 +217,13 @@ git push
 ```
 
 **Checking LFS status:**
+
 ```bash
 git lfs status
 ```
 
 **Pulling LFS objects:**
+
 ```bash
 git lfs pull
 ```
@@ -160,12 +233,14 @@ See the [.gitattributes](.gitattributes) file for a complete list of file types 
 ## 🗓️ Development Timeline
 
 ### MVP Phase (Weeks 1-6)
+
 - ✅ Basic sentiment analysis implementation
 - ✅ Core statistical analysis
 - ✅ Functional dashboard prototype
 - ✅ Initial user research
 
 ### Enhanced Phase (Weeks 7-10)
+
 - 🚧 Advanced transformer models
 - 🚧 Real-time blockchain integration
 - 🚧 Policy recommendation engine
@@ -181,6 +256,7 @@ See the [.gitattributes](.gitattributes) file for a complete list of file types 
 ## 🧪 Testing
 
 Run all tests:
+
 ```bash
 # Python tests
 pytest
@@ -192,11 +268,13 @@ npm test
 ## 🚢 Deployment
 
 ### Using Docker:
+
 ```bash
 docker-compose up -d
 ```
 
 ### Manual deployment:
+
 See [deployment guide](deployment/README.md) for detailed instructions.
 
 ## 📈 Performance Metrics
@@ -211,6 +289,7 @@ See [deployment guide](deployment/README.md) for detailed instructions.
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ### Commit Message Convention
+
 - `feat:` New features
 - `fix:` Bug fixes
 - `docs:` Documentation changes
@@ -222,11 +301,13 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## 📚 Resources
 
 ### External Links
+
 - [Austria Democracy Radar Data](https://data.aussda.at/dataset.xhtml?persistentId=doi:10.11587/GCSLIN)
 - [Project Presentation](docs/project-pitch.pdf)
 - [Figma Prototypes](ux-design/prototypes/figma-links.md)
 
 ### Research Foundation
+
 - Master's thesis: "Towards Inclusive Governance: Blockchain in Citizen Representation"
 - Austria case study showing +15% trust increase with transparency initiatives
 
@@ -287,13 +368,16 @@ The development container is configured with the following persistent volumes:
 
 1. **Avoid Nested Virtual Environments**:
    The container already provides a Python environment. To prevent accidentally nesting virtual environments, source the protection script:
+
    ```bash
    source prevent_nested_venv.sh
    ```
+
    This will prevent any attempt to activate a second virtual environment while one is already active.
 
 2. **BuildKit Optimization**:
    Ensure Docker BuildKit is enabled for optimal build performance:
+
    ```bash
    export DOCKER_BUILDKIT=1
    export COMPOSE_DOCKER_CLI_BUILD=1
@@ -301,6 +385,7 @@ The development container is configured with the following persistent volumes:
 
 3. **Non-Interactive Builds**:
    Use the provided build script for consistent builds:
+
    ```bash
    .devcontainer/build.sh
    ```
@@ -311,11 +396,13 @@ The development container is configured with the following persistent volumes:
 #### Troubleshooting
 
 **MongoDB Connection Issues**:
+
 - Check if the MongoDB container is running: `docker ps | grep governance-db`
 - Verify the environment variables in `.devcontainer/docker-compose.yml`
 - Try connecting manually: `mongosh mongodb://lumin:<your_password>@governance-db:27017/governance_analysis`
 
 **Container Build Failures**:
+
 - Check Docker logs: `docker logs lumin-ai-dev`
 - Ensure BuildKit is enabled: `echo $DOCKER_BUILDKIT`
 - Try rebuilding with `--no-cache`: `.devcontainer/build.sh --no-cache`
@@ -323,4 +410,5 @@ The development container is configured with the following persistent volumes:
 ---
 
 **Made with ❤️ by LUMIN.AI Team | TechLabs Berlin Summer 2025**
+
 # LFS hooks disabled temporarily
