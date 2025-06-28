@@ -5,12 +5,14 @@ Welcome to the LUMIN.AI development team! This guide will get you up and running
 ## 📋 Prerequisites
 
 ### Required Software
+
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (4.0+ recommended)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 - [Git](https://git-scm.com/) (2.30+ recommended)
 
 ### System Requirements
+
 - **RAM**: 8GB minimum, 16GB recommended
 - **Storage**: 20GB free space minimum
 - **CPU**: 4 cores recommended
@@ -19,22 +21,27 @@ Welcome to the LUMIN.AI development team! This guide will get you up and running
 ## 🎯 Quick Start (5 Minutes)
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/yourusername/lumin-ai.git
 cd lumin-ai
 ```
 
 ### 2. Open in VS Code
+
 ```bash
 code .
 ```
 
 ### 3. Launch Dev Container
+
 - VS Code will prompt: "Reopen in Container" → Click **Yes**
 - Or manually: `Ctrl+Shift+P` → "Dev Containers: Reopen in Container"
 
 ### 4. Wait for Setup (First time: 5-10 minutes)
+
 The container will automatically:
+
 - Build the development environment
 - Install Python 3.11 & Node.js 20
 - Set up MongoDB
@@ -42,6 +49,7 @@ The container will automatically:
 - Configure development tools
 
 ### 5. Verify Setup
+
 ```bash
 # Run the environment check
 ./scripts/dev_env_check.sh
@@ -57,17 +65,21 @@ python scripts/test_mongodb_connection.py
 If you are not using the provided Dev Container, you can set up your local environment manually. This project uses a modular dependency structure to keep the core installation lightweight.
 
 ### 1. Create a Virtual Environment
+
 It's highly recommended to use a virtual environment to manage project dependencies.
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # On Windows, use `.venv\\Scripts\\activate`
 ```
 
 ### 2. Install Dependencies
+
 You can now install the required packages.
 
 **Core Installation:**
 For a minimal setup, which is ideal for frontend or web backend development, install the core packages:
+
 ```bash
 pip install .
 ```
@@ -94,6 +106,7 @@ Based on your role, you can install additional packages:
 
 **Full Development Setup:**
 To install all dependencies required for development, including testing tools, use the `dev` extra:
+
 ```bash
 pip install .[dev]
 ```
@@ -101,6 +114,7 @@ pip install .[dev]
 ## 🏗️ Development Environment Overview
 
 ### What's Included
+
 - **Python 3.11**: ML/DS libraries, Jupyter, FastAPI
 - **Node.js 20**: React, TypeScript, web development
 - **MongoDB**: Local database for testing
@@ -108,6 +122,7 @@ pip install .[dev]
 - **Development Tools**: Git, Docker, formatters, linters
 
 ### Container Architecture
+
 ```
 ┌─────────────────────────────────────┐
 │           LUMIN.AI Container        │
@@ -121,6 +136,7 @@ pip install .[dev]
 ```
 
 ### Port Mappings
+
 - **3000**: Web Dashboard (React)
 - **8000**: ML API Services (FastAPI)
 - **9000**: Jupyter Notebooks
@@ -129,6 +145,7 @@ pip install .[dev]
 ## 🎨 Development Workflows
 
 ### Python/ML Development
+
 ```bash
 # Activate development environment (automatic in container)
 # Install additional packages
@@ -145,6 +162,7 @@ pytest tests/
 ```
 
 ### Web Development
+
 ```bash
 # Install npm packages
 npm install package-name
@@ -157,6 +175,7 @@ npm run build
 ```
 
 ### Database Operations
+
 ```bash
 # Connect to MongoDB
 mongosh mongodb://lumin:devpassword@governance-db:27017/governance_analysis # pragma: allowlist secret
@@ -172,19 +191,21 @@ docker logs lumin-governance-db
 
 A quick note on how to run the scripts in the `/scripts` directory:
 
-*   **Inside the Container**: Most scripts are designed to be run from *within* the dev container shell. This includes `container-env-check.sh`, `welcome-new-team-member.sh`, and the individual monitoring scripts.
-*   **From the Host Machine**: Some scripts, particularly those that interact with the Docker daemon itself (like `quick-health-check.sh` which runs `docker exec`), can be run from your host machine's terminal, but are primarily intended for use within the container to maintain a consistent environment.
+- **Inside the Container**: Most scripts are designed to be run from _within_ the dev container shell. This includes `container-env-check.sh`, `welcome-new-team-member.sh`, and the individual monitoring scripts.
+- **From the Host Machine**: Some scripts, particularly those that interact with the Docker daemon itself (like `quick-health-check.sh` which runs `docker exec`), can be run from your host machine's terminal, but are primarily intended for use within the container to maintain a consistent environment.
 
 When in doubt, run the script from the container's terminal prompt.
 
 ## ⚠️ Known Issues & Workarounds
 
 ### 🔧 NPM Permission Issues (Non-blocking)
+
 **Issue**: NPM may show permission errors due to root-owned directories.
 
 **Impact**: Affects web development workflows, but container is 95% functional.
 
 **Workaround**:
+
 ```bash
 # Fix ownership temporarily
 sudo chown -R lumin-dev:lumin-dev node_modules/
@@ -197,6 +218,7 @@ npm install --unsafe-perm
 **Planned Fix**: Container rebuild with proper user ownership.
 
 ### 🔧 Git LFS Issues (Resolved)
+
 **Issue**: Git LFS hooks cause errors due to missing binary.
 
 **Status**: ✅ **RESOLVED** - Hooks have been disabled temporarily.
@@ -204,18 +226,22 @@ npm install --unsafe-perm
 **Details**: Git operations work normally. LFS support will be added in future container rebuild.
 
 ### 🔧 Missing VS Code Extensions (Minor)
+
 **Issue**: 2 extensions failed installation:
+
 - `ms-toolsai.jupyter-cell-tags`
 - `ms-vscode.vscode-json`
 
 **Impact**: Minimal - core functionality unaffected.
 
 **Workaround**: Install manually if needed:
+
 ```bash
 code --install-extension ms-toolsai.jupyter-cell-tags
 ```
 
 ### 🔧 Pre-commit Hook Python Version
+
 **Issue**: Python version mismatch (3.10 vs 3.11) in pre-commit config.
 
 **Impact**: Pre-commit hooks may show warnings.
@@ -225,6 +251,7 @@ code --install-extension ms-toolsai.jupyter-cell-tags
 ## 🛠️ Troubleshooting Guide
 
 ### Container Won't Start
+
 ```bash
 # Check Docker status
 docker ps -a
@@ -237,6 +264,7 @@ docker-compose -f .devcontainer/docker-compose.yml build --no-cache
 ```
 
 ### VS Code Extensions Not Loading
+
 ```bash
 # Reload VS Code window
 Ctrl+Shift+P → "Developer: Reload Window"
@@ -246,6 +274,7 @@ Ctrl+Shift+P → "Extensions: Show Installed Extensions"
 ```
 
 ### MongoDB Connection Issues
+
 ```bash
 # Check MongoDB status
 docker logs lumin-governance-db
@@ -258,6 +287,7 @@ docker restart lumin-governance-db
 ```
 
 ### Performance Issues
+
 ```bash
 # Check Docker resource allocation
 docker stats
@@ -270,12 +300,15 @@ docker stats
 ## 📊 Container Health Monitoring
 
 ### Automated Health Checks
+
 The container includes built-in health monitoring:
+
 - **Container Health**: Checked every 30 seconds
 - **MongoDB Health**: Checked every 10 seconds
 - **Service Status**: Monitored continuously
 
 ### Manual Health Checks
+
 ```bash
 # Run comprehensive environment check
 ./scripts/dev_env_check.sh
@@ -293,6 +326,7 @@ docker logs lumin-ai-dev | grep -i health
 ## 🚀 Next Steps
 
 ### First Day Tasks
+
 1. ✅ Complete environment setup
 2. 📚 Read project documentation in `docs/`
 3. 🧪 Run existing tests: `pytest tests/`
@@ -300,6 +334,7 @@ docker logs lumin-ai-dev | grep -i health
 5. 📝 Review coding standards in `CONTRIBUTING.md`
 
 ### Development Best Practices
+
 - 🔄 **Commit often** - Small, focused changes
 - 🧪 **Test everything** - Unit and integration tests
 - 📚 **Document changes** - Clear commit messages
@@ -307,6 +342,7 @@ docker logs lumin-ai-dev | grep -i health
 - 🛡️ **Security first** - Never commit secrets
 
 ### Getting Help
+
 - 💬 **Team Chat**: Ask questions in development channel
 - 📖 **Documentation**: Check `docs/` directory
 - 🐛 **Issues**: Report bugs in project tracker
@@ -315,6 +351,7 @@ docker logs lumin-ai-dev | grep -i health
 ## 📈 Success Metrics
 
 ### You'll Know You're Ready When:
+
 - ✅ Container starts in under 2 minutes
 - ✅ All health checks pass
 - ✅ You can run Python and Node.js code
@@ -323,6 +360,7 @@ docker logs lumin-ai-dev | grep -i health
 - ✅ Git operations complete without errors
 
 ### Development Velocity Indicators:
+
 - **Setup Time**: < 10 minutes for new developers
 - **Container Rebuild**: < 5 minutes with cache
 - **Test Execution**: < 30 seconds for unit tests
@@ -331,12 +369,14 @@ docker logs lumin-ai-dev | grep -i health
 ## 🔮 Roadmap & Future Improvements
 
 ### Immediate (Next Sprint)
+
 - 🔧 Fix NPM permission issues
 - 📦 Add Git LFS support
 - 🔌 Install missing VS Code extensions
 - 🐍 Resolve pre-commit Python version conflicts
 
 ### Future Enhancements
+
 - 🚀 Container startup optimization
 - 📊 Advanced monitoring dashboard
 - 🔒 Enhanced security scanning
@@ -348,6 +388,7 @@ docker logs lumin-ai-dev | grep -i health
 ## 🎯 Quick Reference
 
 ### Essential Commands
+
 ```bash
 # Environment check
 ./scripts/dev_env_check.sh
@@ -366,6 +407,7 @@ docker logs lumin-ai-dev
 ```
 
 ### Important Files
+
 - `.devcontainer/`: Container configuration
 - `scripts/`: Development utilities
 - `docs/`: Project documentation
@@ -373,6 +415,7 @@ docker logs lumin-ai-dev
 - `.env.example`: Environment template
 
 ### Support Resources
+
 - 📚 [Project Documentation](./docs/)
 - 🐛 [Issue Tracker](https://github.com/your-org/lumin-ai/issues)
 - 💬 [Team Discord/Slack](#)
@@ -380,4 +423,4 @@ docker logs lumin-ai-dev
 
 ---
 
-*Welcome to the team! Let's build something amazing together! 🚀*
+_Welcome to the team! Let's build something amazing together! 🚀_
