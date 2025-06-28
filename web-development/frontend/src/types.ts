@@ -4,4 +4,4 @@ export interface TrustMetricsData {
   trust_score: number;
   confidence_interval: [number, number];
   demographic_segment: string;
-} 
+}
