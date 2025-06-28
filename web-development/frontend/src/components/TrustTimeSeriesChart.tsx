@@ -26,10 +26,7 @@ const TrustTimeSeriesChart: React.FC<{ data: TrustDataPoint[] }> = ({
         }}
       />
       <div ref={legendRef} className="legend-container" />
-      <svg
-        ref={svgRef}
-        style={{ width: "100%", height: "500px" }}
-      />
+      <svg ref={svgRef} style={{ width: "100%", height: "500px" }} />
     </div>
   );
 };
