@@ -104,7 +104,7 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({
     svg.call(zoom as any); // Apply zoom behavior to the SVG
   }, [data]); // Redraw chart when data changes
 
-  return <svg ref={svgRef}></svg>;
+  return <svg ref={svgRef} />;
 };
 
 export default TrustTimeSeriesChart;
