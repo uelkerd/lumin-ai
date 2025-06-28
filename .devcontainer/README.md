@@ -7,6 +7,7 @@ This directory contains configuration for a Docker-based development environment
 1. Ensure you have [Docker](https://www.docker.com/get-started) and [VS Code](https://code.visualstudio.com/) with the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension installed.
 
 2. Clone the repository and open it in VS Code:
+
    ```bash
    git clone https://github.com/yourusername/lumin-ai.git
    cd lumin-ai
@@ -16,6 +17,7 @@ This directory contains configuration for a Docker-based development environment
 3. Click "Reopen in Container" when prompted, or run the "Remote-Containers: Reopen in Container" command.
 
 4. If you prefer to build manually or want to customize the build:
+
    ```bash
    ./.devcontainer/build.sh
    ```
@@ -76,9 +78,11 @@ The environment includes pre-configured pre-commit hooks to maintain code qualit
 - **Prevent-nested-venv**: Avoids creating nested virtual environments
 
 You can activate the nested virtual environment prevention script manually:
+
 ```bash
 source /workspaces/lumin-ai/prevent_nested_venv.sh
 ```
+
 If you see `(.venv) (.venv)` in your prompt, you have nested environments and should run `deactivate` once before activating any environments.
 
 Development secrets are allowlisted in `.allowlist` to prevent pre-commit hooks from blocking commits with known development credentials.
@@ -118,11 +122,13 @@ Key environment variables that can be configured:
 If you encounter any issues with the container:
 
 1. Run the environment check script:
+
    ```bash
    ./scripts/dev_env_check.sh
    ```
 
 2. Verify MongoDB connectivity:
+
    ```bash
    python3 scripts/test_mongodb_connection.py
    ```
@@ -130,12 +136,14 @@ If you encounter any issues with the container:
 3. Check Docker resources in Docker Desktop settings (increase memory/CPU if needed)
 
 4. Review container logs:
+
    ```bash
    docker logs lumin-ai-dev
    docker logs lumin-governance-db
    ```
 
 5. For pre-commit hook issues, try:
+
    ```bash
    pre-commit run --all-files
    ```

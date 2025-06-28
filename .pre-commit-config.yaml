@@ -58,7 +58,7 @@ repos:
 
   # Repository 3: Ruff for Python linting and formatting
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.265'
+    rev: "v0.0.265"
     hooks:
       - id: ruff
         name: "Ruff linting"
@@ -98,7 +98,7 @@ repos:
         name: "Detect secrets"
         description: "Scans for accidentally committed secrets like API keys"
         exclude: "\\.allowlist|package-lock\\.json|yarn\\.lock|\\.devcontainer/docker-compose\\.yml|\\.secrets\\.baseline"
-        args: ['--baseline', '.secrets.baseline']
+        args: ["--baseline", ".secrets.baseline"]
 
   # Repository 7: Prevent nested virtual environments
   - repo: local
@@ -106,26 +106,30 @@ repos:
       - id: prevent-nested-venv
         name: Prevent nested virtual environments
         entry: bash
-        args: ['-c', 'if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then echo "⚠️  ERROR: Nested virtual environment detected!"; echo "❌  Current virtual environment: $VIRTUAL_ENV"; echo "🔄  Please run deactivate before activating another environment."; exit 1; fi; exit 0']
+        args:
+          [
+            "-c",
+            'if [ -n "$VIRTUAL_ENV" ] && [ $(echo "$VIRTUAL_ENV" | grep -c "venv") -gt 1 ]; then echo "⚠️  ERROR: Nested virtual environment detected!"; echo "❌  Current virtual environment: $VIRTUAL_ENV"; echo "🔄  Please run deactivate before activating another environment."; exit 1; fi; exit 0',
+          ]
         language: system
         pass_filenames: false
         always_run: true
 
 # Global configuration for all hooks
-default_stages: [pre-commit]  # Run hooks on commit by default
+default_stages: [pre-commit] # Run hooks on commit by default
 
 # Specific language requirements
 default_language_version:
-  python: python3.10  # Ensure consistent Python version across all hooks
+  python: python3.10 # Ensure consistent Python version across all hooks
 
 # Performance and behavior settings
-minimum_pre_commit_version: "3.0.0"  # Require recent pre-commit version
+minimum_pre_commit_version: "3.0.0" # Require recent pre-commit version
 
 # Fail fast - stop on first failure rather than running all hooks
-fail_fast: false  # Set to true if you want to stop on first failure
+fail_fast: false # Set to true if you want to stop on first failure
 
 # Configuration for specific file types
-files: ''  # Apply to all files by default
+files: "" # Apply to all files by default
 exclude: |
   (?x)^(
       \.git/|

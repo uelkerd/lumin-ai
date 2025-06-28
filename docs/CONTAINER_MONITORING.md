@@ -15,6 +15,7 @@ The LUMIN.AI monitoring system provides comprehensive oversight of your developm
 ## 🚀 Quick Setup (2 Minutes)
 
 ### 1. Install Monitoring System
+
 ```bash
 # Setup monitoring infrastructure
 ./scripts/setup-monitoring.sh
@@ -24,6 +25,7 @@ The LUMIN.AI monitoring system provides comprehensive oversight of your developm
 ```
 
 ### 2. Verify Installation
+
 ```bash
 # Quick health check
 ./scripts/quick-health-check.sh
@@ -33,6 +35,7 @@ The LUMIN.AI monitoring system provides comprehensive oversight of your developm
 ```
 
 ### 3. Check Status
+
 ```bash
 # View monitoring logs
 tail -f .logs/monitoring/health-monitor.log
@@ -69,24 +72,24 @@ ps aux | grep monitor
 
 ### Health Checks ✅
 
-| Check Type | Frequency | Timeout | Status |
-|------------|-----------|---------|--------|
-| Container Status | 30s | 10s | ✅ Active |
-| MongoDB Connectivity | 60s | 15s | ✅ Active |
-| Python Environment | 5m | 30s | ✅ Active |
-| Node.js Environment | 5m | 30s | ✅ Active |
-| Port Connectivity | 2m | 5s | ✅ Active |
-| Disk Usage | 5m | 10s | ✅ Active |
+| Check Type           | Frequency | Timeout | Status    |
+| -------------------- | --------- | ------- | --------- |
+| Container Status     | 30s       | 10s     | ✅ Active |
+| MongoDB Connectivity | 60s       | 15s     | ✅ Active |
+| Python Environment   | 5m        | 30s     | ✅ Active |
+| Node.js Environment  | 5m        | 30s     | ✅ Active |
+| Port Connectivity    | 2m        | 5s      | ✅ Active |
+| Disk Usage           | 5m        | 10s     | ✅ Active |
 
 ### Performance Metrics 📈
 
-| Metric | Collection Rate | Alert Thresholds | Retention |
-|--------|----------------|------------------|-----------|
-| CPU Usage | 5s | Warning: 70%, Critical: 90% | 7 days |
-| Memory Usage | 5s | Warning: 80%, Critical: 95% | 7 days |
-| Network I/O | 5s | Warning: 50MB/s, Critical: 100MB/s | 7 days |
-| Disk I/O | 5s | Warning: 100MB/s, Critical: 200MB/s | 7 days |
-| Container Uptime | 30s | N/A | 30 days |
+| Metric           | Collection Rate | Alert Thresholds                    | Retention |
+| ---------------- | --------------- | ----------------------------------- | --------- |
+| CPU Usage        | 5s              | Warning: 70%, Critical: 90%         | 7 days    |
+| Memory Usage     | 5s              | Warning: 80%, Critical: 95%         | 7 days    |
+| Network I/O      | 5s              | Warning: 50MB/s, Critical: 100MB/s  | 7 days    |
+| Disk I/O         | 5s              | Warning: 100MB/s, Critical: 200MB/s | 7 days    |
+| Container Uptime | 30s             | N/A                                 | 30 days   |
 
 ### Alert Types 🚨
 
@@ -98,34 +101,36 @@ ps aux | grep monitor
 ## 🛠️ Configuration
 
 ### Main Configuration (`monitoring.json`)
+
 ```json
 {
-    "monitoring": {
-        "enabled": true,
-        "interval_seconds": 30,
-        "retention_days": 7
-    },
-    "containers": {
-        "lumin-ai-dev": {
-            "resource_limits": {
-                "cpu_warning": 70,
-                "cpu_critical": 90,
-                "memory_warning": 80,
-                "memory_critical": 95
-            }
-        }
+  "monitoring": {
+    "enabled": true,
+    "interval_seconds": 30,
+    "retention_days": 7
+  },
+  "containers": {
+    "lumin-ai-dev": {
+      "resource_limits": {
+        "cpu_warning": 70,
+        "cpu_critical": 90,
+        "memory_warning": 80,
+        "memory_critical": 95
+      }
     }
+  }
 }
 ```
 
 ### Health Checks (`health-checks.yaml`)
+
 ```yaml
 health_checks:
   - name: "container_status"
     interval: 30
     timeout: 10
     containers: ["lumin-ai-dev", "lumin-governance-db"]
-  
+
   - name: "mongodb_connectivity"
     interval: 60
     timeout: 15
@@ -133,11 +138,12 @@ health_checks:
 ```
 
 ### Performance Monitoring (`performance.yaml`)
+
 ```yaml
 performance_monitoring:
   collection_interval: 5
   retention_period: "7d"
-  
+
   metrics:
     - name: "cpu_usage"
       warning_threshold: 70
@@ -147,6 +153,7 @@ performance_monitoring:
 ## 📊 Using the Web Dashboard
 
 ### Access Dashboard
+
 ```bash
 # Open in browser
 ./scripts/open-dashboard.sh
@@ -156,6 +163,7 @@ open .monitoring/dashboards/index.html
 ```
 
 ### Dashboard Features
+
 - **Real-time Metrics**: Live CPU, memory, and network usage
 - **Container Status**: Health indicators for all containers
 - **Alert Notifications**: Recent alerts and warnings
@@ -163,6 +171,7 @@ open .monitoring/dashboards/index.html
 - **Quick Actions**: Restart containers, view logs
 
 ### Dashboard Layout
+
 ```
 ╔════════════════════════════════════════╗
 ║          LUMIN.AI Monitoring           ║
@@ -228,6 +237,7 @@ python scripts/container-performance-monitor.py --export-csv --duration 600
 ## 📈 Understanding Metrics
 
 ### CPU Usage Patterns
+
 ```bash
 # Normal: 0-50% - Development work, background processes
 # High: 50-80% - Heavy compilation, data processing
@@ -235,6 +245,7 @@ python scripts/container-performance-monitor.py --export-csv --duration 600
 ```
 
 ### Memory Usage Guidelines
+
 ```bash
 # Normal: 0-60% - Regular development activities
 # High: 60-85% - Large datasets, multiple applications
@@ -242,19 +253,21 @@ python scripts/container-performance-monitor.py --export-csv --duration 600
 ```
 
 ### Alert Interpretation
-| Alert Type | Typical Cause | Action Required |
-|------------|---------------|-----------------|
-| High CPU | Heavy computation | Monitor, consider optimization |
-| High Memory | Large datasets | Review memory usage, restart if needed |
-| Container Down | Service failure | Check logs, restart container |
-| MongoDB Error | Database issue | Verify connection, check DB logs |
-| Disk Full | Insufficient space | Clean up files, expand storage |
+
+| Alert Type     | Typical Cause      | Action Required                        |
+| -------------- | ------------------ | -------------------------------------- |
+| High CPU       | Heavy computation  | Monitor, consider optimization         |
+| High Memory    | Large datasets     | Review memory usage, restart if needed |
+| Container Down | Service failure    | Check logs, restart container          |
+| MongoDB Error  | Database issue     | Verify connection, check DB logs       |
+| Disk Full      | Insufficient space | Clean up files, expand storage         |
 
 ## 🚨 Troubleshooting
 
 ### Common Issues
 
 #### Monitoring Not Starting
+
 ```bash
 # Check Docker daemon
 docker info
@@ -270,6 +283,7 @@ tail -f .logs/monitoring/health-monitor.log
 ```
 
 #### High Resource Usage
+
 ```bash
 # Identify resource-heavy processes
 docker stats
@@ -282,6 +296,7 @@ python scripts/container-performance-monitor.py --duration 300
 ```
 
 #### MongoDB Connection Issues
+
 ```bash
 # Test MongoDB directly
 docker exec lumin-governance-db mongosh --eval "db.adminCommand('ping')"
@@ -294,6 +309,7 @@ docker exec lumin-ai-dev ping governance-db
 ```
 
 #### Dashboard Not Loading
+
 ```bash
 # Check file existence
 ls -la .monitoring/dashboards/
@@ -323,6 +339,7 @@ cat .logs/monitoring/alerts.json | jq '.[] | select(.severity=="CRITICAL")'
 ## 🔄 Automation
 
 ### Cron Jobs Setup
+
 ```bash
 # Add to crontab
 crontab .monitoring/config/cron-monitoring.txt
@@ -335,6 +352,7 @@ crontab -l
 ```
 
 ### Automated Reporting
+
 ```bash
 # Daily performance report
 0 9 * * * python /workspace/scripts/container-performance-monitor.py --duration 300 --export-csv
@@ -347,6 +365,7 @@ crontab -l
 ```
 
 ### Integration with CI/CD
+
 ```yaml
 # GitHub Actions example
 - name: Container Health Check
@@ -361,12 +380,14 @@ crontab -l
 ## 📊 Performance Optimization
 
 ### Monitoring Overhead
+
 - **CPU Impact**: < 2% during normal operation
 - **Memory Usage**: ~50MB for monitoring processes
 - **Disk Space**: ~100MB/day for logs and metrics
 - **Network**: Minimal (internal Docker network only)
 
 ### Optimization Tips
+
 ```bash
 # Reduce monitoring frequency for better performance
 # Edit .monitoring/config/monitoring.json
@@ -391,6 +412,7 @@ crontab -l
 ## 🔮 Advanced Features
 
 ### Custom Metrics
+
 ```python
 # Add custom metrics to performance monitor
 def check_custom_metric():
@@ -401,6 +423,7 @@ def check_custom_metric():
 ```
 
 ### Integration with External Systems
+
 ```bash
 # Webhook notifications
 curl -X POST https://hooks.slack.com/... -d '{"text":"Alert: High CPU usage"}'
@@ -413,6 +436,7 @@ python scripts/log-to-database.py --metric cpu_usage --value 85
 ```
 
 ### API Endpoints
+
 ```bash
 # Health check API
 curl http://localhost:8080/api/health
@@ -427,6 +451,7 @@ curl http://localhost:8080/api/alerts
 ## 📚 Best Practices
 
 ### Monitoring Strategy
+
 1. **Start Simple**: Use default configurations initially
 2. **Monitor Trends**: Focus on patterns, not individual spikes
 3. **Set Realistic Thresholds**: Avoid alert fatigue
@@ -434,12 +459,14 @@ curl http://localhost:8080/api/alerts
 5. **Document Changes**: Track configuration modifications
 
 ### Alert Management
+
 - **Prioritize Critical Alerts**: Focus on service-affecting issues
 - **Group Related Alerts**: Avoid duplicate notifications
 - **Include Context**: Provide actionable information in alerts
 - **Test Alert Channels**: Verify notifications work correctly
 
 ### Data Management
+
 - **Regular Cleanup**: Archive old logs and metrics
 - **Backup Important Data**: Preserve historical performance data
 - **Monitor Storage Usage**: Prevent disk space issues
@@ -448,11 +475,13 @@ curl http://localhost:8080/api/alerts
 ## 🆘 Support and Resources
 
 ### Documentation
+
 - 📖 [Team Onboarding Guide](./TEAM_ONBOARDING.md)
 - 🐛 [Troubleshooting Guide](./TROUBLESHOOTING.md)
 - 🔧 [Container Configuration](../.devcontainer/README.md)
 
 ### Monitoring Files
+
 ```
 .monitoring/
 ├── config/
@@ -474,6 +503,7 @@ curl http://localhost:8080/api/alerts
 ```
 
 ### Getting Help
+
 1. **Check Logs**: Review `.logs/monitoring/` for detailed information
 2. **Run Diagnostics**: Use `./scripts/quick-health-check.sh`
 3. **Review Configuration**: Verify `.monitoring/config/` files
@@ -482,4 +512,4 @@ curl http://localhost:8080/api/alerts
 
 ---
 
-*Keep your containers healthy and your development environment optimized! 🚀* 
+_Keep your containers healthy and your development environment optimized! 🚀_

@@ -1,14 +1,14 @@
-
-
 ## 🎨 ux-design/README.md
 
 ```markdown
 # UX Design Track - LUMIN.AI
 
 ## Overview
+
 The UX Design track focuses on creating intuitive, accessible interfaces that make complex governance data understandable for citizens, researchers, and policymakers through user-centered design principles.
 
 ## 🎯 Track Objectives
+
 - Research user needs across diverse stakeholder groups
 - Design intuitive interfaces for complex data visualization
 - Ensure accessibility for all users (WCAG 2.1 AA)
@@ -16,26 +16,28 @@ The UX Design track focuses on creating intuitive, accessible interfaces that ma
 
 ## 📁 Directory Structure
 ```
+
 ux-design/
-├── research/               # User research materials
-│   ├── user-interviews/   # Interview docs & recordings
-│   ├── surveys/           # Survey design & results
-│   └── personas/          # User personas
-├── wireframes/            # Design iterations
-│   ├── low-fidelity/     # Initial sketches
-│   └── high-fidelity/    # Detailed designs
-├── prototypes/            # Interactive prototypes
-│   ├── figma-links.md    # Prototype URLs
-│   └── prototype-v1/     # Version history
-├── design-system/         # Component library
-│   ├── colors.md         # Color palette
-│   ├── typography.md     # Type system
-│   ├── components.md     # UI components
-│   └── assets/           # Icons, images
-└── usability-testing/     # Testing documentation
-    ├── test-plan.md      # Testing methodology
-    ├── test-results.md   # Findings
-    └── iterations.md     # Design changes
+├── research/ # User research materials
+│ ├── user-interviews/ # Interview docs & recordings
+│ ├── surveys/ # Survey design & results
+│ └── personas/ # User personas
+├── wireframes/ # Design iterations
+│ ├── low-fidelity/ # Initial sketches
+│ └── high-fidelity/ # Detailed designs
+├── prototypes/ # Interactive prototypes
+│ ├── figma-links.md # Prototype URLs
+│ └── prototype-v1/ # Version history
+├── design-system/ # Component library
+│ ├── colors.md # Color palette
+│ ├── typography.md # Type system
+│ ├── components.md # UI components
+│ └── assets/ # Icons, images
+└── usability-testing/ # Testing documentation
+├── test-plan.md # Testing methodology
+├── test-results.md # Findings
+└── iterations.md # Design changes
+
 ```
 
 ## 🛠️ Design Tools & Setup
@@ -54,9 +56,11 @@ ux-design/
 
 ### File Naming Convention
 ```
+
 YYYY-MM-DD_FeatureName_Version
 Example: 2024-07-15_Dashboard_v2
-```
+
+````
 
 ## 👥 User Research
 
@@ -117,11 +121,12 @@ Example: 2024-07-15_Dashboard_v2
 ## Design Implications
 - [Implication 1]
 - [Implication 2]
-```
+````
 
 ## 🎨 Design Process
 
 ### 1. Information Architecture
+
 ```
 Home
 ├── Dashboard (Overview)
@@ -138,11 +143,13 @@ Home
 ```
 
 ### 2. Wireframing Process
+
 - **Low-Fidelity**: Paper sketches → Digital wireframes
 - **Mid-Fidelity**: Grayscale layouts with structure
 - **High-Fidelity**: Full visual design with interactions
 
 ### 3. Prototyping Stages
+
 - **v1**: Core user flows (MVP)
 - **v2**: Enhanced interactions
 - **v3**: Final polish with micro-interactions
@@ -150,6 +157,7 @@ Home
 ## 🎨 Design System
 
 ### Color Palette
+
 ```css
 /* Primary Colors */
 --primary-blue: #2563EB;      /* Trust */
@@ -171,21 +179,28 @@ Home
 ```
 
 ### Typography
+
 ```css
 /* Font Stack */
-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+font-family:
+  "Inter",
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  sans-serif;
 
 /* Type Scale */
---text-xs: 0.75rem;     /* 12px - Captions */
---text-sm: 0.875rem;    /* 14px - Body small */
---text-base: 1rem;      /* 16px - Body default */
---text-lg: 1.125rem;    /* 18px - Body large */
---text-xl: 1.25rem;     /* 20px - H3 */
---text-2xl: 1.5rem;     /* 24px - H2 */
---text-3xl: 1.875rem;   /* 30px - H1 */
+--text-xs: 0.75rem; /* 12px - Captions */
+--text-sm: 0.875rem; /* 14px - Body small */
+--text-base: 1rem; /* 16px - Body default */
+--text-lg: 1.125rem; /* 18px - Body large */
+--text-xl: 1.25rem; /* 20px - H3 */
+--text-2xl: 1.5rem; /* 24px - H2 */
+--text-3xl: 1.875rem; /* 30px - H1 */
 ```
 
 ### Component Library
+
 - **Buttons**: Primary, Secondary, Tertiary, Icon
 - **Cards**: Metric, Information, Interactive
 - **Charts**: Line, Bar, Pie, Network
@@ -198,7 +213,9 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ### Testing Protocol
 
 #### MVP Testing (Week 5-6)
+
 1. **Task Scenarios**
+
    - Find trust score for your region
    - Compare two governance systems
    - Export data for report
@@ -209,7 +226,9 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
    - Error rate <1 per task
 
 #### Final Testing (Week 9-10)
+
 1. **Comprehensive Testing**
+
    - All user flows
    - Edge cases
    - Accessibility testing
@@ -220,19 +239,23 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
    - A/B testing key features
 
 ### Testing Documentation
+
 ```markdown
 # Usability Test Results - Round [X]
 
 ## Summary
+
 - Participants: [Number]
 - Completion Rate: [X]%
 - Satisfaction: [X]/5
 
 ## Key Issues
+
 1. [Issue]: [Severity 1-5]
    - Solution: [Proposed fix]
 
 ## Recommendations
+
 - [Change 1]
 - [Change 2]
 ```
@@ -240,6 +263,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ## ♿ Accessibility Guidelines
 
 ### WCAG 2.1 AA Compliance
+
 - [ ] Color contrast ratios (4.5:1 minimum)
 - [ ] Keyboard navigation for all features
 - [ ] Screen reader compatibility
@@ -250,6 +274,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 - [ ] Error identification and correction
 
 ### Testing Tools
+
 - WAVE (WebAIM)
 - axe DevTools
 - NVDA/JAWS screen readers
@@ -258,17 +283,20 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ## 🤝 Collaboration Points
 
 ### With Web Development
+
 - Design handoff via Figma Dev Mode
 - Component specifications
 - Animation guidelines
 - Responsive breakpoints
 
 ### With Data Science
+
 - Data visualization best practices
 - Information hierarchy for metrics
 - Dashboard layout optimization
 
 ### With Deep Learning
+
 - Model confidence visualization
 - Error state design
 - Loading states for predictions
@@ -276,16 +304,19 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ## 📚 Resources & References
 
 ### Design Inspiration
+
 - [GDS Design System](https://design-system.service.gov.uk/)
 - [Estonia e-Governance](https://e-estonia.com/)
 - [OECD Data Portal](https://data.oecd.org/)
 
 ### Learning Resources
+
 - [Design for Democracy](https://www.aiga.org/design-for-democracy)
 - [Inclusive Design Principles](https://inclusivedesignprinciples.org/)
 - [Data Visualization Handbook](https://datavizcatalogue.com/)
 
 ### Tools & Templates
+
 - [Figma Community Templates](https://www.figma.com/community)
 - [User Interview Questions](https://www.nngroup.com/articles/user-interviews/)
 - [Usability Test Script Template](https://www.usability.gov/how-to-and-tools/methods/usability-testing.html)
@@ -293,6 +324,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ## 🎯 Deliverables Checklist
 
 ### MVP (Week 6)
+
 - [ ] 2+ User personas created
 - [ ] 5+ User interviews completed
 - [ ] Wireframes for core screens
@@ -301,6 +333,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 - [ ] Initial usability test (3+ users)
 
 ### Final (Week 10)
+
 - [ ] 15+ User interviews
 - [ ] Complete design system
 - [ ] High-fidelity all screens
@@ -310,6 +343,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 - [ ] Design documentation
 
 ---
+
 **Track Lead**: [Name]  
 **Last Updated**: [Date]  
 **Status**: 🟢 Active Development
