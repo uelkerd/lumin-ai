@@ -23,8 +23,12 @@ setup(
     author="LUMIN.AI Team",
     author_email="team@lumin-ai.org",
     install_requires=[
-        "pandas>=1.5.0",
-        "numpy>=1.21.0",
+        "fastapi>=0.68.0",
+        "uvicorn>=0.15.0",
+        "requests>=2.26.0",
+        "pymongo>=4.5.0",
+        "python-dotenv>=0.19.0",
+        "tqdm>=4.62.0",
     ],
     extras_require={
         "ml": [
@@ -32,15 +36,35 @@ setup(
             "tensorflow>=2.9.0",
             "transformers>=4.20.0",
         ],
+        "data": [
+            "pandas>=1.3.0",
+            "numpy>=1.21.0",
+            "scipy>=1.7.0",
+            "scikit-learn>=0.24.0",
+            "matplotlib>=3.4.0",
+            "seaborn>=0.11.0",
+            "networkx>=2.6.0",
+        ],
+        "nlp": [
+            "nltk>=3.6.0",
+            "spacy>=3.1.0",
+            "textblob>=0.15.3",
+        ],
+        "jupyter": [
+            "jupyter>=1.0.0",
+            "jupyterlab>=3.0.0",
+            "ipywidgets>=7.6.0",
+        ],
         "test": [
             "pytest==7.4.0",
             "pytest-cov==4.1.0",
         ],
         "dev": [
             "ruff==0.4.4",
+            "lumin-ai[all,test]",
         ],
         "all": [
-            "lumin-ai[ml]",
+            "lumin-ai[ml,data,nlp,jupyter]",
         ],
     },
     python_requires=">=3.8",
