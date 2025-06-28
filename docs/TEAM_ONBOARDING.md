@@ -52,6 +52,52 @@ python scripts/test_mongodb_connection.py
 
 🎉 **You're ready to develop!**
 
+## 🔧 Manual Environment Setup
+
+If you are not using the provided Dev Container, you can set up your local environment manually. This project uses a modular dependency structure to keep the core installation lightweight.
+
+### 1. Create a Virtual Environment
+It's highly recommended to use a virtual environment to manage project dependencies.
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows, use `.venv\\Scripts\\activate`
+```
+
+### 2. Install Dependencies
+You can now install the required packages.
+
+**Core Installation:**
+For a minimal setup, which is ideal for frontend or web backend development, install the core packages:
+```bash
+pip install .
+```
+
+**Optional Dependency Groups:**
+Based on your role, you can install additional packages:
+
+- **Data Science (`data`):** For data analysis and visualization.
+  ```bash
+  pip install .[data]
+  ```
+- **NLP (`nlp`):** For natural language processing tasks.
+  ```bash
+  pip install .[nlp]
+  ```
+- **Jupyter (`jupyter`):** For working with Jupyter notebooks.
+  ```bash
+  pip install .[jupyter]
+  ```
+- **Machine Learning (`ml`):** For training and using ML models (includes `torch` and `transformers`).
+  ```bash
+  pip install .[ml]
+  ```
+
+**Full Development Setup:**
+To install all dependencies required for development, including testing tools, use the `dev` extra:
+```bash
+pip install .[dev]
+```
+
 ## 🏗️ Development Environment Overview
 
 ### What's Included

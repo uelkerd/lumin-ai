@@ -116,6 +116,52 @@ For security reasons, sensitive configuration should be managed through environm
    - Configure pre-commit hooks
    - Start all necessary services
 
+## 📦 Installation
+
+This project uses a modular dependency structure to allow for a lightweight installation. You can install the core dependencies and then add optional extras as needed.
+
+### Core Installation
+For a minimal installation, which includes the core application logic without data science or machine learning libraries, run:
+```bash
+pip install .
+```
+
+### Optional Dependencies
+You can install optional dependency groups based on your needs.
+
+- **Data Science**: For data manipulation, analysis, and visualization.
+  ```bash
+  pip install .[data]
+  ```
+
+- **Natural Language Processing**: For NLP tasks.
+  ```bash
+  pip install .[nlp]
+  ```
+
+- **Jupyter Environment**: For running Jupyter notebooks.
+  ```bash
+  pip install .[jupyter]
+  ```
+
+- **Machine Learning**: For machine learning tasks. This project uses PyTorch.
+  ```bash
+  pip install .[ml] 
+  ```
+  The `ml` extra includes `torch` and `transformers`.
+
+### All-in-One Installation
+To install all optional dependencies at once, use the `all` extra:
+```bash
+pip install .[all]
+```
+
+### Development Setup
+For developers who need to run tests and use linting tools, the `dev` extra installs everything from `all` plus development-specific packages:
+```bash
+pip install .[dev]
+```
+
 ## 📁 Project Structure
 
 - `/deep-learning` - Neural network models and training code
