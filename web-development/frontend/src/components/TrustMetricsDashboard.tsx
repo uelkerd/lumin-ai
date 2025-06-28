@@ -12,21 +12,20 @@ const TrustMetricsDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchTrustMetrics = async () => {
+      const demographicSegments = ["all", "age: 18-25", "age: 26-40"];
       try {
         setLoading(true);
         // Fetch data for different demographic segments in parallel
-        const [allData, age1825Data, age2640Data] = await Promise.all([
-          getTrustMetrics({ demographic: "all" }),
-          getTrustMetrics({ demographic: "age: 18-25" }),
-          getTrustMetrics({ demographic: "age: 26-40" }),
-        ]);
+        const promises = demographicSegments.map((demographic) =>
+          getTrustMetrics({ demographic }),
+        );
+        const results = await Promise.all(promises);
 
         // Combine and add a 'series' property
-        const combinedData = [
-          ...allData.map((d) => ({ ...d, series: "All" })),
-          ...age1825Data.map((d) => ({ ...d, series: "Age: 18-25" })),
-          ...age2640Data.map((d) => ({ ...d, series: "Age: 26-40" })),
-        ];
+        const combinedData = results.flatMap((data, index) =>
+          data.map((d) => ({ ...d, series: demographicSegments[index] })),
+        );
+
         setTrustMetrics(combinedData);
       } catch (err) {
         setError("Failed to fetch trust metrics data.");
