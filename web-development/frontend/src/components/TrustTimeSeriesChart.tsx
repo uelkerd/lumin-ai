@@ -23,17 +23,15 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({ data }) => 
     const containerWidth = 800; // Use a larger container width for better visualization
     const containerHeight = 500; // Use a larger container height
     const margin = { top: 20, right: 50, bottom: 50, left: 60 }; // Adjust margins
-
+    const width = containerWidth - margin.left - margin.right;
+    const height = containerHeight - margin.top - margin.bottom;
 
     // Clear previous chart
     svg.selectAll('*').remove();
 
     // Set up SVG dimensions
-    svg.attr('width', width)
-       .attr('height', height);
- 
-    const width = containerWidth - margin.left - margin.right;
-    const height = containerHeight - margin.top - margin.bottom;
+    svg.attr('width', containerWidth)
+       .attr('height', containerHeight);
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -84,17 +82,13 @@ const TrustTimeSeriesChart: React.FC<TrustTimeSeriesChartProps> = ({ data }) => 
         yAxis.call(d3.axisLeft(yScale));
 
         // Update line path with new scales
-        const updatedLine = d3.line<[number, number]>()
-          .x(d => xScale(d[0]))
-          .y(d => yScale(d[1]));
-        path.attr('d', updatedLine(data) as any); // D3 line generator expects data array
+        const updatedLine = d3.line<TrustDataPoint>()
+          .x((d) => xScale(d.year))
+          .y((d) => yScale(d.trust_score));
+        path.attr('d', updatedLine(data) as any);
       });
 
     svg.call(zoom as any); // Apply zoom behavior to the SVG
-
-  }, [data]); // Redraw chart when data changes
-
-
 
   }, [data]); // Redraw chart when data changes
 
