@@ -32,7 +32,7 @@ const DemographicAnalysisChart: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const demographicData = await getDemographics(selectedCategory);
+        const demographicData = await getDemographics({ demographic: selectedCategory });
         setData(demographicData);
       } catch (err) {
         setError("Failed to fetch demographic data.");
