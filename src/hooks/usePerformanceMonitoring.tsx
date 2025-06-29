@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import React from 'react';
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -108,7 +109,7 @@ export const usePerformanceMonitoring = () => {
 
   const getBundleAnalysis = async () => {
     // Analyze bundle size and composition
-    const modules = await import('./bundleAnalyzer');
+    const modules = await import('../utils/bundleAnalyzer');
     return modules.analyzeBundleSize();
   };
 
