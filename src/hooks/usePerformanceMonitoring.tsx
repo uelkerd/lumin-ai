@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import React from 'react';
+import { useEffect, useState } from "react";
+import React from "react";
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -27,42 +27,44 @@ export const usePerformanceMonitoring = () => {
 
     const observer = new PerformanceObserver((list) => {
       const entries = list.getEntries();
-      
+
       entries.forEach((entry) => {
         switch (entry.entryType) {
-          case 'navigation':
+          case "navigation":
             const navEntry = entry as PerformanceNavigationTiming;
-            setMetrics(prev => ({
+            setMetrics((prev) => ({
               ...prev!,
               loadTime: navEntry.loadEventEnd - navEntry.loadEventStart,
-              renderTime: navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
-              TTFB: navEntry.responseStart - navEntry.requestStart
+              renderTime:
+                navEntry.domContentLoadedEventEnd -
+                navEntry.domContentLoadedEventStart,
+              TTFB: navEntry.responseStart - navEntry.requestStart,
             }));
             break;
-            
-          case 'paint':
-            if (entry.name === 'first-contentful-paint') {
-              setWebVitals(prev => ({ ...prev, FCP: entry.startTime }));
+
+          case "paint":
+            if (entry.name === "first-contentful-paint") {
+              setWebVitals((prev) => ({ ...prev, FCP: entry.startTime }));
             }
             break;
-            
-          case 'largest-contentful-paint':
-            setWebVitals(prev => ({ ...prev, LCP: entry.startTime }));
+
+          case "largest-contentful-paint":
+            setWebVitals((prev) => ({ ...prev, LCP: entry.startTime }));
             break;
-            
-          case 'first-input':
+
+          case "first-input":
             const fidEntry = entry as PerformanceEventTiming;
-            setWebVitals(prev => ({ 
-              ...prev, 
-              FID: fidEntry.processingStart - fidEntry.startTime 
+            setWebVitals((prev) => ({
+              ...prev,
+              FID: fidEntry.processingStart - fidEntry.startTime,
             }));
             break;
-            
-          case 'layout-shift':
+
+          case "layout-shift":
             if (!(entry as any).hadRecentInput) {
-              setWebVitals(prev => ({ 
-                ...prev, 
-                CLS: (prev.CLS || 0) + (entry as any).value 
+              setWebVitals((prev) => ({
+                ...prev,
+                CLS: (prev.CLS || 0) + (entry as any).value,
               }));
             }
             break;
@@ -71,16 +73,28 @@ export const usePerformanceMonitoring = () => {
     });
 
     // Observe different performance entry types
-    observer.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift'] });
+    observer.observe({
+      entryTypes: [
+        "navigation",
+        "paint",
+        "largest-contentful-paint",
+        "first-input",
+        "layout-shift",
+      ],
+    });
 
     // Memory usage monitoring
     const memoryInterval = setInterval(() => {
-      if ('memory' in performance) {
+      if ("memory" in performance) {
         const memory = (performance as any).memory;
-        setMetrics(prev => prev ? {
-          ...prev,
-          memoryUsage: memory.usedJSHeapSize / memory.totalJSHeapSize
-        } : null);
+        setMetrics((prev) =>
+          prev
+            ? {
+                ...prev,
+                memoryUsage: memory.usedJSHeapSize / memory.totalJSHeapSize,
+              }
+            : null,
+        );
       }
     }, 5000);
 
@@ -99,17 +113,20 @@ export const usePerformanceMonitoring = () => {
     }
 
     // Scoring based on Core Web Vitals thresholds
-    const fcpScore = webVitals.FCP <= 1800 ? 100 : webVitals.FCP <= 3000 ? 50 : 0;
-    const lcpScore = webVitals.LCP <= 2500 ? 100 : webVitals.LCP <= 4000 ? 50 : 0;
+    const fcpScore =
+      webVitals.FCP <= 1800 ? 100 : webVitals.FCP <= 3000 ? 50 : 0;
+    const lcpScore =
+      webVitals.LCP <= 2500 ? 100 : webVitals.LCP <= 4000 ? 50 : 0;
     const fidScore = webVitals.FID <= 100 ? 100 : webVitals.FID <= 300 ? 50 : 0;
-    const clsScore = webVitals.CLS <= 0.1 ? 100 : webVitals.CLS <= 0.25 ? 50 : 0;
+    const clsScore =
+      webVitals.CLS <= 0.1 ? 100 : webVitals.CLS <= 0.25 ? 50 : 0;
 
     return Math.round((fcpScore + lcpScore + fidScore + clsScore) / 4);
   };
 
   const getBundleAnalysis = async () => {
     // Analyze bundle size and composition
-    const modules = await import('../utils/bundleAnalyzer');
+    const modules = await import("../utils/bundleAnalyzer");
     return modules.analyzeBundleSize();
   };
 
@@ -120,19 +137,19 @@ export const usePerformanceMonitoring = () => {
     startMonitoring,
     stopMonitoring,
     getPerformanceScore,
-    getBundleAnalysis
+    getBundleAnalysis,
   };
 };
 
 // Performance monitoring component
 export const PerformanceMonitor: React.FC = () => {
-  const { 
-    metrics, 
-    webVitals, 
-    isMonitoring, 
-    startMonitoring, 
-    stopMonitoring, 
-    getPerformanceScore 
+  const {
+    metrics,
+    webVitals,
+    isMonitoring,
+    startMonitoring,
+    stopMonitoring,
+    getPerformanceScore,
   } = usePerformanceMonitoring();
 
   useEffect(() => {
@@ -140,7 +157,7 @@ export const PerformanceMonitor: React.FC = () => {
     return () => stopMonitoring();
   }, []);
 
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== "development") {
     return null; // Only show in development
   }
 
@@ -152,7 +169,15 @@ export const PerformanceMonitor: React.FC = () => {
       <div className="space-y-1 text-xs">
         <div className="flex justify-between">
           <span>Score:</span>
-          <span className={score >= 90 ? 'text-green-600' : score >= 50 ? 'text-yellow-600' : 'text-red-600'}>
+          <span
+            className={
+              score >= 90
+                ? "text-green-600"
+                : score >= 50
+                  ? "text-yellow-600"
+                  : "text-red-600"
+            }
+          >
             {score}/100
           </span>
         </div>
