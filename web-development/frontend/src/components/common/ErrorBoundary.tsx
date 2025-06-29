@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Error caught by ErrorBoundary:', error, errorInfo);
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
     // Here you could log the error to an error reporting service
   }
 
@@ -30,16 +30,19 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       if (this.props.fallback) {
         return this.props.fallback;
       }
-      
+
       return (
         <div className="error-container">
           <h2>Something went wrong</h2>
-          <p>We apologize for the inconvenience. Please try refreshing the page or contact support if the problem persists.</p>
+          <p>
+            We apologize for the inconvenience. Please try refreshing the page
+            or contact support if the problem persists.
+          </p>
           <details>
             <summary>Error details</summary>
             <pre>{this.state.error?.toString()}</pre>
           </details>
-          <button 
+          <button
             className="error-reset-button"
             onClick={() => this.setState({ hasError: false, error: null })}
           >

@@ -1,14 +1,14 @@
-import React from 'react';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
-  Legend
-} from 'recharts';
+  Legend,
+} from "recharts";
 
 interface DataPoint {
   date: string;
@@ -22,9 +22,12 @@ interface TrustTrendChartProps {
 const TrustTrendChart: React.FC<TrustTrendChartProps> = ({ data }) => {
   // Format date for display
   const formatDate = (dateStr: string) => {
-    const [year, month] = dateStr.split('-');
+    const [year, month] = dateStr.split("-");
     const date = new Date(parseInt(year), parseInt(month) - 1);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
   };
 
   // Custom tooltip
@@ -50,15 +53,15 @@ const TrustTrendChart: React.FC<TrustTrendChartProps> = ({ data }) => {
           margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-          <XAxis 
-            dataKey="date" 
+          <XAxis
+            dataKey="date"
             tickFormatter={formatDate}
             stroke="rgba(255,255,255,0.7)"
           />
-          <YAxis 
+          <YAxis
             domain={[
-              (dataMin: number) => Math.floor(dataMin - 5), 
-              (dataMax: number) => Math.ceil(dataMax + 5)
+              (dataMin: number) => Math.floor(dataMin - 5),
+              (dataMax: number) => Math.ceil(dataMax + 5),
             ]}
             stroke="rgba(255,255,255,0.7)"
           />
