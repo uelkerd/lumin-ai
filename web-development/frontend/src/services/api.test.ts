@@ -1,6 +1,11 @@
-import { vi, describe, it, expect, afterEach } from 'vitest';
-import api, { fetchDashboardData, fetchTrustMetrics, fetchDemographicAnalysis, analyzeSentiment } from './api';
-import { DashboardData } from '../types/dashboard';
+import { vi, describe, it, expect, afterEach } from "vitest";
+import api, {
+  fetchDashboardData,
+  fetchTrustMetrics,
+  fetchDemographicAnalysis,
+  analyzeSentiment,
+} from "./api";
+import { DashboardData } from "../types/dashboard";
 
 describe("API Service", () => {
   afterEach(() => {
@@ -46,61 +51,71 @@ describe("API Service", () => {
     });
   });
 
-  describe('fetchTrustMetrics', () => {
-    it('should fetch trust metrics successfully', async () => {
-      const mockData = { metrics: [{ date: '2023-01-01', value: 75 }] };
-      const getSpy = vi.spyOn(api, 'get').mockResolvedValue({ data: mockData });
+  describe("fetchTrustMetrics", () => {
+    it("should fetch trust metrics successfully", async () => {
+      const mockData = { metrics: [{ date: "2023-01-01", value: 75 }] };
+      const getSpy = vi.spyOn(api, "get").mockResolvedValue({ data: mockData });
 
-      const data = await fetchTrustMetrics('1y');
+      const data = await fetchTrustMetrics("1y");
 
       expect(data).toEqual(mockData);
-      expect(getSpy).toHaveBeenCalledWith('/trust-metrics?timeRange=1y');
+      expect(getSpy).toHaveBeenCalledWith("/trust-metrics?timeRange=1y");
     });
 
-    it('should handle errors when fetching trust metrics', async () => {
-      const errorMessage = 'Network Error';
-      const getSpy = vi.spyOn(api, 'get').mockRejectedValue(new Error(errorMessage));
+    it("should handle errors when fetching trust metrics", async () => {
+      const errorMessage = "Network Error";
+      const getSpy = vi
+        .spyOn(api, "get")
+        .mockRejectedValue(new Error(errorMessage));
 
-      await expect(fetchTrustMetrics('1y')).rejects.toThrow(errorMessage);
-      expect(getSpy).toHaveBeenCalledWith('/trust-metrics?timeRange=1y');
+      await expect(fetchTrustMetrics("1y")).rejects.toThrow(errorMessage);
+      expect(getSpy).toHaveBeenCalledWith("/trust-metrics?timeRange=1y");
     });
   });
 
-  describe('fetchDemographicAnalysis', () => {
-    it('should fetch demographic analysis successfully', async () => {
-      const mockData = { analysis: [{ group: '18-24', value: 60 }] };
-      const getSpy = vi.spyOn(api, 'get').mockResolvedValue({ data: mockData });
+  describe("fetchDemographicAnalysis", () => {
+    it("should fetch demographic analysis successfully", async () => {
+      const mockData = { analysis: [{ group: "18-24", value: 60 }] };
+      const getSpy = vi.spyOn(api, "get").mockResolvedValue({ data: mockData });
 
-      const data = await fetchDemographicAnalysis('age');
+      const data = await fetchDemographicAnalysis("age");
 
       expect(data).toEqual(mockData);
-      expect(getSpy).toHaveBeenCalledWith('/demographics/analysis?segment=age');
+      expect(getSpy).toHaveBeenCalledWith("/demographics/analysis?segment=age");
     });
 
-    it('should handle errors when fetching demographic analysis', async () => {
-      const errorMessage = 'Network Error';
-      vi.spyOn(api, 'get').mockRejectedValue(new Error(errorMessage));
+    it("should handle errors when fetching demographic analysis", async () => {
+      const errorMessage = "Network Error";
+      vi.spyOn(api, "get").mockRejectedValue(new Error(errorMessage));
 
-      await expect(fetchDemographicAnalysis('age')).rejects.toThrow(errorMessage);
+      await expect(fetchDemographicAnalysis("age")).rejects.toThrow(
+        errorMessage,
+      );
     });
   });
 
-  describe('analyzeSentiment', () => {
-    it('should analyze sentiment successfully', async () => {
-      const mockData = { sentiment: 'positive', score: 0.9 };
-      const postSpy = vi.spyOn(api, 'post').mockResolvedValue({ data: mockData });
+  describe("analyzeSentiment", () => {
+    it("should analyze sentiment successfully", async () => {
+      const mockData = { sentiment: "positive", score: 0.9 };
+      const postSpy = vi
+        .spyOn(api, "post")
+        .mockResolvedValue({ data: mockData });
 
-      const data = await analyzeSentiment('This is great!');
+      const data = await analyzeSentiment("This is great!");
 
       expect(data).toEqual(mockData);
-      expect(postSpy).toHaveBeenCalledWith('/ml/sentiment', { text: 'This is great!' });
+      expect(postSpy).toHaveBeenCalledWith("/ml/sentiment", {
+        text: "This is great!",
+      });
     });
 
-    it('should handle errors when analyzing sentiment', async () => {
-      const errorMessage = 'Network Error';
-      vi.spyOn(api, 'post').mockRejectedValue(new Error(errorMessage));
+    it("should handle errors when analyzing sentiment", async () => {
+      const errorMessage = "Network Error";
+      vi.spyOn(api, "post").mockRejectedValue(new Error(errorMessage));
 
-      await expect(analyzeSentiment('This is great!')).rejects.toThrow(errorMessage);
+      await expect(analyzeSentiment("This is great!")).rejects.toThrow(
+        errorMessage,
+      );
     });
   });
 });
