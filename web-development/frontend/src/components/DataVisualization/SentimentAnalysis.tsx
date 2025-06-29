@@ -128,7 +128,7 @@ const SentimentAnalysis: React.FC = () => {
                 <div
                   className="confidence-bar"
                   style={{ width: `${result.confidence * 100}%` }}
-                ></div>
+                 />
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ const SentimentAnalysis: React.FC = () => {
                         <div
                           className="importance-bar"
                           style={{ width: `${importance * 100}%` }}
-                        ></div>
+                         />
                       </div>
                       <span className="importance-value">
                         {(importance * 100).toFixed(0)}%
