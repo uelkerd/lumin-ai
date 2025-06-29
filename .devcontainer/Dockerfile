@@ -89,7 +89,7 @@ RUN echo 'export ZSH="$HOME/.oh-my-zsh"' > ~/.zshrc && \
     echo 'alias rebuild="sudo docker-compose build --no-cache"' >> ~/.zshrc
 
 # 🐍 SETUP PYTHON USER ENVIRONMENT
-RUN python3 -m pip install --user --upgrade pip==24.0 setuptools==69.5.3 wheel==0.43.0
+RUN python3 -m pip install --user --no-cache-dir --upgrade pip==24.0 setuptools==69.5.3 wheel==0.43.0
 
 # 📂 CREATE & SETUP WORKSPACE
 USER root
