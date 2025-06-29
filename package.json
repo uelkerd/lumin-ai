@@ -13,13 +13,16 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.0",
     "d3": "^7.8.5",
+    "dompurify": "^3.0.6",
+    "framer-motion": "^12.19.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "marked": "^9.1.5",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "recharts": "^2.10.1",
-    "dompurify": "^3.0.6"
+    "recharts": "^2.10.1"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",
