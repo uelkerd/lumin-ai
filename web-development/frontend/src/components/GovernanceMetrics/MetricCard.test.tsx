@@ -13,16 +13,16 @@ describe("MetricCard", () => {
         description="Trust in government institutions"
         trend="up"
         trendValue={1.7}
-      />
+      />,
     );
 
     expect(screen.getByText("Institutional Trust")).toBeInTheDocument();
     expect(screen.getByText("68.3")).toBeInTheDocument();
     expect(screen.getByText("🏛️")).toBeInTheDocument();
     expect(
-      screen.getByText("Trust in government institutions")
+      screen.getByText("Trust in government institutions"),
     ).toBeInTheDocument();
     expect(screen.getByText("↑")).toBeInTheDocument();
     expect(screen.getByText("1.7%")).toBeInTheDocument();
   });
-}); 
+});
