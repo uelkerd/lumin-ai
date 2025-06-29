@@ -89,15 +89,15 @@ RUN echo 'export ZSH="$HOME/.oh-my-zsh"' > ~/.zshrc && \
     echo 'alias jlab="jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"' >> ~/.zshrc && \
     # Development shortcuts
     echo 'alias lumin="cd /workspace && ll"' >> ~/.zshrc && \
-    echo 'alias rebuild="sudo docker-compose build --no-cache"' >> ~/.zshrc && \
-    # Ensure git is available
-    echo 'export PATH="/usr/bin:$PATH"' >> ~/.zshrc
+    echo 'alias rebuild="sudo docker-compose build --no-cache"' >> ~/.zshrc
 
 # 🐍 SETUP PYTHON USER ENVIRONMENT
-RUN python3 -m pip install --user --upgrade pip setuptools wheel
+RUN python3 -m pip install --user --upgrade pip==24.0 setuptools==69.5.3 wheel==0.43.0
 
 # 📂 CREATE & SETUP WORKSPACE
-RUN sudo mkdir -p /workspace && sudo chown lumin-dev:lumin-dev /workspace
+USER root
+RUN mkdir -p /workspace && chown -R lumin-dev:lumin-dev /workspace
+USER lumin-dev
 WORKDIR /workspace
 
 # 🔧 ENVIRONMENT VARIABLES
