@@ -57,6 +57,10 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# 🔧 ENSURE GIT IS IN PATH FOR ALL USERS
+RUN echo 'export PATH="/usr/bin:$PATH"' >> /etc/environment && \
+    ln -sf /usr/bin/git /usr/local/bin/git
+
 # 👤 SWITCH TO USER & SETUP ZSH
 USER lumin-dev
 WORKDIR /home/lumin-dev
@@ -85,7 +89,9 @@ RUN echo 'export ZSH="$HOME/.oh-my-zsh"' > ~/.zshrc && \
     echo 'alias jlab="jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"' >> ~/.zshrc && \
     # Development shortcuts
     echo 'alias lumin="cd /workspace && ll"' >> ~/.zshrc && \
-    echo 'alias rebuild="sudo docker-compose build --no-cache"' >> ~/.zshrc
+    echo 'alias rebuild="sudo docker-compose build --no-cache"' >> ~/.zshrc && \
+    # Ensure git is available
+    echo 'export PATH="/usr/bin:$PATH"' >> ~/.zshrc
 
 # 🐍 SETUP PYTHON USER ENVIRONMENT
 RUN python3 -m pip install --user --upgrade pip setuptools wheel
@@ -97,7 +103,7 @@ WORKDIR /workspace
 # 🔧 ENVIRONMENT VARIABLES
 ENV SHELL=/bin/zsh
 ENV PYTHONPATH=/workspace/src
-ENV PATH="/home/lumin-dev/.local/bin:$PATH"
+ENV PATH="/usr/bin:/home/lumin-dev/.local/bin:$PATH"
 
 # 🚪 EXPOSE DEVELOPMENT PORTS
 EXPOSE 3000 5000 8000 8080 8888 27017
