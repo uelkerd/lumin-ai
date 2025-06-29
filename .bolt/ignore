@@ -1,0 +1,50 @@
+# Standard exclusions
+node_modules/
+.git/
+dist/
+build/
+
+# Binary assets (keep references in code, but exclude actual assets)
+assets/logos/*
+assets/presentations/*
+
+# Large documentation files
+docs/architecture/*
+*.pdf
+*.pptx
+
+# Example data
+data/examples/*
+
+# Deep learning notebooks (large files)
+deep-learning/*
+
+data-science/*
+data/*
+
+# Package lock files (very large, regenerated automatically)
+**/package-lock.json
+
+# Test directories
+tests/
+
+# Build and monitoring scripts
+scripts/container-*
+scripts/setup-*
+scripts/*.sh
+scripts/*.py
+
+# Configuration files rarely edited
+codecov.yml
+pyproject.toml
+
+# Log files and build reports
+*.log
+BUILD_*.md
+
+# Backend dependencies if not working on backend
+web-development/backend/node_modules/
+
+# Keep all TypeScript/JavaScript source files and important configuration
+# Keep README files for context
+# Keep your main component files
