@@ -1,7 +1,7 @@
 interface CacheConfig {
   maxAge: number;
   maxSize: number;
-  strategy: 'LRU' | 'FIFO' | 'TTL';
+  strategy: "LRU" | "FIFO" | "TTL";
 }
 
 interface CacheEntry<T> {
@@ -19,17 +19,17 @@ export class CacheManager<T> {
     this.config = {
       maxAge: 5 * 60 * 1000, // 5 minutes
       maxSize: 100, // 100 entries
-      strategy: 'LRU',
-      ...config
+      strategy: "LRU",
+      ...config,
     };
   }
 
   set(key: string, data: T): void {
     const now = Date.now();
-    
+
     // Remove expired entries
     this.cleanup();
-    
+
     // If cache is full, remove entries based on strategy
     if (this.cache.size >= this.config.maxSize) {
       this.evict();
@@ -39,13 +39,13 @@ export class CacheManager<T> {
       data,
       timestamp: now,
       accessCount: 0,
-      lastAccessed: now
+      lastAccessed: now,
     });
   }
 
   get(key: string): T | null {
     const entry = this.cache.get(key);
-    
+
     if (!entry) {
       return null;
     }
@@ -81,14 +81,19 @@ export class CacheManager<T> {
 
   getStats() {
     const entries = Array.from(this.cache.values());
-    const totalAccesses = entries.reduce((sum, entry) => sum + entry.accessCount, 0);
-    const avgAge = entries.reduce((sum, entry) => sum + (Date.now() - entry.timestamp), 0) / entries.length;
+    const totalAccesses = entries.reduce(
+      (sum, entry) => sum + entry.accessCount,
+      0,
+    );
+    const avgAge =
+      entries.reduce((sum, entry) => sum + (Date.now() - entry.timestamp), 0) /
+      entries.length;
 
     return {
       size: this.cache.size,
       totalAccesses,
       avgAge: avgAge || 0,
-      hitRate: totalAccesses / (totalAccesses + this.cache.size) // Simplified calculation
+      hitRate: totalAccesses / (totalAccesses + this.cache.size), // Simplified calculation
     };
   }
 
@@ -102,7 +107,7 @@ export class CacheManager<T> {
       }
     }
 
-    expiredKeys.forEach(key => this.cache.delete(key));
+    expiredKeys.forEach((key) => this.cache.delete(key));
   }
 
   private evict(): void {
@@ -111,10 +116,10 @@ export class CacheManager<T> {
     let keyToRemove: string;
 
     switch (this.config.strategy) {
-      case 'LRU':
+      case "LRU":
         // Remove least recently used
         let oldestAccess = Date.now();
-        keyToRemove = '';
+        keyToRemove = "";
         for (const [key, entry] of this.cache.entries()) {
           if (entry.lastAccessed < oldestAccess) {
             oldestAccess = entry.lastAccessed;
@@ -123,10 +128,10 @@ export class CacheManager<T> {
         }
         break;
 
-      case 'FIFO':
+      case "FIFO":
         // Remove first in (oldest timestamp)
         let oldestTimestamp = Date.now();
-        keyToRemove = '';
+        keyToRemove = "";
         for (const [key, entry] of this.cache.entries()) {
           if (entry.timestamp < oldestTimestamp) {
             oldestTimestamp = entry.timestamp;
@@ -135,14 +140,14 @@ export class CacheManager<T> {
         }
         break;
 
-      case 'TTL':
+      case "TTL":
         // Remove entry closest to expiration
         const now = Date.now();
         let closestToExpiration = 0;
-        keyToRemove = '';
+        keyToRemove = "";
         for (const [key, entry] of this.cache.entries()) {
           const timeToExpire = this.config.maxAge - (now - entry.timestamp);
-          if (timeToExpire < closestToExpiration || keyToRemove === '') {
+          if (timeToExpire < closestToExpiration || keyToRemove === "") {
             closestToExpiration = timeToExpire;
             keyToRemove = key;
           }
@@ -163,37 +168,39 @@ export class CacheManager<T> {
 export const dataCache = new CacheManager({
   maxAge: 10 * 60 * 1000, // 10 minutes for data
   maxSize: 50,
-  strategy: 'LRU'
+  strategy: "LRU",
 });
 
 export const visualizationCache = new CacheManager({
   maxAge: 5 * 60 * 1000, // 5 minutes for visualizations
   maxSize: 20,
-  strategy: 'LRU'
+  strategy: "LRU",
 });
 
 export const apiCache = new CacheManager({
   maxAge: 2 * 60 * 1000, // 2 minutes for API responses
   maxSize: 100,
-  strategy: 'TTL'
+  strategy: "TTL",
 });
 
 // Cache utilities
-export const createCacheKey = (...parts: (string | number | boolean)[]): string => {
-  return parts.map(part => String(part)).join(':');
+export const createCacheKey = (
+  ...parts: (string | number | boolean)[]
+): string => {
+  return parts.map((part) => String(part)).join(":");
 };
 
 export const withCache = <T>(
   cache: CacheManager<T>,
   key: string,
-  fetcher: () => Promise<T>
+  fetcher: () => Promise<T>,
 ): Promise<T> => {
   const cached = cache.get(key);
   if (cached) {
     return Promise.resolve(cached);
   }
 
-  return fetcher().then(data => {
+  return fetcher().then((data) => {
     cache.set(key, data);
     return data;
   });

@@ -11,12 +11,12 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 import { PerformanceMonitor } from "./hooks/usePerformanceMonitoring";
 
 // Lazy loaded components for better performance
-import { 
+import {
   LazyAdvancedDashboard,
   LazyTrustMetrics,
   LazySentimentAnalysis,
   LazyDemographicAnalysis,
-  preloadComponents
+  preloadComponents,
 } from "./components/common/LazyComponents";
 
 // Regular dashboard for faster initial load
@@ -41,17 +41,14 @@ const App: React.FC = () => {
             <Suspense fallback={<Loading message="Loading page..." />}>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route 
-                  path="/advanced-dashboard" 
-                  element={<LazyAdvancedDashboard />} 
+                <Route
+                  path="/advanced-dashboard"
+                  element={<LazyAdvancedDashboard />}
                 />
-                <Route 
-                  path="/trust-metrics" 
-                  element={<LazyTrustMetrics />} 
-                />
-                <Route 
-                  path="/sentiment-analysis" 
-                  element={<LazySentimentAnalysis />} 
+                <Route path="/trust-metrics" element={<LazyTrustMetrics />} />
+                <Route
+                  path="/sentiment-analysis"
+                  element={<LazySentimentAnalysis />}
                 />
                 <Route
                   path="/demographic-analysis"
@@ -62,7 +59,7 @@ const App: React.FC = () => {
             </Suspense>
           </main>
           <Footer />
-          {process.env.NODE_ENV === 'development' && <PerformanceMonitor />}
+          {process.env.NODE_ENV === "development" && <PerformanceMonitor />}
         </div>
       </Router>
     </ErrorBoundary>
