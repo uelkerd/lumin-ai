@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
@@ -16,5 +17,10 @@ export default defineConfig({
   },
   build: {
     outDir: "build", // Same output directory as CRA for consistency
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./vitest.setup.ts",
   },
 });
