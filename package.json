@@ -1,24 +1,39 @@
 {
-  "name": "lumin-ai",
-  "version": "1.0.0",
-  "description": "LUMIN.AI Project Hub",
-  "main": "index.html",
+  "name": "lumin-ai-dashboard",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx http-server -o"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/uelkerd/lumin-ai.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/uelkerd/lumin-ai/issues"
-  },
-  "homepage": "https://github.com/uelkerd/lumin-ai#readme",
   "dependencies": {
-    "http-server": "^14.1.1"
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.0",
+    "d3": "^7.8.5",
+    "marked": "^9.1.5",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "recharts": "^2.10.1",
+    "dompurify": "^3.0.6"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/dompurify": "^3.0.5",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
   }
 }
