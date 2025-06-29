@@ -107,7 +107,7 @@ const TrustMetrics: React.FC = () => {
         <p>
           Trust metrics are calculated using composite indices from Austria Democracy Radar survey responses.
           The indices combine institutional trust, process satisfaction, and democratic efficacy measures
-          with appropriate statistical validation (Cronbach's alpha > 0.7).
+          with appropriate statistical validation (Cronbach's alpha {'>'} 0.7).
         </p>
       </div>
     </div>
