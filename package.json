@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/uelkerd/lumin-ai#readme",
   "dependencies": {
-    "dompurify": "^3.2.6",
     "http-server": "^14.1.1"
   }
 }
