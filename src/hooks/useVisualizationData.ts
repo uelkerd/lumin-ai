@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 
 export interface VisualizationFilters {
   dateRange: [Date, Date];
@@ -19,7 +19,7 @@ export interface DataPoint {
 
 export const useVisualizationData = (
   dataSource: string,
-  filters: Partial<VisualizationFilters> = {}
+  filters: Partial<VisualizationFilters> = {},
 ) => {
   const [rawData, setRawData] = useState<DataPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,11 +27,11 @@ export const useVisualizationData = (
 
   // Default filters
   const defaultFilters: VisualizationFilters = {
-    dateRange: [new Date('2022-01-01'), new Date()],
+    dateRange: [new Date("2022-01-01"), new Date()],
     categories: [],
     regions: [],
     significanceLevel: 0.05,
-    outlierThreshold: 3.5
+    outlierThreshold: 3.5,
   };
 
   const activeFilters = { ...defaultFilters, ...filters };
@@ -52,7 +52,7 @@ export const useVisualizationData = (
         const data = await response.json();
         setRawData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
+        setError(err instanceof Error ? err.message : "Unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -65,19 +65,28 @@ export const useVisualizationData = (
   const processedData = useMemo(() => {
     if (!rawData.length) return [];
 
-    return rawData.filter(point => {
+    return rawData.filter((point) => {
       // Date range filter
-      if (point.date < activeFilters.dateRange[0] || point.date > activeFilters.dateRange[1]) {
+      if (
+        point.date < activeFilters.dateRange[0] ||
+        point.date > activeFilters.dateRange[1]
+      ) {
         return false;
       }
 
       // Category filter
-      if (activeFilters.categories.length > 0 && !activeFilters.categories.includes(point.category)) {
+      if (
+        activeFilters.categories.length > 0 &&
+        !activeFilters.categories.includes(point.category)
+      ) {
         return false;
       }
 
       // Region filter
-      if (activeFilters.regions.length > 0 && !activeFilters.regions.includes(point.region)) {
+      if (
+        activeFilters.regions.length > 0 &&
+        !activeFilters.regions.includes(point.region)
+      ) {
         return false;
       }
 
@@ -89,13 +98,15 @@ export const useVisualizationData = (
   const statistics = useMemo(() => {
     if (!processedData.length) return null;
 
-    const values = processedData.map(d => d.value);
+    const values = processedData.map((d) => d.value);
     const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+    const variance =
+      values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) /
+      values.length;
     const stdDev = Math.sqrt(variance);
 
     // Outlier detection using modified Z-score
-    const outliers = processedData.filter(point => {
+    const outliers = processedData.filter((point) => {
       const zScore = Math.abs((point.value - mean) / stdDev);
       return zScore > activeFilters.outlierThreshold;
     });
@@ -120,7 +131,7 @@ export const useVisualizationData = (
       q3,
       iqr: q3 - q1,
       outliers: outliers.length,
-      outliersData: outliers
+      outliersData: outliers,
     };
   }, [processedData, activeFilters.outlierThreshold]);
 
@@ -129,15 +140,19 @@ export const useVisualizationData = (
     if (!processedData.length) return null;
 
     // Group data by category for correlation analysis
-    const categories = [...new Set(processedData.map(d => d.category))];
+    const categories = [...new Set(processedData.map((d) => d.category))];
     const correlationMatrix: number[][] = [];
 
     categories.forEach((cat1, i) => {
       correlationMatrix[i] = [];
       categories.forEach((cat2, j) => {
-        const data1 = processedData.filter(d => d.category === cat1).map(d => d.value);
-        const data2 = processedData.filter(d => d.category === cat2).map(d => d.value);
-        
+        const data1 = processedData
+          .filter((d) => d.category === cat1)
+          .map((d) => d.value);
+        const data2 = processedData
+          .filter((d) => d.category === cat2)
+          .map((d) => d.value);
+
         if (data1.length === data2.length && data1.length > 1) {
           correlationMatrix[i][j] = calculatePearsonCorrelation(data1, data2);
         } else {
@@ -148,7 +163,7 @@ export const useVisualizationData = (
 
     return {
       categories,
-      matrix: correlationMatrix
+      matrix: correlationMatrix,
     };
   }, [processedData]);
 
@@ -159,7 +174,7 @@ export const useVisualizationData = (
     error,
     statistics,
     correlationAnalysis,
-    filters: activeFilters
+    filters: activeFilters,
   };
 };
 
@@ -175,7 +190,9 @@ function calculatePearsonCorrelation(x: number[], y: number[]): number {
   const sumY2 = y.reduce((sum, yi) => sum + yi * yi, 0);
 
   const numerator = n * sumXY - sumX * sumY;
-  const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+  const denominator = Math.sqrt(
+    (n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY),
+  );
 
   return denominator === 0 ? 0 : numerator / denominator;
 }

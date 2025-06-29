@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 interface ResponsiveWrapperProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ const ResponsiveWrapper: React.FC<ResponsiveWrapperProps> = ({
   minWidth = 320,
   minHeight = 240,
   aspectRatio,
-  className = ''
+  className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -23,29 +23,29 @@ const ResponsiveWrapper: React.FC<ResponsiveWrapperProps> = ({
       if (containerRef.current) {
         const { offsetWidth } = containerRef.current;
         const width = Math.max(offsetWidth, minWidth);
-        const height = aspectRatio 
-          ? width / aspectRatio 
+        const height = aspectRatio
+          ? width / aspectRatio
           : Math.max(offsetWidth * 0.6, minHeight);
-        
+
         setDimensions({ width, height });
       }
     };
 
     updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    
-    return () => window.removeEventListener('resize', updateDimensions);
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
   }, [minWidth, minHeight, aspectRatio]);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`w-full ${className}`}
       style={{ height: dimensions.height }}
     >
       {React.cloneElement(children as React.ReactElement, {
         width: dimensions.width,
-        height: dimensions.height
+        height: dimensions.height,
       })}
     </div>
   );
