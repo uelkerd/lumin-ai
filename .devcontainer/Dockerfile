@@ -58,9 +58,6 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     rm -rf /var/lib/apt/lists/*
 
 # 🔧 ENSURE GIT IS IN PATH FOR ALL USERS
-RUN echo 'export PATH="/usr/bin:$PATH"' >> /etc/environment && \
-    ln -sf /usr/bin/git /usr/local/bin/git
-
 # 👤 SWITCH TO USER & SETUP ZSH
 USER lumin-dev
 WORKDIR /home/lumin-dev
