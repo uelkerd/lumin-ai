@@ -2,13 +2,13 @@ import { vi, describe, it, expect, afterEach } from 'vitest';
 import api, { fetchDashboardData, fetchTrustMetrics, fetchDemographicAnalysis, analyzeSentiment } from './api';
 import { DashboardData } from '../types/dashboard';
 
-describe('API Service', () => {
+describe("API Service", () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  describe('fetchDashboardData', () => {
-    it('should fetch dashboard data successfully', async () => {
+  describe("fetchDashboardData", () => {
+    it("should fetch dashboard data successfully", async () => {
       const mockData: DashboardData = {
         trustMetrics: {
           institutionalTrust: 68.3,
@@ -27,20 +27,22 @@ describe('API Service', () => {
         },
       };
 
-      const getSpy = vi.spyOn(api, 'get').mockResolvedValue({ data: mockData });
+      const getSpy = vi.spyOn(api, "get").mockResolvedValue({ data: mockData });
 
       const data = await fetchDashboardData();
 
       expect(data).toEqual(mockData);
-      expect(getSpy).toHaveBeenCalledWith('/dashboard');
+      expect(getSpy).toHaveBeenCalledWith("/dashboard");
     });
 
-    it('should handle errors when fetching dashboard data', async () => {
-      const errorMessage = 'Network Error';
-      const getSpy = vi.spyOn(api, 'get').mockRejectedValue(new Error(errorMessage));
+    it("should handle errors when fetching dashboard data", async () => {
+      const errorMessage = "Network Error";
+      const getSpy = vi
+        .spyOn(api, "get")
+        .mockRejectedValue(new Error(errorMessage));
 
       await expect(fetchDashboardData()).rejects.toThrow(errorMessage);
-      expect(getSpy).toHaveBeenCalledWith('/dashboard');
+      expect(getSpy).toHaveBeenCalledWith("/dashboard");
     });
   });
 
@@ -101,4 +103,4 @@ describe('API Service', () => {
       await expect(analyzeSentiment('This is great!')).rejects.toThrow(errorMessage);
     });
   });
-}); 
+});
