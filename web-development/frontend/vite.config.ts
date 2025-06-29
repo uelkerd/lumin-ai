@@ -16,6 +16,6 @@ export default defineConfig({
     port: 3001, // As mentioned in the PR description
   },
   build: {
-    outDir: 'build', // Same output directory as CRA for consistency
-  }
-}) 
+    outDir: "build", // Same output directory as CRA for consistency
+  },
+});
