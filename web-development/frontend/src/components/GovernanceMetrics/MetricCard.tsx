@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 interface MetricCardProps {
   title: string;
   value: number;
   icon: string;
   description: string;
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
   trendValue?: number;
-  format?: 'number' | 'percent' | 'currency';
+  format?: "number" | "percent" | "currency";
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
@@ -15,15 +15,15 @@ const MetricCard: React.FC<MetricCardProps> = ({
   value,
   icon,
   description,
-  trend = 'neutral',
+  trend = "neutral",
   trendValue = 0,
-  format = 'number'
+  format = "number",
 }) => {
   const formatValue = (val: number): string => {
     switch (format) {
-      case 'percent':
+      case "percent":
         return `${val.toFixed(1)}%`;
-      case 'currency':
+      case "currency":
         return `$${val.toLocaleString()}`;
       default:
         return val.toLocaleString(undefined, { maximumFractionDigits: 1 });
@@ -32,23 +32,23 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
   const getTrendIcon = () => {
     switch (trend) {
-      case 'up':
-        return '↑';
-      case 'down':
-        return '↓';
+      case "up":
+        return "↑";
+      case "down":
+        return "↓";
       default:
-        return '→';
+        return "→";
     }
   };
 
   const getTrendClass = () => {
     switch (trend) {
-      case 'up':
-        return 'trend-up';
-      case 'down':
-        return 'trend-down';
+      case "up":
+        return "trend-up";
+      case "down":
+        return "trend-down";
       default:
-        return 'trend-neutral';
+        return "trend-neutral";
     }
   };
 

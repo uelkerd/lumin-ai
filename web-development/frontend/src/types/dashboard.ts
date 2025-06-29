@@ -23,12 +23,12 @@ export interface MetricData {
   value: number;
   icon: string;
   description: string;
-  trend?: 'up' | 'down' | 'neutral';
+  trend?: "up" | "down" | "neutral";
   trendValue?: number;
 }
 
 export interface SentimentResult {
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
   confidence: number;
   explanation: {
     key_phrases: string[];
