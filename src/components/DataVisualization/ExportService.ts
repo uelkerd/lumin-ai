@@ -1,57 +1,57 @@
 export interface ExportOptions {
-  format: 'PNG' | 'SVG' | 'PDF' | 'HTML' | 'CSV';
-  resolution: 'standard' | 'high' | 'print';
+  format: "PNG" | "SVG" | "PDF" | "HTML" | "CSV";
+  resolution: "standard" | "high" | "print";
   includeData: boolean;
   customDimensions?: { width: number; height: number };
-  colorScheme?: 'default' | 'colorblind' | 'grayscale' | 'high-contrast';
+  colorScheme?: "default" | "colorblind" | "grayscale" | "high-contrast";
 }
 
 export class VisualizationExportService {
   private static readonly RESOLUTIONS = {
     standard: { width: 1920, height: 1080, dpi: 96 },
     high: { width: 3840, height: 2160, dpi: 192 },
-    print: { width: 2550, height: 3300, dpi: 300 } // 8.5x11 at 300 DPI
+    print: { width: 2550, height: 3300, dpi: 300 }, // 8.5x11 at 300 DPI
   };
 
   private static readonly COLOR_SCHEMES = {
     default: {
-      primary: '#2563eb',
-      secondary: '#7c3aed',
-      success: '#059669',
-      warning: '#d97706',
-      error: '#dc2626',
-      neutral: '#6b7280'
+      primary: "#2563eb",
+      secondary: "#7c3aed",
+      success: "#059669",
+      warning: "#d97706",
+      error: "#dc2626",
+      neutral: "#6b7280",
     },
     colorblind: {
-      primary: '#1f77b4',
-      secondary: '#ff7f0e',
-      success: '#2ca02c',
-      warning: '#d62728',
-      error: '#9467bd',
-      neutral: '#8c564b'
+      primary: "#1f77b4",
+      secondary: "#ff7f0e",
+      success: "#2ca02c",
+      warning: "#d62728",
+      error: "#9467bd",
+      neutral: "#8c564b",
     },
     grayscale: {
-      primary: '#000000',
-      secondary: '#404040',
-      success: '#606060',
-      warning: '#808080',
-      error: '#a0a0a0',
-      neutral: '#c0c0c0'
+      primary: "#000000",
+      secondary: "#404040",
+      success: "#606060",
+      warning: "#808080",
+      error: "#a0a0a0",
+      neutral: "#c0c0c0",
     },
-    'high-contrast': {
-      primary: '#000000',
-      secondary: '#ffffff',
-      success: '#00ff00',
-      warning: '#ffff00',
-      error: '#ff0000',
-      neutral: '#808080'
-    }
+    "high-contrast": {
+      primary: "#000000",
+      secondary: "#ffffff",
+      success: "#00ff00",
+      warning: "#ffff00",
+      error: "#ff0000",
+      neutral: "#808080",
+    },
   };
 
   static async exportVisualization(
-    elementId: string, 
-    filename: string, 
-    options: ExportOptions
+    elementId: string,
+    filename: string,
+    options: ExportOptions,
   ): Promise<void> {
     const element = document.getElementById(elementId);
     if (!element) {
@@ -62,19 +62,19 @@ export class VisualizationExportService {
     const dimensions = options.customDimensions || resolution;
 
     switch (options.format) {
-      case 'PNG':
+      case "PNG":
         await this.exportAsPNG(element, filename, dimensions, options);
         break;
-      case 'SVG':
+      case "SVG":
         await this.exportAsSVG(element, filename, options);
         break;
-      case 'PDF':
+      case "PDF":
         await this.exportAsPDF(element, filename, dimensions, options);
         break;
-      case 'HTML':
+      case "HTML":
         await this.exportAsHTML(element, filename, options);
         break;
-      case 'CSV':
+      case "CSV":
         await this.exportAsCSV(filename, options);
         break;
       default:
@@ -83,87 +83,93 @@ export class VisualizationExportService {
   }
 
   private static async exportAsPNG(
-    element: HTMLElement, 
-    filename: string, 
+    element: HTMLElement,
+    filename: string,
     dimensions: { width: number; height: number },
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<void> {
-    const { default: html2canvas } = await import('html2canvas');
-    
+    const { default: html2canvas } = await import("html2canvas");
+
     const canvas = await html2canvas(element, {
       width: dimensions.width,
       height: dimensions.height,
-      scale: options.resolution === 'print' ? 3 : options.resolution === 'high' ? 2 : 1,
+      scale:
+        options.resolution === "print"
+          ? 3
+          : options.resolution === "high"
+            ? 2
+            : 1,
       useCORS: true,
       allowTaint: false,
-      backgroundColor: '#ffffff'
+      backgroundColor: "#ffffff",
     });
 
     // Add watermark if needed
     if (options.includeData) {
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (ctx) {
-        ctx.font = '16px Arial';
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillText('LUMIN.AI Dashboard Export', 20, canvas.height - 20);
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        ctx.fillText("LUMIN.AI Dashboard Export", 20, canvas.height - 20);
         ctx.fillText(new Date().toISOString(), 20, canvas.height - 40);
       }
     }
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.download = `${filename}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.href = canvas.toDataURL("image/png");
     link.click();
   }
 
   private static async exportAsSVG(
-    element: HTMLElement, 
-    filename: string, 
-    options: ExportOptions
+    element: HTMLElement,
+    filename: string,
+    options: ExportOptions,
   ): Promise<void> {
     // Convert DOM to SVG
     const svgElement = this.convertToSVG(element, options);
     const svgString = new XMLSerializer().serializeToString(svgElement);
-    
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+
+    const blob = new Blob([svgString], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.download = `${filename}.svg`;
     link.href = url;
     link.click();
-    
+
     URL.revokeObjectURL(url);
   }
 
   private static async exportAsPDF(
-    element: HTMLElement, 
-    filename: string, 
+    element: HTMLElement,
+    filename: string,
     dimensions: { width: number; height: number },
-    options: ExportOptions
+    options: ExportOptions,
   ): Promise<void> {
-    const { default: jsPDF } = await import('jspdf');
-    const { default: html2canvas } = await import('html2canvas');
-    
+    const { default: jsPDF } = await import("jspdf");
+    const { default: html2canvas } = await import("html2canvas");
+
     const canvas = await html2canvas(element, {
       width: dimensions.width,
       height: dimensions.height,
       scale: 2,
-      useCORS: true
+      useCORS: true,
     });
 
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
-      orientation: dimensions.width > dimensions.height ? 'landscape' : 'portrait',
-      unit: 'px',
-      format: [dimensions.width, dimensions.height]
+      orientation:
+        dimensions.width > dimensions.height ? "landscape" : "portrait",
+      unit: "px",
+      format: [dimensions.width, dimensions.height],
     });
 
-    pdf.addImage(imgData, 'PNG', 0, 0, dimensions.width, dimensions.height);
-    
+    pdf.addImage(imgData, "PNG", 0, 0, dimensions.width, dimensions.height);
+
     if (options.includeData) {
       pdf.setFontSize(10);
-      pdf.text('Generated by LUMIN.AI Dashboard', 20, dimensions.height - 20);
+      pdf.text("Generated by LUMIN.AI Dashboard", 20, dimensions.height - 20);
       pdf.text(new Date().toISOString(), 20, dimensions.height - 10);
     }
 
@@ -171,56 +177,68 @@ export class VisualizationExportService {
   }
 
   private static async exportAsHTML(
-    element: HTMLElement, 
-    filename: string, 
-    options: ExportOptions
+    element: HTMLElement,
+    filename: string,
+    options: ExportOptions,
   ): Promise<void> {
     const htmlContent = this.generateStandaloneHTML(element, options);
-    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const blob = new Blob([htmlContent], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.download = `${filename}.html`;
     link.href = url;
     link.click();
-    
+
     URL.revokeObjectURL(url);
   }
 
-  private static async exportAsCSV(filename: string, options: ExportOptions): Promise<void> {
+  private static async exportAsCSV(
+    filename: string,
+    options: ExportOptions,
+  ): Promise<void> {
     // This would extract data from the current visualization state
     // For now, we'll create a mock CSV export
     const csvContent = this.generateCSVContent();
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
+
+    const link = document.createElement("a");
     link.download = `${filename}.csv`;
     link.href = url;
     link.click();
-    
+
     URL.revokeObjectURL(url);
   }
 
-  private static convertToSVG(element: HTMLElement, options: ExportOptions): SVGElement {
+  private static convertToSVG(
+    element: HTMLElement,
+    options: ExportOptions,
+  ): SVGElement {
     // This is a simplified conversion - in practice, you'd use a library like dom-to-svg
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', element.offsetWidth.toString());
-    svg.setAttribute('height', element.offsetHeight.toString());
-    
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", element.offsetWidth.toString());
+    svg.setAttribute("height", element.offsetHeight.toString());
+
     // Add basic styling and content
-    const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-    foreignObject.setAttribute('width', '100%');
-    foreignObject.setAttribute('height', '100%');
+    const foreignObject = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "foreignObject",
+    );
+    foreignObject.setAttribute("width", "100%");
+    foreignObject.setAttribute("height", "100%");
     foreignObject.appendChild(element.cloneNode(true));
-    
+
     svg.appendChild(foreignObject);
     return svg;
   }
 
-  private static generateStandaloneHTML(element: HTMLElement, options: ExportOptions): string {
-    const colorScheme = this.COLOR_SCHEMES[options.colorScheme || 'default'];
-    
+  private static generateStandaloneHTML(
+    element: HTMLElement,
+    options: ExportOptions,
+  ): string {
+    const colorScheme = this.COLOR_SCHEMES[options.colorScheme || "default"];
+
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -274,25 +292,34 @@ export class VisualizationExportService {
 
   private static generateCSVContent(): string {
     // Mock CSV data - in practice, this would extract actual visualization data
-    const headers = ['Date', 'Trust Score', 'Transparency Index', 'Participation Rate', 'Significance'];
+    const headers = [
+      "Date",
+      "Trust Score",
+      "Transparency Index",
+      "Participation Rate",
+      "Significance",
+    ];
     const rows = [
-      ['2023-01', '68.2', '65.1', '47.8', 'true'],
-      ['2023-02', '69.5', '66.3', '46.2', 'true'],
-      ['2023-03', '70.1', '67.8', '45.9', 'false'],
-      ['2023-04', '71.3', '68.5', '44.7', 'true'],
-      ['2023-05', '72.0', '69.1', '45.2', 'true'],
-      ['2023-06', '72.5', '68.3', '45.2', 'false']
+      ["2023-01", "68.2", "65.1", "47.8", "true"],
+      ["2023-02", "69.5", "66.3", "46.2", "true"],
+      ["2023-03", "70.1", "67.8", "45.9", "false"],
+      ["2023-04", "71.3", "68.5", "44.7", "true"],
+      ["2023-05", "72.0", "69.1", "45.2", "true"],
+      ["2023-06", "72.5", "68.3", "45.2", "false"],
     ];
 
     const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.join(','))
-    ].join('\n');
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
 
     return csvContent;
   }
 
   static getColorScheme(scheme: string) {
-    return this.COLOR_SCHEMES[scheme as keyof typeof this.COLOR_SCHEMES] || this.COLOR_SCHEMES.default;
+    return (
+      this.COLOR_SCHEMES[scheme as keyof typeof this.COLOR_SCHEMES] ||
+      this.COLOR_SCHEMES.default
+    );
   }
 }
