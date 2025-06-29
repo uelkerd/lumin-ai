@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,11 +9,11 @@ export default defineConfig({
   resolve: {
     alias: {
       // Set up any path aliases you might need
-      '@': path.resolve(__dirname, './src'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
-    port: 3000, // Same port as CRA for consistency
+    port: 3001, // As mentioned in the PR description
   },
   build: {
     outDir: 'build', // Same output directory as CRA for consistency
