@@ -4,6 +4,12 @@ import MetricCard from "./MetricCard";
 import TrustTrendChart from "../DataVisualization/TrustTrendChart";
 import DemographicComparison from "../DataVisualization/DemographicComparison";
 
+/**
+ * Renders the Trust Metrics dashboard, displaying an analysis of
+ * trust in democratic institutions based on Austria Democracy Radar data.
+ * It includes institutional trust, process satisfaction, and democratic efficacy metrics,
+ * along with visualizations for trust evolution and demographic comparisons.
+ */
 const TrustMetrics: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<string>("1y");
@@ -114,7 +120,7 @@ const TrustMetrics: React.FC = () => {
           Trust metrics are calculated using composite indices from Austria
           Democracy Radar survey responses. The indices combine institutional
           trust, process satisfaction, and democratic efficacy measures with
-          appropriate statistical validation (Cronbach's alpha {">"} 0.7).
+          appropriate statistical validation (Cronbach&apos;s alpha {">"} 0.7).
         </p>
       </div>
     </div>
