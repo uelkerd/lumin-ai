@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Loading from "../common/Loading";
 import MetricCard from "./MetricCard";
 import TrustTrendChart from "../DataVisualization/TrustTrendChart";
@@ -18,6 +18,11 @@ const TrustMetrics: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Memoized callbacks to prevent recreation on each render
+  const handleTimeRangeOneYear = useCallback(() => setTimeRange("1y"), []);
+  const handleTimeRangeThreeYears = useCallback(() => setTimeRange("3y"), []);
+  const handleTimeRangeAllTime = useCallback(() => setTimeRange("all"), []);
+
   if (loading) {
     return <Loading message="Loading trust metrics data..." />;
   }
@@ -33,19 +38,19 @@ const TrustMetrics: React.FC = () => {
       <div className="time-range-selector">
         <button
           className={timeRange === "1y" ? "active" : ""}
-          onClick={() => setTimeRange("1y")}
+          onClick={handleTimeRangeOneYear}
         >
           1 Year
         </button>
         <button
           className={timeRange === "3y" ? "active" : ""}
-          onClick={() => setTimeRange("3y")}
+          onClick={handleTimeRangeThreeYears}
         >
           3 Years
         </button>
         <button
           className={timeRange === "all" ? "active" : ""}
-          onClick={() => setTimeRange("all")}
+          onClick={handleTimeRangeAllTime}
         >
           All Time
         </button>
