@@ -17,31 +17,34 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Add auth token if available
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     // Add request timestamp for debugging
     config.metadata = { startTime: new Date() };
-    
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for handling common errors and logging
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log response time in development
-    if (process.env.NODE_ENV === 'development' && response.config.metadata) {
+    if (process.env.NODE_ENV === "development" && response.config.metadata) {
       const endTime = new Date();
-      const duration = endTime.getTime() - response.config.metadata.startTime.getTime();
-      console.log(`API ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms`);
+      const duration =
+        endTime.getTime() - response.config.metadata.startTime.getTime();
+      console.log(
+        `API ${response.config.method?.toUpperCase()} ${response.config.url}: ${duration}ms`,
+      );
     }
-    
+
     return response;
   },
   (error: AxiosError) => {
@@ -52,12 +55,12 @@ api.interceptors.response.use(
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
       const { status, data } = error.response;
-      
+
       switch (status) {
         case 401:
           // Unauthorized - redirect to login
-          localStorage.removeItem('authToken');
-          window.location.href = '/login';
+          localStorage.removeItem("authToken");
+          window.location.href = "/login";
           break;
         case 403:
           // Forbidden
@@ -87,7 +90,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // API functions with proper error handling and typing
@@ -105,7 +108,7 @@ export const fetchDashboardData = async (): Promise<DashboardData> => {
 export const fetchTrustMetrics = async (timeRange: string = "1y") => {
   try {
     const response = await api.get(`/trust-metrics`, {
-      params: { timeRange }
+      params: { timeRange },
     });
     return response.data;
   } catch (error) {
@@ -117,21 +120,25 @@ export const fetchTrustMetrics = async (timeRange: string = "1y") => {
 export const fetchDemographicAnalysis = async (demographic: string = "age") => {
   try {
     const response = await api.get(`/demographics/analysis`, {
-      params: { segment: demographic }
+      params: { segment: demographic },
     });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch demographic analysis:", error);
-    throw new Error("Unable to load demographic analysis. Please try again later.");
+    throw new Error(
+      "Unable to load demographic analysis. Please try again later.",
+    );
   }
 };
 
-export const analyzeSentiment = async (text: string): Promise<SentimentResult> => {
+export const analyzeSentiment = async (
+  text: string,
+): Promise<SentimentResult> => {
   try {
     if (!text.trim()) {
       throw new Error("Text cannot be empty");
     }
-    
+
     const response = await api.post("/ml/sentiment", { text });
     return response.data;
   } catch (error) {
@@ -202,7 +209,7 @@ export const createApiCache = () => {
       cache.set(key, { data, timestamp: Date.now() });
     },
     clear: () => cache.clear(),
-    size: () => cache.size
+    size: () => cache.size,
   };
 };
 
@@ -212,7 +219,7 @@ export const apiCache = createApiCache();
 // Cached API wrapper
 export const withCache = async <T>(
   key: string,
-  apiCall: () => Promise<T>
+  apiCall: () => Promise<T>,
 ): Promise<T> => {
   const cached = apiCache.get(key);
   if (cached) {
