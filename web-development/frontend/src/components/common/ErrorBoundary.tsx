@@ -20,25 +20,25 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
+    this.state = {
+      hasError: false,
+      error: null,
       errorInfo: null,
-      eventId: null
+      eventId: null,
     };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    return { 
-      hasError: true, 
+    return {
+      hasError: true,
       error,
-      eventId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      eventId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
-    
+
     this.setState({ errorInfo });
 
     // Call custom error handler if provided
@@ -55,12 +55,20 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { hasError } = this.state;
 
     if (hasError && prevProps.resetKeys !== resetKeys) {
-      if (resetKeys?.some((resetKey, idx) => prevProps.resetKeys?.[idx] !== resetKey)) {
+      if (
+        resetKeys?.some(
+          (resetKey, idx) => prevProps.resetKeys?.[idx] !== resetKey,
+        )
+      ) {
         this.resetErrorBoundary();
       }
     }
 
-    if (hasError && resetOnPropsChange && prevProps.children !== this.props.children) {
+    if (
+      hasError &&
+      resetOnPropsChange &&
+      prevProps.children !== this.props.children
+    ) {
       this.resetErrorBoundary();
     }
   }
@@ -80,28 +88,28 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      eventId: this.state.eventId
+      eventId: this.state.eventId,
     };
 
     // Example: Send to error reporting service
     // errorReportingService.captureException(errorReport);
-    
+
     // For now, just log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.group('🚨 Error Boundary Report');
-      console.error('Error:', error);
-      console.error('Error Info:', errorInfo);
-      console.error('Full Report:', errorReport);
+    if (process.env.NODE_ENV === "development") {
+      console.group("🚨 Error Boundary Report");
+      console.error("Error:", error);
+      console.error("Error Info:", errorInfo);
+      console.error("Full Report:", errorReport);
       console.groupEnd();
     }
   };
 
   private resetErrorBoundary = (): void => {
-    this.setState({ 
-      hasError: false, 
-      error: null, 
+    this.setState({
+      hasError: false,
+      error: null,
       errorInfo: null,
-      eventId: null
+      eventId: null,
     });
   };
 
@@ -126,9 +134,9 @@ Timestamp: ${new Date().toISOString()}
 
     try {
       await navigator.clipboard.writeText(errorText);
-      alert('Error details copied to clipboard');
+      alert("Error details copied to clipboard");
     } catch (err) {
-      console.error('Failed to copy error details:', err);
+      console.error("Failed to copy error details:", err);
     }
   };
 
@@ -145,9 +153,10 @@ Timestamp: ${new Date().toISOString()}
           <div className="error-content">
             <h2>Something went wrong</h2>
             <p>
-              We apologize for the inconvenience. An unexpected error occurred while loading this component.
+              We apologize for the inconvenience. An unexpected error occurred
+              while loading this component.
             </p>
-            
+
             <div className="error-actions">
               <button
                 className="error-button primary"
@@ -163,15 +172,21 @@ Timestamp: ${new Date().toISOString()}
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && (
+            {process.env.NODE_ENV === "development" && (
               <details className="error-details">
                 <summary>Error Details (Development)</summary>
                 <div className="error-info">
-                  <p><strong>Error ID:</strong> {eventId}</p>
-                  <p><strong>Error:</strong> {error?.message}</p>
+                  <p>
+                    <strong>Error ID:</strong> {eventId}
+                  </p>
+                  <p>
+                    <strong>Error:</strong> {error?.message}
+                  </p>
                   <pre className="error-stack">{error?.stack}</pre>
                   {errorInfo && (
-                    <pre className="error-component-stack">{errorInfo.componentStack}</pre>
+                    <pre className="error-component-stack">
+                      {errorInfo.componentStack}
+                    </pre>
                   )}
                   <button
                     className="error-button copy"
@@ -194,7 +209,7 @@ Timestamp: ${new Date().toISOString()}
 // Higher-order component for easier usage
 export const withErrorBoundary = <P extends object>(
   Component: React.ComponentType<P>,
-  errorBoundaryProps?: Omit<ErrorBoundaryProps, 'children'>
+  errorBoundaryProps?: Omit<ErrorBoundaryProps, "children">,
 ) => {
   const WrappedComponent = (props: P) => (
     <ErrorBoundary {...errorBoundaryProps}>
