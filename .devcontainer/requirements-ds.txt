@@ -27,7 +27,7 @@ ipywidgets==8.0.4
 # Optional packages - uncomment if needed
 spacy==3.5.2
 textblob==0.17.1
-transformers==4.50.0
+transformers==4.51.0
 fastapi==0.95.2
 uvicorn==0.22.0
 requests==2.32.4
